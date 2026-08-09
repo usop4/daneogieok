@@ -58,7 +58,7 @@
     }
     @media (max-width: 860px){
       .wrap{ grid-template-columns: 1fr; }
-      .tableWrap{ padding: 8px; }
+      .tableWrap{ padding: 0; }
       table.quiz{ min-width: 0; border-spacing: 8px 6px; }
       .hangulCell{ font-size: 28px; padding: 6px 4px; }
       button.cellBtn{ padding: 8px 6px; min-height: 44px; font-size: 20px; }
@@ -66,7 +66,7 @@
 
     @media (max-width: 520px){
       .wrap{ padding: 0 10px; }
-      .card .bd{ padding: 12px; }
+      .card .bd{ padding: 8px; }
       .hd{ padding: 12px; }
       .row{ gap: 6px; }
       .btn{ padding: 8px 10px; font-size: 13px; }
@@ -146,11 +146,11 @@
       border: 1px dashed rgba(255,255,255,.18);
       background: rgba(0,0,0,.15);
       border-radius: 14px;
-      padding: 12px;
+      padding: 0;
     }
     table.quiz{
       width: 100%;
-      min-width: 400px;   /* iPhone でも使いやすいように縮める */
+      min-width: 380px;   /* iPhone でも使いやすいように縮める */
       table-layout: fixed;
       border-collapse: separate;
       border-spacing: 18px 10px;  /* セル間に余白を作って“表っぽさ”を減らす */
@@ -355,7 +355,6 @@
         <div class="row">
           <button class="btn primary" id="btnNext">次の問題 [ENTER]</button>
           <button class="btn" id="btnReveal">答えを見る [R]</button>
-          <button class="btn danger" id="btnResetScore">スコアリセット</button>
         </div>
       </div>
 
@@ -700,12 +699,6 @@ function hideCorrectPopup(){
   popup.hidden = true;
 }
 
-function resetScore(){
-  state.score = { ok: 0, ng: 0, total: 0 };
-  updateStat();
-  showResult("スコアをリセットしました。", "ok");
-}
-
 function applyCSV(){
   const text = $("#csvInput").value;
   const items = parseCSV(text);
@@ -735,7 +728,6 @@ $("#csvInput").value = DEFAULT_CSV;
 $("#btnApplyCsv").addEventListener("click", applyCSV);
 $("#btnNext").addEventListener("click", nextQuestion);
 $("#btnReveal").addEventListener("click", revealAnswer);
-$("#btnResetScore").addEventListener("click", resetScore);
 $("#btnPopupNext").addEventListener("click", () => {
   hideCorrectPopup();
   nextQuestion();
