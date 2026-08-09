@@ -32,8 +32,9 @@
       padding: 0 16px;
       display:flex;
       justify-content:space-between;
-      align-items:flex-end;
+      align-items:center;
       gap: 12px;
+      flex-wrap: wrap;
     }
     h1{ margin:0; font-size: 20px; letter-spacing:.02em; }
     .sub{ color:var(--muted); font-size: 13px; margin-top:6px; }
@@ -55,7 +56,21 @@
       grid-template-columns: 1.2fr .8fr;
       gap: 14px;
     }
-    @media (max-width: 860px){ .wrap{ grid-template-columns: 1fr; } }
+    @media (max-width: 860px){
+      .wrap{ grid-template-columns: 1fr; }
+      .tableWrap{ padding: 8px; }
+      table.quiz{ min-width: 0; border-spacing: 10px 8px; }
+      .hangulCell{ font-size: 28px; padding: 6px 4px; }
+      button.cellBtn{ padding: 8px 6px; min-height: 44px; }
+    }
+
+    @media (max-width: 480px){
+      .hd{ padding: 12px; }
+      .row{ gap: 6px; }
+      .btn{ padding: 8px 10px; font-size: 13px; }
+      .hangulCell{ font-size: 24px; }
+      button.cellBtn{ min-height: 42px; padding: 7px 6px; }
+    }
 
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
@@ -72,6 +87,12 @@
       justify-content:space-between;
       gap: 10px;
       background: rgba(0,0,0,.15);
+      flex-wrap: wrap;
+    }
+    .headerRow{
+      display:flex;
+      align-items:center;
+      gap: 8px;
       flex-wrap: wrap;
     }
     .card .bd{ padding: 16px; }
@@ -144,9 +165,9 @@
       font-size: 36px;
       padding: 10px 8px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(122,162,255,.10);
-      box-shadow: 0 6px 18px rgba(0,0,0,.25);
+      border: none;
+      background: transparent;
+      box-shadow: none;
     }
 
     /* 漢字候補セル：ボタンを縦に積む */
@@ -158,19 +179,36 @@
     }
     button.cellBtn{
       width: 100%;
+      min-width: 0;
+      min-height: 48px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.18);
       color: var(--text);
       border-radius: 12px;
       padding: 10px 8px;
       font-size: 22px;
+      line-height: 1.3;
       cursor: pointer;
       text-align: center;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     button.cellBtn:hover{ background: rgba(255,255,255,.08); }
     button.cellBtn.selected{
       border-color: rgba(122,162,255,.85);
       background: rgba(122,162,255,.18);
+    }
+    button.cellBtn.active{
+      box-shadow: inset 0 0 0 1px rgba(122,162,255,.55);
+    }
+    .cellBtn.dummy{
+      visibility: visible;
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: transparent;
+      min-height: 48px;
     }
     /* ===== ここまで ===== */
 
@@ -235,9 +273,10 @@
   <header>
     <div>
       <h1>漢字語クイズ</h1>
-      <div class="sub">ハングルの下に候補漢字を縦積み表示／全列の選択が揃ったら自動で正誤判定</div>
     </div>
-    <div class="pill" id="statPill">-</div>
+    <div class="headerRow">
+      <div class="pill" id="statPill">-</div>
+    </div>
   </header>
 
   <div class="wrap">
@@ -245,13 +284,9 @@
     <section class="card">
       <div class="hd">
         <div class="row">
-          <button class="btn primary" id="btnNext">次の問題</button>
-          <button class="btn" id="btnReveal">答えを見る</button>
+          <button class="btn primary" id="btnNext">次の問題 [ENTER]</button>
+          <button class="btn" id="btnReveal">答えを見る [R]</button>
           <button class="btn danger" id="btnResetScore">スコアリセット</button>
-        </div>
-        <div class="row">
-          <span class="kbd">Enter</span><span class="small">次へ</span>
-          <span class="kbd">R</span><span class="small">答え</span>
         </div>
       </div>
 
@@ -301,8 +336,10 @@ const state = {
   items: [],       // { hangul, kanji }
   current: null,   // { hangul, kanji }
   picked: [],      // picked kanji per column index
+  activeCol: null, // キーボード操作の対象列
   score: { ok: 0, ng: 0, total: 0 },
   judging: false,  // 自動判定の連打防止
+  awaitingNextKey: false,
 };
 
 function normalizeLine(line){
@@ -360,6 +397,24 @@ function shuffle(arr){
   return arr;
 }
 
+function getDisplayedOptions(hChar, correctKanji){
+  const base = Array.from(state.dict.get(hChar) || new Set([correctKanji]));
+  if (!base.includes(correctKanji)) base.push(correctKanji);
+
+  const unique = Array.from(new Set(base));
+  if (unique.length <= 7){
+    const opts = unique.slice();
+    shuffle(opts);
+    return opts;
+  }
+
+  const others = unique.filter(k => k !== correctKanji);
+  shuffle(others);
+  const opts = [correctKanji, ...others.slice(0, 6)];
+  shuffle(opts);
+  return opts;
+}
+
 function nextQuestion(){
   if (state.items.length === 0){
     renderEmptyTable("CSVが空です。右のCSVを入力して「CSVを適用」してください。");
@@ -367,7 +422,9 @@ function nextQuestion(){
   }
   state.current = sampleOne(state.items);
   state.picked = Array.from(state.current.hangul).map(() => null);
+  state.activeCol = 0;
   state.judging = false;
+  state.awaitingNextKey = false;
   renderTable();
   hideResult();
 }
@@ -380,6 +437,17 @@ function renderEmptyTable(msg){
   $("#currentGuess").textContent = "（未選択）";
 }
 
+function getNextColumn(col){
+  const start = col + 1;
+  for (let i = start; i < state.picked.length; i++){
+    if (!state.picked[i]) return i;
+  }
+  for (let i = 0; i < col; i++){
+    if (!state.picked[i]) return i;
+  }
+  return col;
+}
+
 function renderTable(){
   const hangulChars = Array.from(state.current.hangul);
   const kanjiChars  = Array.from(state.current.kanji);
@@ -387,10 +455,8 @@ function renderTable(){
 
   // 列ごとの候補配列
   const colOptions = hangulChars.map((hChar, idx) => {
-    const set = state.dict.get(hChar) || new Set([kanjiChars[idx]]);
-    const opts = Array.from(set);
-    shuffle(opts);
-    return opts;
+    const correctKanji = kanjiChars[idx];
+    return getDisplayedOptions(hChar, correctKanji);
   });
 
   // 1行目（ハングル）
@@ -405,11 +471,18 @@ function renderTable(){
   html += "<tr>";
   for (let c=0; c<cols; c++){
     const opts = colOptions[c];
+    const filledOpts = [...opts];
+    while (filledOpts.length < 7) {
+      filledOpts.push("");
+    }
     html += `<td>
       <div class="kanjiStack">
-        ${opts.map(k => `
-          <button class="cellBtn" data-col="${c}" data-k="${escapeAttr(k)}">${escapeHtml(k)}</button>
-        `).join("")}
+        ${filledOpts.map((k, idx) => {
+          if (!k) {
+            return `<div class="cellBtn dummy" aria-hidden="true"></div>`;
+          }
+          return `<button class="cellBtn" data-col="${c}" data-k="${escapeAttr(k)}">${idx + 1}. ${escapeHtml(k)}</button>`;
+        }).join("")}
       </div>
     </td>`;
   }
@@ -417,6 +490,12 @@ function renderTable(){
 
   const table = $("#quizTable");
   table.innerHTML = html;
+
+  const updateActiveColumnHighlight = () => {
+    table.querySelectorAll(".cellBtn").forEach(b => b.classList.remove("active"));
+    if (state.activeCol === null || state.activeCol === undefined) return;
+    table.querySelectorAll(`.cellBtn[data-col="${state.activeCol}"]`).forEach(b => b.classList.add("active"));
+  };
 
   // クリック：列ごとに1つ選択
   table.onclick = (e) => {
@@ -426,18 +505,54 @@ function renderTable(){
     const col = Number(btn.dataset.col);
     const k = btn.dataset.k;
 
+    state.activeCol = col;
     state.picked[col] = k;
 
     // 同じ列だけ selected を付け替え
     table.querySelectorAll(`.cellBtn[data-col="${col}"]`).forEach(b => b.classList.remove("selected"));
     btn.classList.add("selected");
 
+    const nextCol = getNextColumn(col);
+    state.activeCol = nextCol;
+    updateActiveColumnHighlight();
+
     renderCurrentGuess();
     maybeAutoJudge(); // ★選択が揃ったら自動判定
   };
 
+  updateActiveColumnHighlight();
   renderCurrentGuess();
   updateStat();
+}
+
+function selectOptionByKey(key){
+  if (!state.current) return;
+
+  const col = state.activeCol !== null && state.activeCol !== undefined
+    ? state.activeCol
+    : state.picked.findIndex(v => v === null);
+  if (col === -1) return;
+
+  state.activeCol = col;
+  const buttons = $("#quizTable").querySelectorAll(`.cellBtn[data-col="${col}"]`);
+  const options = Array.from(buttons).map(b => b.dataset.k);
+  const index = key === "0" ? 9 : Number(key) - 1;
+  if (!options[index]) return;
+
+  const k = options[index];
+  state.picked[col] = k;
+  buttons.forEach(b => b.classList.remove("selected"));
+  buttons[index].classList.add("selected");
+
+  const nextCol = getNextColumn(col);
+  state.activeCol = nextCol;
+  $("#quizTable").querySelectorAll(".cellBtn").forEach(b => b.classList.remove("active"));
+  if (state.activeCol !== null && state.activeCol !== undefined) {
+    $("#quizTable").querySelectorAll(`.cellBtn[data-col="${state.activeCol}"]`).forEach(b => b.classList.add("active"));
+  }
+
+  renderCurrentGuess();
+  maybeAutoJudge();
 }
 
 function renderCurrentGuess(){
@@ -465,11 +580,8 @@ function judgeAnswer(){
     state.score.ok += 1;
     showResult(`正解！ ${state.current.hangul} = ${correct}`, "ok");
     updateStat();
-    // 正解なら自動で次へ
-    setTimeout(() => {
-      state.judging = false;
-      nextQuestion();
-    }, 650);
+    state.judging = false;
+    state.awaitingNextKey = true;
   } else {
     state.score.ng += 1;
     showResult(`不正解：あなたの答え=${guess} / 正解=${correct} （${state.current.hangul}）`, "ng");
@@ -536,6 +648,23 @@ $("#btnReveal").addEventListener("click", revealAnswer);
 $("#btnResetScore").addEventListener("click", resetScore);
 
 window.addEventListener("keydown", (e) => {
+  const target = e.target;
+  if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+    return;
+  }
+
+  if (state.awaitingNextKey) {
+    state.awaitingNextKey = false;
+    nextQuestion();
+    return;
+  }
+
+  if (/^[0-9]$/.test(e.key)) {
+    e.preventDefault();
+    selectOptionByKey(e.key);
+    return;
+  }
+
   if (e.key === "Enter") nextQuestion();
   if (e.key.toLowerCase() === "r") revealAnswer();
 });
