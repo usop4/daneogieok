@@ -59,17 +59,21 @@
     @media (max-width: 860px){
       .wrap{ grid-template-columns: 1fr; }
       .tableWrap{ padding: 8px; }
-      table.quiz{ min-width: 0; border-spacing: 10px 8px; }
+      table.quiz{ min-width: 0; border-spacing: 8px 6px; }
       .hangulCell{ font-size: 28px; padding: 6px 4px; }
-      button.cellBtn{ padding: 8px 6px; min-height: 44px; }
+      button.cellBtn{ padding: 8px 6px; min-height: 44px; font-size: 20px; }
     }
 
-    @media (max-width: 480px){
+    @media (max-width: 520px){
+      .wrap{ padding: 0 10px; }
+      .card .bd{ padding: 12px; }
       .hd{ padding: 12px; }
       .row{ gap: 6px; }
       .btn{ padding: 8px 10px; font-size: 13px; }
-      .hangulCell{ font-size: 24px; }
-      button.cellBtn{ min-height: 42px; padding: 7px 6px; }
+      .hangulCell{ font-size: 24px; padding: 4px 2px; }
+      table.quiz{ border-spacing: 6px 4px; }
+      button.cellBtn{ min-height: 40px; padding: 6px 4px; font-size: 18px; }
+      .answerPanel{ padding: 10px 12px; }
     }
 
     .card{
@@ -146,7 +150,7 @@
     }
     table.quiz{
       width: 100%;
-      min-width: 520px;   /* スマホは横スクロール */
+      min-width: 400px;   /* iPhone でも使いやすいように縮める */
       table-layout: fixed;
       border-collapse: separate;
       border-spacing: 18px 10px;  /* セル間に余白を作って“表っぽさ”を減らす */
@@ -254,6 +258,71 @@
       background: rgba(255,90,122,.12);
     }
 
+    .popupOverlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 8, 20, .48);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .15s ease;
+    }
+    .popupOverlay.show{
+      display:flex;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .popupCard{
+      width: min(92vw, 420px);
+      border-radius: 20px;
+      padding: 24px 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.16);
+      text-align:center;
+      color: var(--text);
+    }
+    .popupCard.ok{
+      background: linear-gradient(135deg, rgba(240,242,245,.96), rgba(222,226,233,.96));
+      color: #1f2937;
+      border-color: rgba(31,41,55,.12);
+    }
+    .popupTitle{
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: .02em;
+    }
+    .popupText{
+      font-size: 18px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .popupBtn,
+    .popupBtn:hover,
+    .popupBtn:focus-visible,
+    .popupBtn:active{
+      width:100% !important;
+      font-size: 15px !important;
+      padding: 12px 14px !important;
+      color: #ffffff !important;
+      background: #26d07c !important;
+      border-color: #26d07c !important;
+      box-shadow: none !important;
+    }
+    .popupBtn:hover,
+    .popupBtn:focus-visible,
+    .popupBtn:active{
+      background: #1fb367 !important;
+      border-color: #1fb367 !important;
+    }
+
     textarea{
       width: 100%;
       min-height: 220px;
@@ -296,10 +365,7 @@
         </div>
 
         <div class="answerPanel">
-          <div>
-            <div class="muted">選択中（列ごと）</div>
-            <div class="current" id="currentGuess">（未選択）</div>
-          </div>
+          <div class="current" id="currentGuess">（未選択）</div>
           <div class="row">
             <span class="small">※全列が埋まると自動で判定します</span>
           </div>
@@ -325,6 +391,14 @@
         </p>
       </div>
     </aside>
+  </div>
+
+  <div id="correctPopup" class="popupOverlay">
+    <div class="popupCard ok">
+      <div class="popupTitle">正解</div>
+      <div class="popupText" id="correctPopupText"></div>
+      <button class="btn primary popupBtn" id="btnPopupNext">次の問題</button>
+    </div>
   </div>
 
 <script>
@@ -416,6 +490,7 @@ function getDisplayedOptions(hChar, correctKanji){
 }
 
 function nextQuestion(){
+  hideCorrectPopup();
   if (state.items.length === 0){
     renderEmptyTable("CSVが空です。右のCSVを入力して「CSVを適用」してください。");
     return;
@@ -578,7 +653,8 @@ function judgeAnswer(){
   state.score.total += 1;
   if (guess === correct){
     state.score.ok += 1;
-    showResult(`正解！ ${state.current.hangul} = ${correct}`, "ok");
+    hideResult();
+    showCorrectPopup(`${state.current.hangul} = ${correct}`);
     updateStat();
     state.judging = false;
     state.awaitingNextKey = true;
@@ -608,6 +684,20 @@ function hideResult(){
   box.textContent = "";
   box.style.display = "none";
   box.style.display = "";
+}
+function showCorrectPopup(text){
+  const popup = $("#correctPopup");
+  const popupText = $("#correctPopupText");
+  if (!popup || !popupText) return;
+  popupText.textContent = text;
+  popup.classList.add("show");
+  popup.removeAttribute("hidden");
+}
+function hideCorrectPopup(){
+  const popup = $("#correctPopup");
+  if (!popup) return;
+  popup.classList.remove("show");
+  popup.hidden = true;
 }
 
 function resetScore(){
@@ -646,6 +736,10 @@ $("#btnApplyCsv").addEventListener("click", applyCSV);
 $("#btnNext").addEventListener("click", nextQuestion);
 $("#btnReveal").addEventListener("click", revealAnswer);
 $("#btnResetScore").addEventListener("click", resetScore);
+$("#btnPopupNext").addEventListener("click", () => {
+  hideCorrectPopup();
+  nextQuestion();
+});
 
 window.addEventListener("keydown", (e) => {
   const target = e.target;
