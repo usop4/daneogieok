@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div class="wrap quiz-layout">
+  <div class="wrap">
     <!-- Quiz -->
     <section class="card">
       <div class="hd">
@@ -35,23 +35,6 @@
       </div>
     </section>
 
-    <!-- CSV -->
-    <aside class="card">
-      <div class="hd">
-        <div>漢字語データ</div>
-        <button class="btn" id="btnApplyCsv">CSVを適用</button>
-      </div>
-      <div class="bd">
-        <div class="filterWrap">
-          <div class="small" style="margin-bottom:8px;">子音で絞り込み</div>
-          <div class="filterButtons" id="filterButtons"></div>
-        </div>
-        <textarea id="csvInput" spellcheck="false"></textarea>
-        <p class="small">
-          ※ 辞書は「ハングル1文字 → 候補漢字集合」として内部生成します。
-        </p>
-      </div>
-    </aside>
   </div>
 
   <div id="correctPopup" class="popupOverlay">
@@ -66,12 +49,9 @@
 
 const $ = (sel) => document.querySelector(sel);
 
-const INITIAL_CONSONANT_FILTERS = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
-
 const state = {
   dict: new Map(), // hangulChar -> Set(kanjiChar)
-  allItems: [],    // { hangul, kanji }
-  items: [],       // filtered items for quiz selection
+  items: [],       // quiz selection items
   current: null,   // { hangul, kanji }
   picked: [],      // picked kanji per column index
   activeCol: null, // キーボード操作の対象列
@@ -79,7 +59,6 @@ const state = {
   judging: false,  // 自動判定の連打防止
   awaitingNextKey: false,
   popupVisible: false,
-  filter: "all",
 };
 
 function normalizeLine(line){
@@ -127,48 +106,6 @@ function updateStat(){
   }
 }
 
-function getInitialConsonant(hangulChar){
-  if (!hangulChar) return null;
-  const code = hangulChar.charCodeAt(0);
-  if (code < 0xAC00 || code > 0xD7A3) return null;
-  const index = Math.floor((code - 0xAC00) / 588);
-  const initials = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
-  return initials[index] || null;
-}
-
-function getFilteredItems(items, filterKey){
-  if (!filterKey || filterKey === "all") return items;
-  return items.filter(({ hangul }) => {
-    const firstChar = Array.from(hangul)[0];
-    return getInitialConsonant(firstChar) === filterKey;
-  });
-}
-
-function renderFilterButtons(){
-  const container = $("#filterButtons");
-  if (!container) return;
-
-  const filterKeys = INITIAL_CONSONANT_FILTERS;
-  const buttons = [
-    `<button class="btn filterBtn ${state.filter === "all" ? "active" : ""}" data-filter="all">全て</button>`,
-    ...filterKeys.map((key) => `<button class="btn filterBtn ${state.filter === key ? "active" : ""}" data-filter="${escapeAttr(key)}">${escapeHtml(key)}</button>`),
-  ];
-
-  container.innerHTML = buttons.join("");
-  container.onclick = (e) => {
-    const btn = e.target.closest(".filterBtn");
-    if (!btn) return;
-    setFilter(btn.dataset.filter);
-  };
-}
-
-function setFilter(filterKey){
-  state.filter = filterKey;
-  state.items = getFilteredItems(state.allItems, filterKey);
-  updateStat();
-  nextQuestion();
-}
-
 function sampleOne(arr){
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -202,7 +139,7 @@ function getDisplayedOptions(hChar, correctKanji){
 function nextQuestion(){
   hideCorrectPopup();
   if (state.items.length === 0){
-    renderEmptyTable("CSVが空です。右のCSVを入力して「CSVを適用」してください。");
+    renderEmptyTable("データがありません。");
     return;
   }
   state.current = sampleOne(state.items);
@@ -401,17 +338,10 @@ function closePopupAndAdvance(){
   nextQuestion();
 }
 
-function applyCSV(){
-  const text = $("#csvInput").value;
-  const items = parseCSV(text);
-
-  state.allItems = items.slice();
-  state.items = getFilteredItems(state.allItems, state.filter);
+function loadDefaultData(){
+  const items = parseCSV(DEFAULT_CSV);
+  state.items = items.slice();
   state.dict = buildDict(items);
-
-  const sampleEntries = Array.from(state.dict.entries()).slice(0, 20);
-  console.log("[quiz01] generated dict sample:", sampleEntries);
-
   updateStat();
   nextQuestion();
 }
@@ -429,10 +359,6 @@ function escapeAttr(s){
 }
 
 // init
-$("#csvInput").value = DEFAULT_CSV;
-renderFilterButtons();
-
-$("#btnApplyCsv").addEventListener("click", applyCSV);
 $("#btnNext").addEventListener("click", nextQuestion);
 $("#btnPopupNext").addEventListener("click", closePopupAndAdvance);
 
@@ -464,8 +390,8 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "Enter") nextQuestion();
 });
 
-// auto apply
-applyCSV();
+// initialize from the bundled data
+loadDefaultData();
 </script>
 </body>
 </html>
