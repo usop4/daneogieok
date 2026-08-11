@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Quiz03 - 動詞意味クイズ</title>
+    <script src="quiz03-option.js"></script>
+    <script src="quiz03-data.js"></script>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --text: #e9ecf5;
+        --muted: #aab3d6;
+        --border: rgba(255,255,255,.14);
+        --shadow: 0 10px 25px rgba(0,0,0,.35);
+        --radius: 16px;
+        --ok: #26d07c;
+        --ng: #ff5a7a;
+        --accent: #7aa2ff;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: var(--sans);
+        background: radial-gradient(1200px 800px at 20% 10%, #18244d 0%, var(--bg) 60%);
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .wrap { max-width: 900px; margin: 24px auto 60px; padding: 0 16px; }
+      .card {
+        background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .hd {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(255,255,255,.10);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: rgba(0,0,0,.15);
+        flex-wrap: wrap;
+      }
+      .bd { padding: 18px; }
+      .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      .pill {
+        font-size: 12px; color: var(--muted);
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,.04);
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-family: var(--mono);
+      }
+      .question {
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: .04em;
+        padding: 18px 14px;
+        margin-bottom: 16px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 14px;
+        background: rgba(255,255,255,.05);
+      }
+      .choices { display: grid; gap: 10px; }
+      .choice {
+        appearance: none;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 12px 14px;
+        cursor: pointer;
+        text-align: left;
+        font-size: 16px;
+        transition: transform .03s ease, background .15s ease, border-color .15s ease;
+      }
+      .choice .hangul-label {
+        display: none;
+        margin-left: 6px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .choice.revealed .hangul-label {
+        display: inline;
+      }
+      .choice:hover { background: rgba(255,255,255,.10); }
+      .choice:active { transform: translateY(1px); }
+      .choice.correct { border-color: rgba(38,208,124,.75); background: rgba(38,208,124,.16); }
+      .choice.wrong { border-color: rgba(255,90,122,.75); background: rgba(255,90,122,.14); }
+      .choice.locked { cursor: default; }
+      .hint { margin-top: 12px; color: var(--muted); font-size: 13px; }
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 10px 12px;
+        cursor: pointer;
+      }
+      .btn.primary {
+        border-color: rgba(122,162,255,.55);
+        background: rgba(122,162,255,.18);
+      }
+      @media (max-width: 720px) {
+        .question { font-size: 28px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="card">
+        <div class="hd">
+          <div class="row">
+            <strong>Quiz03</strong>
+            <span class="pill" id="statPill">-</span>
+          </div>
+          <button class="btn primary" id="nextBtn">次の問題</button>
+        </div>
+        <div class="bd">
+          <div class="question" id="questionText">-</div>
+          <div id="choices" class="choices"></div>
+          <div class="hint" id="hintText">選択肢を選んでください。</div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const state = {
+        items: [],
+        current: null,
+        answered: false,
+        score: { ok: 0, ng: 0, total: 0 }
+      };
+
+      function normalizeLine(line) {
+        return line.replace(/\r/g, '').trim();
+      }
+
+      function parseEntries(text) {
+        const items = [];
+        const lines = text.split('\n').map(normalizeLine).filter(Boolean);
+        for (const rawLine of lines) {
+          if (rawLine.startsWith('#')) continue;
+          const parts = rawLine.split(/\s+/, 2);
+          if (parts.length < 2) continue;
+          const hangul = parts[0].trim();
+          const rest = rawLine.slice(hangul.length).trim();
+          const values = rest.split(',').map((value) => value.trim()).filter(Boolean);
+          if (!hangul || values.length === 0) continue;
+          items.push({ hangul, values });
+        }
+        return items;
+      }
+
+      function shuffle(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      function getGroupCandidates(item) {
+        const groups = Array.isArray(window.QUIZ03_OPTION_GROUPS)
+          ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.some((entry) => entry.hangul === item.hangul))
+          : [];
+
+        console.log(`[quiz03] ${item.hangul} belongs to groups:`, groups.map((group) => group.name));
+
+        const selected = [];
+        for (const group of groups) {
+          const otherEntries = group.entries.filter((entry) => entry.hangul !== item.hangul);
+          if (!otherEntries.length) continue;
+          const entry = otherEntries[Math.floor(Math.random() * otherEntries.length)];
+          const value = entry.values[Math.floor(Math.random() * entry.values.length)];
+          if (!value) continue;
+          if (selected.some((candidate) => candidate.value === value)) continue;
+          selected.push({ hangul: entry.hangul, value, isCorrect: false });
+        }
+        return selected;
+      }
+
+      function pickOptions(item) {
+        const correctValue = item.values[Math.floor(Math.random() * item.values.length)];
+        const options = [{ hangul: item.hangul, value: correctValue, isCorrect: true }];
+        const seenValues = new Set([correctValue]);
+        const groupCandidates = getGroupCandidates(item).filter((entry) => !seenValues.has(entry.value));
+
+        const selected = [];
+        for (const candidate of groupCandidates) {
+          if (selected.length >= 3) break;
+          if (seenValues.has(candidate.value)) continue;
+          selected.push(candidate);
+          seenValues.add(candidate.value);
+        }
+
+        const fallbackPool = state.items
+          .filter((candidate) => candidate.hangul !== item.hangul)
+          .flatMap((candidate) => candidate.values.map((value) => ({ hangul: candidate.hangul, value })))
+          .filter((entry) => !seenValues.has(entry.value));
+
+        const fallback = shuffle(fallbackPool).filter((entry, index, arr) => arr.findIndex((candidate) => candidate.value === entry.value) === index);
+        for (const candidate of fallback) {
+          if (selected.length >= 3) break;
+          if (seenValues.has(candidate.value)) continue;
+          selected.push({ hangul: candidate.hangul, value: candidate.value, isCorrect: false });
+          seenValues.add(candidate.value);
+        }
+
+        return shuffle([...options, ...selected]).slice(0, 4);
+      }
+
+      function updateStat() {
+        document.getElementById('statPill').textContent = `問題=${state.score.total} / 正解=${state.score.ok} / 不正解=${state.score.ng}`;
+      }
+
+      function renderQuestion() {
+        if (!state.current) return;
+        document.getElementById('questionText').textContent = state.current.hangul;
+        const choicesBox = document.getElementById('choices');
+        const options = pickOptions(state.current);
+        choicesBox.innerHTML = '';
+        options.forEach((option) => {
+          const btn = document.createElement('button');
+          btn.className = 'choice';
+          btn.dataset.value = option.value;
+          btn.dataset.hangul = option.hangul;
+          btn.innerHTML = `<span class="choice-text">${option.value}</span><span class="hangul-label">（${option.hangul}）</span>`;
+          btn.addEventListener('click', () => evaluateAnswer(option.value));
+          choicesBox.appendChild(btn);
+        });
+        document.getElementById('hintText').textContent = '選択肢を選んでください。';
+        state.answered = false;
+        updateStat();
+      }
+
+      function evaluateAnswer(selectedValue) {
+        if (state.answered || !state.current) return;
+        state.answered = true;
+        const buttons = Array.from(document.querySelectorAll('.choice'));
+        const selectedIsCorrect = state.current.values.includes(selectedValue);
+        const correctAnswerText = state.current.values.join(' / ');
+        buttons.forEach((btn) => {
+          btn.classList.add('locked');
+          btn.classList.add('revealed');
+          const value = btn.dataset.value;
+          const isCorrect = state.current.values.includes(value);
+          const isSelected = value === selectedValue;
+          if (isCorrect) {
+            btn.classList.add('correct');
+          }
+          if (isSelected && !isCorrect) {
+            btn.classList.add('wrong');
+          }
+        });
+
+        if (selectedIsCorrect) {
+          state.score.ok += 1;
+        } else {
+          state.score.ng += 1;
+        }
+        state.score.total += 1;
+        document.getElementById('hintText').textContent = selectedIsCorrect ? '正解です。' : `不正解です。正解は ${correctAnswerText} です。`;
+        updateStat();
+      }
+
+      function nextQuestion() {
+        if (!state.items.length) return;
+        const index = Math.floor(Math.random() * state.items.length);
+        state.current = state.items[index];
+        renderQuestion();
+      }
+
+      document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+
+      document.addEventListener('keydown', (event) => {
+        if (!state.current || state.answered) return;
+        const key = Number(event.key);
+        if (Number.isInteger(key) && key >= 1 && key <= 4) {
+          const buttons = Array.from(document.querySelectorAll('.choice'));
+          const target = buttons[key - 1];
+          if (target) evaluateAnswer(target.dataset.value);
+        }
+      });
+
+      function init() {
+        const text = typeof DEFAULT_TXT === 'string' ? DEFAULT_TXT : '';
+        state.items = parseEntries(text);
+        updateStat();
+        nextQuestion();
+      }
+
+      init();
+    </script>
+  </body>
+</html>
