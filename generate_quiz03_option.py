@@ -6,6 +6,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import DefaultDict, List, Tuple
 
+from common_setting import FAMILY_DISPLAY_NAMES, INITIAL_FAMILY, MEDIAL_FAMILY
+
 
 def extract_default_csv(js_path: Path) -> str:
     text = js_path.read_text(encoding="utf-8")
@@ -74,60 +76,6 @@ def build_groups(entries: List[Tuple[str, List[str]]]) -> Tuple[List[Tuple[str, 
     if not valid_entries:
         return [], []
 
-    initial_family = {
-        "ㄱ": "ㄱ",
-        "ㄲ": "ㄱ",
-        "ㅋ": "ㄱ",
-        "ㄷ": "ㄷ",
-        "ㅌ": "ㄷ",
-        "ㅂ": "ㅂ",
-        "ㅍ": "ㅂ",
-        "ㅈ": "ㅈ",
-        "ㅊ": "ㅈ",
-        "ㅅ": "ㅅ",
-        "ㅆ": "ㅅ",
-        "ㅎ": "ㅎ",
-        "ㄴ": "ㄴ",
-        "ㅁ": "ㅁ",
-        "ㄹ": "ㄹ",
-        "ㅇ": "ㅇ",
-    }
-    family_display_names = {
-        "ㄱ": "ㄱ系",
-        "ㄷ": "ㄷ系",
-        "ㅂ": "ㅂ系",
-        "ㅈ": "ㅈ系",
-        "ㅅ": "ㅅ系",
-        "ㅎ": "ㅎ系",
-        "ㄴ": "ㄴ系",
-        "ㅁ": "ㅁ系",
-        "ㄹ": "ㄹ系",
-        "ㅇ": "ㅇ系",
-    }
-    medial_family = {
-        "ㅏ": "a",
-        "ㅐ": "a",
-        "ㅑ": "a",
-        "ㅒ": "a",
-        "ㅘ": "a",
-        "ㅙ": "a",
-        "ㅚ": "a",
-        "ㅓ": "e",
-        "ㅔ": "e",
-        "ㅕ": "e",
-        "ㅖ": "e",
-        "ㅝ": "e",
-        "ㅞ": "e",
-        "ㅟ": "e",
-        "ㅗ": "o",
-        "ㅛ": "o",
-        "ㅜ": "u",
-        "ㅠ": "u",
-        "ㅡ": "eu",
-        "ㅢ": "eu",
-        "ㅣ": "i",
-    }
-
     suffix_groups: DefaultDict[str, List[Tuple[str, List[str]]]] = defaultdict(list)
     for hangul, japanese_values in valid_entries:
         suffix_key = build_suffix_key(hangul)
@@ -149,13 +97,13 @@ def build_groups(entries: List[Tuple[str, List[str]]]) -> Tuple[List[Tuple[str, 
             if decomp is None:
                 continue
             initial, _ = decomp
-            family = initial_family.get(initial, initial)
+            family = INITIAL_FAMILY.get(initial, initial)
             by_family[family].append((hangul, japanese_values))
 
         for family, family_entries in by_family.items():
             if len(family_entries) < 2:
                 continue
-            display_family = family_display_names.get(family, family)
+            display_family = FAMILY_DISPLAY_NAMES.get(family, family)
             suffix_items.append((f"suffix_{suffix}_{display_family}", family_entries))
 
     suffix_items.sort(key=lambda item: (len(item[1]), item[0]))
@@ -167,10 +115,10 @@ def build_groups(entries: List[Tuple[str, List[str]]]) -> Tuple[List[Tuple[str, 
         if decomp is None:
             continue
         initial, medial = decomp
-        key = (initial_family.get(initial, initial), medial_family.get(medial, medial))
+        key = (INITIAL_FAMILY.get(initial, initial), MEDIAL_FAMILY.get(medial, medial))
         grouped[key].append((hangul, japanese_values))
 
-    grouped_items = [(f"{family_display_names.get(initial, initial)}_{medial}", entries_for_group) for (initial, medial), entries_for_group in grouped.items() if len(entries_for_group) > 1]
+    grouped_items = [(f"{FAMILY_DISPLAY_NAMES.get(initial, initial)}_{medial}", entries_for_group) for (initial, medial), entries_for_group in grouped.items() if len(entries_for_group) > 1]
     grouped_items.sort(key=lambda item: (len(item[1]), item[0]))
 
     groups = grouped_items + suffix_items
