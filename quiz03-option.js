@@ -73,7 +73,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "조르다",
         "values": [
-          "強請る, せがむ, 締める"
+          "せがむ, 締める"
         ]
       },
       {
@@ -251,7 +251,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "헤매다",
         "values": [
-          "さ迷う・彷徨う, 彷徨く"
+          "さまよう, 彷徨く"
         ]
       },
       {
@@ -483,7 +483,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "해내다",
         "values": [
-          "遣っ付ける, 打ち負かす"
+          "打ち負かす"
         ]
       },
       {
@@ -774,7 +774,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "주고받다",
         "values": [
-          "遣り取りする, 取り交わす・取交わす"
+          "取り交わす・取交わす"
         ]
       },
       {
@@ -827,7 +827,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "망설이다",
         "values": [
-          "躊躇う, 躊躇する"
+          "躊躇する"
         ]
       },
       {
@@ -950,13 +950,13 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "데치다",
         "values": [
-          "湯掻く"
+          "茹でる"
         ]
       },
       {
         "hangul": "뒤떨어지다",
         "values": [
-          "遅れる・後れる, 遅れを取る・後れを取る"
+          "遅れる, 遅れを取る"
         ]
       },
       {
@@ -1222,7 +1222,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "일으키다",
         "values": [
-          "起こす・起す, 興す"
+          "起こす, 引き起こす"
         ]
       },
       {
@@ -1257,7 +1257,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "잠그다",
         "values": [
-          "閉ざす・鎖す, 止める"
+          "閉ざす, 止める"
         ]
       },
       {
@@ -1269,7 +1269,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "잠들다",
         "values": [
-          "眠る・睡る, 寝入る"
+          "眠る, 寝入る"
         ]
       },
       {
@@ -1417,7 +1417,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "다루다",
         "values": [
-          "扱う, 鞣す, 取り上げる"
+          "扱う, 取り上げる"
         ]
       },
       {
@@ -1596,7 +1596,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "해내다",
         "values": [
-          "遣っ付ける, 打ち負かす"
+          "打ち負かす"
         ]
       },
       {
@@ -1613,7 +1613,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "잠들다",
         "values": [
-          "眠る・睡る, 寝入る"
+          "眠る, 寝入る"
         ]
       },
       {
@@ -2211,7 +2211,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "뒤떨어지다",
         "values": [
-          "遅れる・後れる, 遅れを取る・後れを取る"
+          "遅れる, 遅れを取る"
         ]
       },
       {

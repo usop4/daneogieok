@@ -6,11 +6,12 @@ from pathlib import Path
 
 HANGUL_RE = re.compile(r"[가-힣]")
 JAPANESE_RE = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]")
-BRACKETED_GLOSS_RE = re.compile(r"([^\s,、。]+)\[([^\]]+)\]")
+BRACKETED_GLOSS_RE = re.compile(r"([^\s,、。]+)[【\[]([^\]】]+)[】\]]")
 
 
 def normalize_japanese_text(text: str) -> str:
-    return BRACKETED_GLOSS_RE.sub(r"\2", text)
+    text = BRACKETED_GLOSS_RE.sub(r"\2", text)
+    return text
 
 
 def transform_line(line: str) -> str:
@@ -27,11 +28,10 @@ def transform_line(line: str) -> str:
 
     prefix = stripped[:idx]
     suffix = stripped[idx:]
-    if suffix.startswith(" "):
-        return line
+    suffix = suffix.lstrip()
 
     suffix = normalize_japanese_text(suffix)
-    if not JAPANESE_RE.match(suffix):
+    if not JAPANESE_RE.search(suffix):
         return line
 
     return f"{prefix} {suffix}"
@@ -44,9 +44,10 @@ def transform_csv_block(text: str) -> str:
 
 def rewrite_js_file(input_path: Path, output_path: Path) -> None:
     text = input_path.read_text(encoding="utf-8")
-    marker = "const DEFAULT_CSV = `"
-    if marker not in text:
-        raise ValueError(f"Could not find DEFAULT_CSV block in {input_path}")
+    markers = ["const DEFAULT_TXT = `", "const DEFAULT_CSV = `"]
+    marker = next((m for m in markers if m in text), None)
+    if marker is None:
+        raise ValueError(f"Could not find a supported DEFAULT_* block in {input_path}")
 
     start = text.index(marker) + len(marker)
     end = text.find("`", start)
@@ -60,7 +61,7 @@ def rewrite_js_file(input_path: Path, output_path: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Insert a space between the leading Hangul and the following Japanese text in quiz03 data")
+    parser = argparse.ArgumentParser(description="Normalize quiz03 Japanese gloss entries in the data file")
     parser.add_argument("--input", default="quiz03-data.js", help="Path to the input JavaScript file")
     parser.add_argument("--output", default=None, help="Path to the output JavaScript file. Defaults to overwriting the input file")
     parser.add_argument("--in-place", action="store_true", help="Overwrite the input file in place")
