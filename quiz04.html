@@ -105,8 +105,7 @@
         return shuffle(selected);
       }
 
-      function pickOptions(item) {
-        const promptValue = item.values[Math.floor(Math.random() * item.values.length)];
+      function pickOptions(item, promptValue) {
         const correctOption = {
           hangul: item.hangul,
           japanese: promptValue,
@@ -153,7 +152,7 @@
         const promptValue = state.current.values[Math.floor(Math.random() * state.current.values.length)];
         document.getElementById('questionText').textContent = promptValue;
         const choicesBox = document.getElementById('choices');
-        const options = pickOptions(state.current);
+        const options = pickOptions(state.current, promptValue);
         choicesBox.innerHTML = '';
         options.forEach((option) => {
           const btn = document.createElement('button');
@@ -197,6 +196,11 @@
         state.score.total += 1;
         document.getElementById('hintText').textContent = selectedIsCorrect ? '正解です。' : `不正解です。正解は ${correctAnswerText} です。`;
         updateStat();
+
+        const correctButton = buttons.find((btn) => state.current.hangul === btn.dataset.value);
+        if (correctButton) {
+          correctButton.addEventListener('click', nextQuestion, { once: true });
+        }
       }
 
       function nextQuestion() {

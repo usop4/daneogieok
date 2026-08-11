@@ -226,6 +226,11 @@
         state.score.total += 1;
         document.getElementById('hintText').textContent = selectedIsCorrect ? '正解です。' : `不正解です。正解は ${correctAnswerText} です。`;
         updateStat();
+
+        const correctButton = buttons.find((btn) => state.current.values.includes(btn.dataset.value));
+        if (correctButton) {
+          correctButton.addEventListener('click', nextQuestion, { once: true });
+        }
       }
 
       function nextQuestion() {
