@@ -6,119 +6,14 @@
     <title>Quiz03 - 動詞意味クイズ</title>
     <script src="quiz03-option.js"></script>
     <script src="quiz03-data.js"></script>
-    <style>
-      :root {
-        --bg: #0b1020;
-        --text: #e9ecf5;
-        --muted: #aab3d6;
-        --border: rgba(255,255,255,.14);
-        --shadow: 0 10px 25px rgba(0,0,0,.35);
-        --radius: 16px;
-        --ok: #26d07c;
-        --ng: #ff5a7a;
-        --accent: #7aa2ff;
-        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: var(--sans);
-        background: radial-gradient(1200px 800px at 20% 10%, #18244d 0%, var(--bg) 60%);
-        color: var(--text);
-        line-height: 1.5;
-      }
-      .wrap { max-width: 900px; margin: 24px auto 60px; padding: 0 16px; }
-      .card {
-        background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-      }
-      .hd {
-        padding: 14px 16px;
-        border-bottom: 1px solid rgba(255,255,255,.10);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        background: rgba(0,0,0,.15);
-        flex-wrap: wrap;
-      }
-      .bd { padding: 18px; }
-      .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-      .pill {
-        font-size: 12px; color: var(--muted);
-        border: 1px solid var(--border);
-        background: rgba(255,255,255,.04);
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-family: var(--mono);
-      }
-      .question {
-        font-size: 36px;
-        font-weight: 700;
-        letter-spacing: .04em;
-        padding: 18px 14px;
-        margin-bottom: 16px;
-        text-align: center;
-        border: 1px solid rgba(255,255,255,.12);
-        border-radius: 14px;
-        background: rgba(255,255,255,.05);
-      }
-      .choices { display: grid; gap: 10px; }
-      .choice {
-        appearance: none;
-        border: 1px solid rgba(255,255,255,.14);
-        background: rgba(255,255,255,.06);
-        color: var(--text);
-        border-radius: 12px;
-        padding: 12px 14px;
-        cursor: pointer;
-        text-align: left;
-        font-size: 16px;
-        transition: transform .03s ease, background .15s ease, border-color .15s ease;
-      }
-      .choice .hangul-label {
-        display: none;
-        margin-left: 6px;
-        color: var(--muted);
-        font-size: 13px;
-      }
-      .choice.revealed .hangul-label {
-        display: inline;
-      }
-      .choice:hover { background: rgba(255,255,255,.10); }
-      .choice:active { transform: translateY(1px); }
-      .choice.correct { border-color: rgba(38,208,124,.75); background: rgba(38,208,124,.16); }
-      .choice.wrong { border-color: rgba(255,90,122,.75); background: rgba(255,90,122,.14); }
-      .choice.locked { cursor: default; }
-      .hint { margin-top: 12px; color: var(--muted); font-size: 13px; }
-      .btn {
-        appearance: none;
-        border: 1px solid rgba(255,255,255,.14);
-        background: rgba(255,255,255,.06);
-        color: var(--text);
-        border-radius: 12px;
-        padding: 10px 12px;
-        cursor: pointer;
-      }
-      .btn.primary {
-        border-color: rgba(122,162,255,.55);
-        background: rgba(122,162,255,.18);
-      }
-      @media (max-width: 720px) {
-        .question { font-size: 28px; }
-      }
-    </style>
+    <link rel="stylesheet" href="quiz-common.css" />
   </head>
   <body>
     <div class="wrap">
       <section class="card">
         <div class="hd">
           <div class="row">
-            <strong>Quiz03</strong>
+            <strong>Quiz03 動詞（韓→日）</strong>
             <span class="pill" id="statPill">-</span>
           </div>
           <button class="btn primary" id="nextBtn">次の問題</button>
@@ -219,7 +114,7 @@
       }
 
       function updateStat() {
-        document.getElementById('statPill').textContent = `問題=${state.score.total} / 正解=${state.score.ok} / 不正解=${state.score.ng}`;
+        document.getElementById('statPill').textContent = `正解=${state.score.ok} / 不正解=${state.score.ng}`;
       }
 
       function renderQuestion() {
