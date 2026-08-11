@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Quiz03 - 動詞意味クイズ</title>
-    <script src="quiz03-option.js"></script>
     <script src="quiz03-data.js"></script>
+    <script src="quiz03-option.js"></script>
     <link rel="stylesheet" href="quiz-common.css" />
   </head>
   <body>
@@ -38,6 +38,36 @@
         return line.replace(/\r/g, '').trim();
       }
 
+      function parseOptionGroups(text) {
+        const groups = [];
+        const lines = text.split('\n').map(normalizeLine).filter(Boolean);
+        let currentGroup = null;
+
+        for (const rawLine of lines) {
+          if (rawLine.startsWith('[') && rawLine.endsWith(']')) {
+            const name = rawLine.slice(1, -1).trim();
+            if (name === 'グループなし') {
+              currentGroup = null;
+              continue;
+            }
+            currentGroup = { name, entries: [] };
+            groups.push(currentGroup);
+            continue;
+          }
+
+          if (!currentGroup) continue;
+          const parts = rawLine.split(/\s+/, 2);
+          if (parts.length < 2) continue;
+          const hangul = parts[0].trim();
+          const rest = rawLine.slice(hangul.length).trim();
+          const values = rest.split(',').map((value) => value.trim()).filter(Boolean);
+          if (!hangul || values.length === 0) continue;
+          currentGroup.entries.push({ hangul, values });
+        }
+
+        return groups;
+      }
+
       function parseEntries(text) {
         const items = [];
         const lines = text.split('\n').map(normalizeLine).filter(Boolean);
@@ -63,24 +93,55 @@
         return arr;
       }
 
+      async function loadOptionGroups() {
+        if (Array.isArray(window.QUIZ03_OPTION_GROUPS) && window.QUIZ03_OPTION_GROUPS.length) {
+          return window.QUIZ03_OPTION_GROUPS;
+        }
+
+        try {
+          const response = await fetch('quiz03-option.txt');
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const text = await response.text();
+          const groups = parseOptionGroups(text);
+          window.QUIZ03_OPTION_GROUPS = groups;
+          return groups;
+        } catch (error) {
+          console.warn('[quiz03] Failed to load option groups:', error);
+          window.QUIZ03_OPTION_GROUPS = [];
+          return [];
+        }
+      }
+
       function getGroupCandidates(item) {
         const groups = Array.isArray(window.QUIZ03_OPTION_GROUPS)
           ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.some((entry) => entry.hangul === item.hangul))
           : [];
 
-        console.log(`[quiz03] ${item.hangul} belongs to groups:`, groups.map((group) => group.name));
+        console.log(`[quiz03] 出題単語: ${item.hangul}`);
+        console.log(`[quiz03] 所属グループ:`, groups.map((group) => group.name));
+        if (groups.length) {
+          console.log(`[quiz03] グループ内単語:`, groups.map((group) => ({
+            words: (group.entries || []).map((entry) => entry.hangul)
+          })));
+        }
 
         const selected = [];
+        const seenKeys = new Set();
+
         for (const group of groups) {
-          const otherEntries = group.entries.filter((entry) => entry.hangul !== item.hangul);
-          if (!otherEntries.length) continue;
-          const entry = otherEntries[Math.floor(Math.random() * otherEntries.length)];
-          const value = entry.values[Math.floor(Math.random() * entry.values.length)];
-          if (!value) continue;
-          if (selected.some((candidate) => candidate.value === value)) continue;
-          selected.push({ hangul: entry.hangul, value, isCorrect: false });
+          const otherEntries = (group.entries || []).filter((entry) => entry.hangul !== item.hangul);
+          for (const entry of otherEntries) {
+            for (const value of entry.values || []) {
+              if (!value) continue;
+              const key = `${entry.hangul}::${value}`;
+              if (seenKeys.has(key)) continue;
+              seenKeys.add(key);
+              selected.push({ hangul: entry.hangul, value, isCorrect: false });
+            }
+          }
         }
-        return selected;
+
+        return shuffle(selected);
       }
 
       function pickOptions(item) {
@@ -186,9 +247,10 @@
         }
       });
 
-      function init() {
+      async function init() {
         const text = typeof DEFAULT_TXT === 'string' ? DEFAULT_TXT : '';
         state.items = parseEntries(text);
+        await loadOptionGroups();
         updateStat();
         nextQuestion();
       }

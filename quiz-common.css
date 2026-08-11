@@ -211,7 +211,8 @@ table.quiz td {
   display: none;
   margin-left: 6px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 18px;
+  font-weight: 600;
 }
 .choice.revealed .hangul-label { display: inline; }
 .choice.correct { border-color: rgba(38,208,124,.75); background: rgba(38,208,124,.16); }
