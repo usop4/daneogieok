@@ -737,7 +737,6 @@ const DEFAULT_CSV = `# sample
 희생자,犠牲者
 인정,認定
 책임,責任
-
-
+정확,正確
 
 `;
