@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Quiz02 - 日本語語彙からハングル選択</title>
+    <script src="quiz01-data.js"></script>
+    <script src="quiz02-data.js"></script>
+    <style>
+      :root{
+        --bg:#0b1020;
+        --text:#e9ecf5;
+        --muted:#aab3d6;
+        --border:rgba(255,255,255,.14);
+        --shadow:0 10px 25px rgba(0,0,0,.35);
+        --radius:16px;
+        --ok:#26d07c;
+        --ng:#ff5a7a;
+        --accent:#7aa2ff;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      }
+      body{
+        margin:0;
+        font-family:var(--sans);
+        background:radial-gradient(1200px 800px at 20% 10%, #18244d 0%, var(--bg) 60%);
+        color:var(--text);
+        line-height:1.5;
+      }
+      .wrap{ max-width:980px; margin:24px auto 60px; padding:0 16px; }
+      .card{ background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+      .hd{ padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.10); display:flex; align-items:center; justify-content:space-between; gap:10px; background:rgba(0,0,0,.15); flex-wrap:wrap; }
+      .bd{ padding:16px; }
+      .row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+      .btn{ appearance:none; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); color:var(--text); border-radius:12px; padding:10px 12px; cursor:pointer; transition:transform .03s ease, background .15s ease, border-color .15s ease; font-size:14px; }
+      .btn:hover{ background:rgba(255,255,255,.10); }
+      .btn:active{ transform:translateY(1px); }
+      .btn.primary{ border-color:rgba(122,162,255,.55); background:rgba(122,162,255,.18); }
+      .pill{ font-size:12px; color:var(--muted); border:1px solid var(--border); background:rgba(255,255,255,.04); padding:6px 10px; border-radius:999px; font-family:var(--mono); white-space:nowrap; }
+      .small{ font-size:12px; color:var(--muted); }
+      .tableWrap{ overflow:auto; border:1px dashed rgba(255,255,255,.18); background:rgba(0,0,0,.15); border-radius:14px; padding:0; }
+      table.quiz{ width:100%; min-width:380px; table-layout:fixed; border-collapse:separate; border-spacing:18px 10px; }
+      table.quiz td{ border:none; padding:0; text-align:center; vertical-align:top; background:transparent; }
+      .questionCell{ font-size:32px; padding:10px 8px; border-radius:14px; background:transparent; }
+      .kanjiStack{ display:flex; flex-direction:column; gap:8px; align-items:stretch; }
+      button.cellBtn{ width:100%; min-width:0; min-height:48px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18); color:var(--text); border-radius:12px; padding:10px 8px; font-size:22px; line-height:1.3; cursor:pointer; text-align:center; white-space:normal; overflow-wrap:anywhere; word-break:break-word; }
+      button.cellBtn:hover{ background:rgba(255,255,255,.08); }
+      button.cellBtn.selected{ border-color:rgba(122,162,255,.85); background:rgba(122,162,255,.18); }
+      button.cellBtn.active{ box-shadow:inset 0 0 0 1px rgba(122,162,255,.55); }
+      .cellBtn.dummy{ visibility:visible; pointer-events:none; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.18); color:transparent; min-height:48px; }
+      .answerPanel{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(0,0,0,.18); }
+      .answerPanel .current{ font-size:22px; letter-spacing:.04em; }
+      .result{ margin-top:12px; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04); font-size:14px; display:none; }
+      .result.ok{ display:block; border-color:rgba(38,208,124,.55); background:rgba(38,208,124,.12); }
+      .result.ng{ display:block; border-color:rgba(255,90,122,.55); background:rgba(255,90,122,.15); }
+      .popupOverlay{ position:fixed; inset:0; background:rgba(3,8,20,.48); display:none; align-items:center; justify-content:center; padding:20px; z-index:1000; opacity:0; visibility:hidden; pointer-events:none; transition:opacity .15s ease; }
+      .popupOverlay.show{ display:flex; opacity:1; visibility:visible; pointer-events:auto; }
+      .popupCard{ width:min(92vw, 420px); border-radius:20px; padding:24px 20px; box-shadow:var(--shadow); border:1px solid rgba(255,255,255,.16); text-align:center; color:var(--text); background:linear-gradient(135deg, rgba(240,242,245,.96), rgba(222,226,233,.96)); color:#1f2937; }
+      .popupTitle{ font-size:24px; font-weight:700; margin-bottom:10px; letter-spacing:.02em; }
+      .popupText{ font-size:18px; margin-bottom:16px; line-height:1.5; word-break:break-word; }
+      .popupBtn{ width:100% !important; font-size:15px !important; padding:12px 14px !important; color:#ffffff !important; background:#26d07c !important; border-color:#26d07c !important; box-shadow:none !important; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="card">
+        <div class="hd">
+          <div class="row">
+            <button class="btn primary" id="btnNext">次の問題 [ENTER]</button>
+            <button class="btn" id="btnReveal">答えを見る [R]</button>
+          </div>
+          <div class="pill" id="statPill">-</div>
+        </div>
+        <div class="bd">
+          <div class="tableWrap">
+            <table class="quiz" id="quizTable" aria-label="quiz table"></table>
+          </div>
+          <div class="answerPanel">
+            <div class="current" id="currentGuess">（未選択）</div>
+            <div class="row">
+              <span class="small">※全列が埋まると自動で判定します</span>
+            </div>
+          </div>
+          <div id="resultBox" class="result"></div>
+        </div>
+      </section>
+    </div>
+
+    <div id="correctPopup" class="popupOverlay">
+      <div class="popupCard">
+        <div class="popupTitle">正解</div>
+        <div class="popupText" id="correctPopupText"></div>
+        <button class="btn primary popupBtn" id="btnPopupNext">次の問題</button>
+      </div>
+    </div>
+
+    <script>
+      const $ = (sel) => document.querySelector(sel);
+
+      const state = {
+        items: [],
+        current: null,
+        picked: [],
+        activeCol: null,
+        score: { ok: 0, ng: 0, total: 0 },
+        judging: false,
+        awaitingNextKey: false,
+        popupVisible: false,
+        optionGroups: new Map(),
+      };
+
+      function normalizeLine(line){ return line.replace(/\r/g, "").trim(); }
+
+      function parseCSV(text){
+        const items = [];
+        const lines = text.split("\n").map(normalizeLine).filter((line) => line.length > 0);
+        for (const line of lines){
+          if (line.startsWith("#")) continue;
+          const idx = line.indexOf(",");
+          if (idx === -1) continue;
+          const hangul = line.slice(0, idx).trim();
+          const kanji = line.slice(idx + 1).trim();
+          if (!hangul || !kanji) continue;
+          items.push({ hangul, kanji });
+        }
+        return items;
+      }
+
+      function parsePairGroups(text){
+        const groups = [];
+        const lines = text.split("\n").map(normalizeLine).filter((line) => line.length > 0);
+        for (const line of lines){
+          const parts = line.split(/\s+/).filter(Boolean);
+          if (parts.length > 0) groups.push(parts);
+        }
+        return groups;
+      }
+
+      function buildOptionGroups(groups){
+        const map = new Map();
+        for (const group of groups){
+          for (const ch of group){
+            if (!map.has(ch)) map.set(ch, group);
+          }
+        }
+        return map;
+      }
+
+      function updateStat(){
+        $("#statPill").textContent = `items=${state.items.length} / ok=${state.score.ok} ng=${state.score.ng}`;
+      }
+
+      function sampleOne(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+
+      function shuffle(arr){
+        for (let i = arr.length - 1; i > 0; i--){
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      function getDisplayedOptions(correctHangul){
+        const base = Array.from(state.optionGroups.get(correctHangul) || [correctHangul]);
+        if (!base.includes(correctHangul)) base.unshift(correctHangul);
+        const unique = Array.from(new Set(base));
+        const limited = unique.filter((ch) => ch !== correctHangul).slice(0, 6);
+        const opts = [correctHangul, ...limited];
+        shuffle(opts);
+        return opts.slice(0, 7);
+      }
+
+      function nextQuestion(){
+        hideCorrectPopup();
+        if (state.items.length === 0){
+          renderEmptyTable("CSVが空です。quiz01-data.js を確認してください。" );
+          return;
+        }
+        state.current = sampleOne(state.items);
+        state.picked = Array.from(state.current.hangul).map(() => null);
+        state.activeCol = 0;
+        state.judging = false;
+        state.awaitingNextKey = false;
+        renderTable();
+        hideResult();
+      }
+
+      function renderEmptyTable(msg){
+        const t = $("#quizTable");
+        t.innerHTML = `<tr><td style="text-align:left;font-size:14px;color:#aab3d6;">${escapeHtml(msg)}</td></tr>`;
+        $("#currentGuess").textContent = "（未選択）";
+      }
+
+      function getNextColumn(col){
+        const start = col + 1;
+        for (let i = start; i < state.picked.length; i++){ if (!state.picked[i]) return i; }
+        for (let i = 0; i < col; i++){ if (!state.picked[i]) return i; }
+        return col;
+      }
+
+      function renderTable(){
+        const japaneseChars = Array.from(state.current.kanji);
+        const hangulChars = Array.from(state.current.hangul);
+        const cols = hangulChars.length;
+
+        let html = "<tr>";
+        for (let c = 0; c < cols; c++){
+          html += `<td><div class="questionCell">${escapeHtml(japaneseChars[c] || "")}</div></td>`;
+        }
+        html += "</tr>";
+
+        html += "<tr>";
+        for (let c = 0; c < cols; c++){
+          const correctHangul = hangulChars[c];
+          const opts = getDisplayedOptions(correctHangul);
+          const filledOpts = [...opts];
+          while (filledOpts.length < 7) filledOpts.push("");
+          html += `<td><div class="kanjiStack">${filledOpts.map((k, idx) => {
+            if (!k) return `<div class="cellBtn dummy" aria-hidden="true"></div>`;
+            return `<button class="cellBtn" data-col="${c}" data-h="${escapeAttr(k)}">${idx + 1}. ${escapeHtml(k)}</button>`;
+          }).join("")}</div></td>`;
+        }
+        html += "</tr>";
+
+        const table = $("#quizTable");
+        table.innerHTML = html;
+
+        const updateActiveColumnHighlight = () => {
+          table.querySelectorAll(".cellBtn").forEach((b) => b.classList.remove("active"));
+          if (state.activeCol === null || state.activeCol === undefined) return;
+          table.querySelectorAll(`.cellBtn[data-col="${state.activeCol}"]`).forEach((b) => b.classList.add("active"));
+        };
+
+        table.onclick = (e) => {
+          const btn = e.target.closest(".cellBtn");
+          if (!btn) return;
+          const col = Number(btn.dataset.col);
+          const ch = btn.dataset.h;
+          state.activeCol = col;
+          state.picked[col] = ch;
+          table.querySelectorAll(`.cellBtn[data-col="${col}"]`).forEach((b) => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          const nextCol = getNextColumn(col);
+          state.activeCol = nextCol;
+          updateActiveColumnHighlight();
+          renderCurrentGuess();
+          maybeAutoJudge();
+        };
+
+        updateActiveColumnHighlight();
+        renderCurrentGuess();
+        updateStat();
+      }
+
+      function selectOptionByKey(key){
+        if (!state.current) return;
+        const col = state.activeCol !== null && state.activeCol !== undefined ? state.activeCol : state.picked.findIndex((v) => v === null);
+        if (col === -1) return;
+        state.activeCol = col;
+        const buttons = $("#quizTable").querySelectorAll(`.cellBtn[data-col="${col}"]`);
+        const options = Array.from(buttons).map((b) => b.dataset.h);
+        const index = key === "0" ? 9 : Number(key) - 1;
+        if (!options[index]) return;
+        const ch = options[index];
+        state.picked[col] = ch;
+        buttons.forEach((b) => b.classList.remove("selected"));
+        buttons[index].classList.add("selected");
+        const nextCol = getNextColumn(col);
+        state.activeCol = nextCol;
+        $("#quizTable").querySelectorAll(".cellBtn").forEach((b) => b.classList.remove("active"));
+        if (state.activeCol !== null && state.activeCol !== undefined) {
+          $("#quizTable").querySelectorAll(`.cellBtn[data-col="${state.activeCol}"]`).forEach((b) => b.classList.add("active"));
+        }
+        renderCurrentGuess();
+        maybeAutoJudge();
+      }
+
+      function renderCurrentGuess(){
+        const guess = state.picked.every((x) => x) ? state.picked.join("") : state.picked.map((x) => x || "＿").join("");
+        $("#currentGuess").textContent = guess;
+      }
+
+      function maybeAutoJudge(){
+        if (!state.current) return;
+        if (state.judging) return;
+        if (!state.picked.every((x) => x)) return;
+        state.judging = true;
+        judgeAnswer();
+      }
+
+      function judgeAnswer(){
+        const guess = state.picked.join("");
+        const correct = state.current.hangul;
+        state.score.total += 1;
+        if (guess === correct){
+          state.score.ok += 1;
+          hideResult();
+          showCorrectPopup(`${state.current.kanji} = ${correct}`);
+          updateStat();
+          state.judging = false;
+          state.awaitingNextKey = true;
+        } else {
+          state.score.ng += 1;
+          showResult(`不正解：あなたの答え=${guess} / 正解=${correct} （${state.current.kanji}）`, "ng");
+          updateStat();
+          setTimeout(() => { state.judging = false; }, 50);
+        }
+      }
+
+      function revealAnswer(){
+        if (!state.current) return;
+        showResult(`答え：${state.current.kanji} = ${state.current.hangul}`, "ok");
+      }
+
+      function showResult(text, kind){
+        const box = $("#resultBox");
+        box.className = "result " + (kind || "");
+        box.textContent = text;
+      }
+      function hideResult(){
+        const box = $("#resultBox");
+        box.className = "result";
+        box.textContent = "";
+        box.style.display = "none";
+        box.style.display = "";
+      }
+      function showCorrectPopup(text){
+        const popup = $("#correctPopup");
+        const popupText = $("#correctPopupText");
+        if (!popup || !popupText) return;
+        popupText.textContent = text;
+        popup.classList.add("show");
+        popup.removeAttribute("hidden");
+        state.popupVisible = true;
+      }
+      function hideCorrectPopup(){
+        const popup = $("#correctPopup");
+        if (!popup) return;
+        popup.classList.remove("show");
+        popup.hidden = true;
+        state.popupVisible = false;
+      }
+
+      function init(){
+        const items = parseCSV(DEFAULT_CSV);
+        state.items = items.slice();
+        state.optionGroups = buildOptionGroups(parsePairGroups(PAIR));
+        updateStat();
+        nextQuestion();
+      }
+
+      $("#btnNext").addEventListener("click", nextQuestion);
+      $("#btnReveal").addEventListener("click", revealAnswer);
+      $("#btnPopupNext").addEventListener("click", () => {
+        hideCorrectPopup();
+        nextQuestion();
+      });
+
+      window.addEventListener("keydown", (e) => {
+        const target = e.target;
+        if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return;
+        if (state.popupVisible && e.key === "Enter") {
+          e.preventDefault();
+          hideCorrectPopup();
+          nextQuestion();
+          return;
+        }
+        if (state.awaitingNextKey) {
+          state.awaitingNextKey = false;
+          nextQuestion();
+          return;
+        }
+        if (/^[0-9]$/.test(e.key)) {
+          e.preventDefault();
+          selectOptionByKey(e.key);
+          return;
+        }
+        if (e.key === "Enter") nextQuestion();
+        if (e.key.toLowerCase() === "r") revealAnswer();
+      });
+
+      function escapeHtml(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+      function escapeAttr(s){ return escapeHtml(s); }
+
+      init();
+    </script>
+  </body>
+</html>
