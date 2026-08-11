@@ -7,6 +7,7 @@
     <script src="quiz01-data.js"></script>
     <script src="quiz02-data.js"></script>
     <link rel="stylesheet" href="quiz-common.css" />
+    <script src="quiz-common.js"></script>
   </head>
   <body>
     <div class="wrap">
@@ -49,7 +50,7 @@
     </div>
 
     <script>
-      const $ = (sel) => document.querySelector(sel);
+      const $ = quizCommon.$;
 
       const state = {
         items: [],
@@ -63,7 +64,7 @@
         optionGroups: new Map(),
       };
 
-      function normalizeLine(line){ return line.replace(/\r/g, "").trim(); }
+      function normalizeLine(line){ return quizCommon.normalizeLine(line); }
 
       function parseCSV(text){
         const items = [];
@@ -101,21 +102,12 @@
       }
 
       function updateStat(){
-        const pill = $("#statPill");
-        if (pill) {
-          pill.textContent = `正解=${state.score.ok} / 不正解=${state.score.ng}`;
-        }
+        quizCommon.updateStat("#statPill", state.score);
       }
 
-      function sampleOne(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+      function sampleOne(arr){ return quizCommon.sampleOne(arr); }
 
-      function shuffle(arr){
-        for (let i = arr.length - 1; i > 0; i--){
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-      }
+      function shuffle(arr){ return quizCommon.shuffle(arr); }
 
       function getDisplayedOptions(correctHangul){
         const base = Array.from(state.optionGroups.get(correctHangul) || [correctHangul]);
@@ -123,8 +115,7 @@
         const unique = Array.from(new Set(base));
         const limited = unique.filter((ch) => ch !== correctHangul).slice(0, 6);
         const opts = [correctHangul, ...limited];
-        shuffle(opts);
-        return opts.slice(0, 7);
+        return shuffle(opts).slice(0, 7);
       }
 
       function nextQuestion(){
@@ -143,8 +134,7 @@
       }
 
       function renderEmptyTable(msg){
-        const t = $("#quizTable");
-        t.innerHTML = `<tr><td style="text-align:left;font-size:14px;color:#aab3d6;">${escapeHtml(msg)}</td></tr>`;
+        quizCommon.renderEmptyTable("#quizTable", msg);
       }
 
       function getNextColumn(col){
@@ -318,8 +308,8 @@
         if (e.key === "Enter") nextQuestion();
       });
 
-      function escapeHtml(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
-      function escapeAttr(s){ return escapeHtml(s); }
+      function escapeHtml(s){ return quizCommon.escapeHtml(s); }
+      function escapeAttr(s){ return quizCommon.escapeAttr(s); }
 
       init();
     </script>

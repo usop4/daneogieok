@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Quiz01 - 漢字語（韓→日）</title>
   <link rel="stylesheet" href="quiz-common.css" />
+  <script src="quiz-common.js"></script>
 </head>
 
 <body>
@@ -53,7 +54,7 @@
 
 <script>
 
-const $ = (sel) => document.querySelector(sel);
+const $ = quizCommon.$;
 
 const state = {
   dict: new Map(), // hangulChar -> Set(kanjiChar)
@@ -68,7 +69,7 @@ const state = {
 };
 
 function normalizeLine(line){
-  return line.replace(/\r/g, "").trim();
+  return quizCommon.normalizeLine(line);
 }
 
 function parseCSV(text){
@@ -106,22 +107,15 @@ function buildDict(items){
 }
 
 function updateStat(){
-  const pill = $("#statPill");
-  if (pill) {
-    pill.textContent = `正解=${state.score.ok} / 不正解=${state.score.ng}`;
-  }
+  quizCommon.updateStat("#statPill", state.score);
 }
 
 function sampleOne(arr){
-  return arr[Math.floor(Math.random() * arr.length)];
+  return quizCommon.sampleOne(arr);
 }
 
 function shuffle(arr){
-  for (let i=arr.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
-  }
-  return arr;
+  return quizCommon.shuffle(arr);
 }
 
 function getDisplayedOptions(hChar, correctKanji){
@@ -158,10 +152,7 @@ function nextQuestion(){
 }
 
 function renderEmptyTable(msg){
-  const t = $("#quizTable");
-  t.innerHTML = `
-    <tr><td style="text-align:left;font-size:14px;color:#aab3d6;">${escapeHtml(msg)}</td></tr>
-  `;
+  quizCommon.renderEmptyTable("#quizTable", msg);
 }
 
 function getNextColumn(col){
@@ -353,15 +344,10 @@ function loadDefaultData(){
 }
 
 function escapeHtml(s){
-  return String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  return quizCommon.escapeHtml(s);
 }
 function escapeAttr(s){
-  return escapeHtml(s);
+  return quizCommon.escapeAttr(s);
 }
 
 // init

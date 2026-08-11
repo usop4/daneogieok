@@ -7,6 +7,7 @@
     <script src="quiz03-data.js"></script>
     <script src="quiz03-option.js"></script>
     <link rel="stylesheet" href="quiz-common.css" />
+    <script src="quiz-common.js"></script>
   </head>
   <body>
     <div class="wrap">
@@ -42,7 +43,7 @@
       };
 
       function normalizeLine(line) {
-        return line.replace(/\r/g, '').trim();
+        return quizCommon.normalizeLine(line);
       }
 
       function parseEntries(text) {
@@ -62,12 +63,7 @@
       }
 
       function shuffle(array) {
-        const arr = [...array];
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
+        return quizCommon.shuffle(array);
       }
 
       async function loadOptionGroups() {
@@ -151,7 +147,7 @@
       }
 
       function updateStat() {
-        document.getElementById('statPill').textContent = `正解=${state.score.ok} / 不正解=${state.score.ng}`;
+        quizCommon.updateStat('#statPill', state.score);
       }
 
       function renderQuestion() {
