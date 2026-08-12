@@ -67,7 +67,9 @@ def build_suffix_key(hangul: str) -> str | None:
     return suffix
 
 
-def build_groups(entries: List[Tuple[str, List[str]]]) -> Tuple[List[Tuple[str, List[Tuple[str, List[str]]]]], List[Tuple[str, List[str]]]]:
+def build_groups(
+    entries: List[Tuple[str, List[str]]],
+) -> Tuple[List[Tuple[str, List[Tuple[str, List[str]]]]], List[Tuple[str, List[str]]]]:
     valid_entries: List[Tuple[str, List[str]]] = []
     for hangul, japanese_values in entries:
         if hangul and re.fullmatch(r"[가-힣]+", hangul):

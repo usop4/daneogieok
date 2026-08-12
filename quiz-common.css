@@ -207,11 +207,14 @@ table.quiz td {
   font-size: 16px;
   transition: transform .03s ease, background .15s ease, border-color .15s ease;
 }
+.choice .choice-text {
+  font-size: 18px;
+}
 .choice .hangul-label {
   display: none;
   margin-left: 6px;
   color: var(--muted);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
 }
 .choice.revealed .hangul-label { display: inline; }

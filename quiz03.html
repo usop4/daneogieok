@@ -92,6 +92,17 @@
         return items;
       }
 
+      function parseExcludedWords(text) {
+        const excludedWords = new Set();
+        const lines = text.split('\n').map(normalizeLine).filter(Boolean);
+        for (const rawLine of lines) {
+          if (rawLine.startsWith('#')) continue;
+          const hangul = rawLine.split(/\s+/, 1)[0];
+          if (hangul) excludedWords.add(hangul);
+        }
+        return excludedWords;
+      }
+
       function shuffle(array) {
         return quizCommon.shuffle(array);
       }
@@ -115,6 +126,29 @@
         }
       }
 
+      async function loadExcludedWords() {
+        if (window.QUIZ03_EXCLUDED_WORDS instanceof Set) {
+          return window.QUIZ03_EXCLUDED_WORDS;
+        }
+
+        try {
+          const response = await fetch('quiz03-exclude.txt');
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const text = await response.text();
+          const excludedWords = parseExcludedWords(text);
+          window.QUIZ03_EXCLUDED_WORDS = excludedWords;
+          return excludedWords;
+        } catch (error) {
+          console.warn('[quiz03] Failed to load exclusion words:', error);
+          window.QUIZ03_EXCLUDED_WORDS = new Set();
+          return window.QUIZ03_EXCLUDED_WORDS;
+        }
+      }
+
+      function isExcludedWord(word) {
+        return window.QUIZ03_EXCLUDED_WORDS instanceof Set && window.QUIZ03_EXCLUDED_WORDS.has(word);
+      }
+
       function getGroupCandidates(item) {
         const groups = Array.isArray(window.QUIZ03_OPTION_GROUPS)
           ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.some((entry) => entry.hangul === item.hangul))
@@ -134,6 +168,7 @@
         for (const group of groups) {
           const otherEntries = (group.entries || []).filter((entry) => entry.hangul !== item.hangul);
           for (const entry of otherEntries) {
+            if (isExcludedWord(entry.hangul)) continue;
             for (const value of entry.values || []) {
               if (!value) continue;
               const key = `${entry.hangul}::${value}`;
@@ -163,6 +198,7 @@
 
         const fallbackPool = state.items
           .filter((candidate) => candidate.hangul !== item.hangul)
+          .filter((candidate) => !isExcludedWord(candidate.hangul))
           .flatMap((candidate) => candidate.values.map((value) => ({ hangul: candidate.hangul, value })))
           .filter((entry) => !seenValues.has(entry.value));
 
@@ -259,6 +295,7 @@
         const text = typeof DEFAULT_TXT === 'string' ? DEFAULT_TXT : '';
         state.items = parseEntries(text);
         await loadOptionGroups();
+        await loadExcludedWords();
         updateStat();
         nextQuestion();
       }

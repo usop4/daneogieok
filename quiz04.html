@@ -62,6 +62,17 @@
         return items;
       }
 
+      function parseExcludedWords(text) {
+        const excludedWords = new Set();
+        const lines = text.split('\n').map(normalizeLine).filter(Boolean);
+        for (const rawLine of lines) {
+          if (rawLine.startsWith('#')) continue;
+          const hangul = rawLine.split(/\s+/, 1)[0];
+          if (hangul) excludedWords.add(hangul);
+        }
+        return excludedWords;
+      }
+
       function shuffle(array) {
         return quizCommon.shuffle(array);
       }
@@ -72,6 +83,29 @@
         }
 
         return [];
+      }
+
+      async function loadExcludedWords() {
+        if (window.QUIZ03_EXCLUDED_WORDS instanceof Set) {
+          return window.QUIZ03_EXCLUDED_WORDS;
+        }
+
+        try {
+          const response = await fetch('quiz03-exclude.txt');
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const text = await response.text();
+          const excludedWords = parseExcludedWords(text);
+          window.QUIZ03_EXCLUDED_WORDS = excludedWords;
+          return excludedWords;
+        } catch (error) {
+          console.warn('[quiz04] Failed to load exclusion words:', error);
+          window.QUIZ03_EXCLUDED_WORDS = new Set();
+          return window.QUIZ03_EXCLUDED_WORDS;
+        }
+      }
+
+      function isExcludedWord(word) {
+        return window.QUIZ03_EXCLUDED_WORDS instanceof Set && window.QUIZ03_EXCLUDED_WORDS.has(word);
       }
 
       function getGroupCandidates(item) {
@@ -94,6 +128,7 @@
           const otherEntries = (group.entries || []).filter((entry) => entry.hangul !== item.hangul);
           for (const entry of otherEntries) {
             if (!entry.hangul) continue;
+            if (isExcludedWord(entry.hangul)) continue;
             const key = entry.hangul;
             if (seenKeys.has(key)) continue;
             seenKeys.add(key);
@@ -128,6 +163,7 @@
 
         const fallbackPool = state.items
           .filter((candidate) => candidate.hangul !== item.hangul)
+          .filter((candidate) => !isExcludedWord(candidate.hangul))
           .map((candidate) => ({
             hangul: candidate.hangul,
             japanese: candidate.values[0] || '',
@@ -229,6 +265,7 @@
         const text = typeof DEFAULT_TXT === 'string' ? DEFAULT_TXT : '';
         state.items = parseEntries(text);
         await loadOptionGroups();
+        await loadExcludedWords();
         updateStat();
         nextQuestion();
       }
