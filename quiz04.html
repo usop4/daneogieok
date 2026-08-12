@@ -80,6 +80,10 @@
         return quizCommon.shuffle(array);
       }
 
+      function sortHangulOptions(options) {
+        return [...options].sort((a, b) => a.hangul.localeCompare(b.hangul, 'ko'));
+      }
+
       async function loadOptionGroups() {
         if (Array.isArray(window.QUIZ03_OPTION_GROUPS) && window.QUIZ03_OPTION_GROUPS.length) {
           return window.QUIZ03_OPTION_GROUPS;
@@ -182,7 +186,7 @@
           seenValues.add(candidate.hangul);
         }
 
-        return shuffle([correctOption, ...selected]).slice(0, 4);
+        return sortHangulOptions([correctOption, ...selected]).slice(0, 4);
       }
 
       function updateStat() {

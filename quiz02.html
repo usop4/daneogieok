@@ -133,13 +133,17 @@
 
       function shuffle(arr){ return quizCommon.shuffle(arr); }
 
+      function sortHangulOptions(options){
+        return [...options].sort((a, b) => a.localeCompare(b, "ko"));
+      }
+
       function getDisplayedOptions(correctHangul){
         const base = Array.from(state.optionGroups.get(correctHangul) || [correctHangul]);
         if (!base.includes(correctHangul)) base.unshift(correctHangul);
         const unique = Array.from(new Set(base));
         const limited = unique.filter((ch) => ch !== correctHangul).slice(0, 6);
         const opts = [correctHangul, ...limited];
-        return shuffle(opts).slice(0, 7);
+        return sortHangulOptions(opts).slice(0, 7);
       }
 
       function nextQuestion(){
