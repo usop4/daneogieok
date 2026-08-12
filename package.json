@@ -1,0 +1,14 @@
+{
+  "name": "daneogieok-quiz",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test:data": "playwright test tests/data-integrity.spec.js",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}

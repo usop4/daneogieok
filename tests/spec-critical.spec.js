@@ -1,0 +1,70 @@
+const { test, expect } = require("@playwright/test");
+
+async function answerColumnsWithKeyOne(page, count) {
+  for (let i = 0; i < count; i += 1) {
+    await page.keyboard.press("1");
+  }
+}
+
+async function waitForQuiz01Or02Evaluation(page) {
+  await page.waitForFunction(() => {
+    const popup = document.querySelector("#correctPopup");
+    const feedback = document.querySelector("#answerFeedback");
+    const popupShown = Boolean(popup && popup.classList.contains("show"));
+    const hasWrongFeedback = Boolean(feedback && /不正解/.test(feedback.textContent || ""));
+    return popupShown || hasWrongFeedback;
+  }, { timeout: 3000 });
+}
+
+test.describe("Quiz01/Quiz02 key and auto judge", () => {
+  test("Quiz01 supports number key selection and auto judge", async ({ page }) => {
+    await page.goto("/quiz01.html");
+    await expect(page.locator("#quizTable .hangulCell").first()).toBeVisible();
+
+    await page.keyboard.press("1");
+    await expect(page.locator("#quizTable .cellBtn.selected")).toHaveCount(1);
+
+    const columnCount = await page.locator("#quizTable .hangulCell").count();
+    await answerColumnsWithKeyOne(page, columnCount - 1);
+    await waitForQuiz01Or02Evaluation(page);
+
+    await expect(page.locator("#statPill")).toContainText("正解=");
+  });
+
+  test("Quiz02 supports Enter to move to next question", async ({ page }) => {
+    await page.goto("/quiz02.html");
+    await expect(page.locator("#quizTable .questionCell").first()).toBeVisible();
+
+    await page.keyboard.press("1");
+    await expect(page.locator("#quizTable .cellBtn.selected")).toHaveCount(1);
+
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#quizTable .cellBtn.selected")).toHaveCount(0);
+  });
+});
+
+test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
+  test("Quiz03 reveals labels and marks correctness after answering", async ({ page }) => {
+    await page.goto("/quiz03.html");
+    await expect(page.locator("#choices .choice")).toHaveCount(4);
+    await expect(page.locator("#choices .choice .hangul-label").first()).toBeHidden();
+
+    await page.keyboard.press("1");
+
+    await expect(page.locator("#choices .choice.revealed")).toHaveCount(4);
+    await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
+    await expect(page.locator("#choices .choice .hangul-label").first()).toBeVisible();
+  });
+
+  test("Quiz04 reveals labels and marks correctness after answering", async ({ page }) => {
+    await page.goto("/quiz04.html");
+    await expect(page.locator("#choices .choice")).toHaveCount(4);
+    await expect(page.locator("#choices .choice .hangul-label").first()).toBeHidden();
+
+    await page.keyboard.press("1");
+
+    await expect(page.locator("#choices .choice.revealed")).toHaveCount(4);
+    await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
+    await expect(page.locator("#choices .choice .hangul-label").first()).toBeVisible();
+  });
+});
