@@ -39,6 +39,7 @@
         items: [],
         questionOrder: [],
         questionIndex: 0,
+        progress: null,
         current: null,
         answered: false,
         score: { ok: 0, ng: 0, total: 0 }
@@ -189,7 +190,23 @@
       }
 
       function resetQuestionOrder() {
-        state.questionOrder = quizCommon.shuffle(state.items.map((_, index) => index));
+        state.questionOrder = state.progress
+          ? state.progress.buildQuestionOrder(state.items, 'random')
+          : quizCommon.shuffle(state.items.map((_, index) => index));
+        state.questionIndex = 0;
+      }
+
+      function resetQuestionOrderForStartup() {
+        state.questionOrder = state.progress
+          ? state.progress.buildQuestionOrder(state.items, 'startup')
+          : quizCommon.shuffle(state.items.map((_, index) => index));
+        state.questionIndex = 0;
+      }
+
+      function resetQuestionOrderPrioritized() {
+        state.questionOrder = state.progress
+          ? state.progress.buildQuestionOrder(state.items, 'prioritize')
+          : quizCommon.shuffle(state.items.map((_, index) => index));
         state.questionIndex = 0;
       }
 
@@ -249,8 +266,13 @@
           state.score.ok += 1;
         } else {
           state.score.ng += 1;
+          console.log('[quiz04] 不正解単語:', state.current.hangul);
         }
         state.score.total += 1;
+        if (state.progress) {
+          state.progress.recordOutcome(state.current, selectedIsCorrect);
+          state.progress.persist();
+        }
         document.getElementById('hintText').textContent = selectedIsCorrect ? '正解です。' : `不正解です。正解は ${correctAnswerText} です。`;
         updateStat();
 
@@ -267,6 +289,15 @@
       }
 
       document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+      document.getElementById('statPill').addEventListener('click', () => {
+        if (!state.items.length) return;
+        const incorrectWords = state.progress ? state.progress.getIncorrectKeys(state.items) : [];
+        console.log('[quiz04] 不正解単語一覧:', incorrectWords);
+        if (state.progress) state.progress.resetForStatPill();
+        resetQuestionOrderPrioritized();
+        updateStat();
+        nextQuestion();
+      });
 
       document.addEventListener('keydown', (event) => {
         if (!state.current || state.answered) return;
@@ -281,9 +312,16 @@
       async function init() {
         const text = typeof DEFAULT_TXT === 'string' ? DEFAULT_TXT : '';
         state.items = parseEntries(text);
+        state.progress = quizCommon.createOutcomeProgress({
+          storageKey: 'quiz04-progress-v1',
+          getItemKey: (item) => item?.hangul,
+          score: state.score,
+          stickyNg: true
+        });
+        state.progress.load();
         await loadOptionGroups();
         await loadExcludedWords();
-        resetQuestionOrder();
+        resetQuestionOrderForStartup();
         updateStat();
         nextQuestion();
       }

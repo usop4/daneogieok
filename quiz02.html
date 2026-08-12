@@ -56,6 +56,7 @@
         items: [],
         questionOrder: [],
         questionIndex: 0,
+        progress: null,
         current: null,
         picked: [],
         activeCol: null,
@@ -108,7 +109,23 @@
       }
 
       function resetQuestionOrder(){
-        state.questionOrder = shuffle(state.items.map((_, index) => index));
+        state.questionOrder = state.progress
+          ? state.progress.buildQuestionOrder(state.items, "random")
+          : shuffle(state.items.map((_, index) => index));
+        state.questionIndex = 0;
+      }
+
+      function resetQuestionOrderForStartup(){
+        state.questionOrder = state.progress
+          ? state.progress.buildQuestionOrder(state.items, "startup")
+          : shuffle(state.items.map((_, index) => index));
+        state.questionIndex = 0;
+      }
+
+      function resetQuestionOrderPrioritized(){
+        state.questionOrder = state.progress
+          ? state.progress.buildQuestionOrder(state.items, "prioritize")
+          : shuffle(state.items.map((_, index) => index));
         state.questionIndex = 0;
       }
 
@@ -249,12 +266,21 @@
           hideResult();
           showCorrectPopup(`${state.current.kanji} = ${correct}`);
           updateStat();
+          if (state.progress) {
+            state.progress.recordOutcome(state.current, true);
+            state.progress.persist();
+          }
           state.judging = false;
           state.awaitingNextKey = true;
         } else {
           state.score.ng += 1;
+          console.log("[quiz02] 不正解単語:", state.current.hangul);
           showResult(`不正解：${guess} / 正解=${correct}`, "ng");
           updateStat();
+          if (state.progress) {
+            state.progress.recordOutcome(state.current, false);
+            state.progress.persist();
+          }
           setTimeout(() => { state.judging = false; }, 50);
         }
       }
@@ -290,7 +316,14 @@
         const items = parseCSV(DEFAULT_CSV);
         state.items = items.slice();
         state.optionGroups = buildOptionGroups(parsePairGroups(PAIR));
-        resetQuestionOrder();
+        state.progress = quizCommon.createOutcomeProgress({
+          storageKey: "quiz02-progress-v1",
+          getItemKey: (item) => item?.hangul,
+          score: state.score,
+          stickyNg: true
+        });
+        state.progress.load();
+        resetQuestionOrderForStartup();
         updateStat();
         nextQuestion();
       }
@@ -298,6 +331,15 @@
       $("#btnNext").addEventListener("click", nextQuestion);
       $("#btnPopupNext").addEventListener("click", () => {
         hideCorrectPopup();
+        nextQuestion();
+      });
+      $("#statPill").addEventListener("click", () => {
+        if (!state.items.length) return;
+        const incorrectWords = state.progress ? state.progress.getIncorrectKeys(state.items) : [];
+        console.log("[quiz02] 不正解単語一覧:", incorrectWords);
+        if (state.progress) state.progress.resetForStatPill();
+        resetQuestionOrderPrioritized();
+        updateStat();
         nextQuestion();
       });
 
