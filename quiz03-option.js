@@ -466,7 +466,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "올리다",
         "values": [
-          "上げる、上げる・挙げる"
+          "上げる・挙げる"
         ]
       }
     ]
@@ -570,13 +570,13 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "무너지다",
         "values": [
-          "崩れる、頽れる"
+          "崩れる"
         ]
       },
       {
         "hangul": "묻히다",
         "values": [
-          "埋まる、畳まれる"
+          "埋まる"
         ]
       },
       {
@@ -1682,7 +1682,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "올리다",
         "values": [
-          "上げる、上げる・挙げる"
+          "上げる・挙げる"
         ]
       }
     ]
@@ -2246,7 +2246,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "무너지다",
         "values": [
-          "崩れる、頽れる"
+          "崩れる"
         ]
       },
       {

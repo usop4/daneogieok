@@ -59,6 +59,8 @@ const $ = quizCommon.$;
 const state = {
   dict: new Map(), // hangulChar -> Set(kanjiChar)
   items: [],       // quiz selection items
+  questionOrder: [],
+  questionIndex: 0,
   current: null,   // { hangul, kanji }
   picked: [],      // picked kanji per column index
   activeCol: null, // キーボード操作の対象列
@@ -110,6 +112,11 @@ function updateStat(){
   quizCommon.updateStat("#statPill", state.score);
 }
 
+function resetQuestionOrder(){
+  state.questionOrder = shuffle(state.items.map((_, index) => index));
+  state.questionIndex = 0;
+}
+
 function sampleOne(arr){
   return quizCommon.sampleOne(arr);
 }
@@ -142,7 +149,14 @@ function nextQuestion(){
     renderEmptyTable("データがありません。");
     return;
   }
-  state.current = sampleOne(state.items);
+  if (!state.questionOrder.length || state.questionIndex >= state.questionOrder.length){
+    resetQuestionOrder();
+  }
+
+  const nextIndex = state.questionOrder[state.questionIndex];
+  state.questionIndex += 1;
+  state.current = state.items[nextIndex] || null;
+  if (!state.current) return;
   state.picked = Array.from(state.current.hangul).map(() => null);
   state.activeCol = 0;
   state.judging = false;
@@ -339,6 +353,7 @@ function loadDefaultData(){
   const items = parseCSV(DEFAULT_CSV);
   state.items = items.slice();
   state.dict = buildDict(items);
+  resetQuestionOrder();
   updateStat();
   nextQuestion();
 }

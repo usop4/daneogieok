@@ -54,6 +54,8 @@
 
       const state = {
         items: [],
+        questionOrder: [],
+        questionIndex: 0,
         current: null,
         picked: [],
         activeCol: null,
@@ -105,6 +107,11 @@
         quizCommon.updateStat("#statPill", state.score);
       }
 
+      function resetQuestionOrder(){
+        state.questionOrder = shuffle(state.items.map((_, index) => index));
+        state.questionIndex = 0;
+      }
+
       function sampleOne(arr){ return quizCommon.sampleOne(arr); }
 
       function shuffle(arr){ return quizCommon.shuffle(arr); }
@@ -124,7 +131,14 @@
           renderEmptyTable("CSVが空です。quiz01-data.js を確認してください。" );
           return;
         }
-        state.current = sampleOne(state.items);
+        if (!state.questionOrder.length || state.questionIndex >= state.questionOrder.length){
+          resetQuestionOrder();
+        }
+
+        const nextIndex = state.questionOrder[state.questionIndex];
+        state.questionIndex += 1;
+        state.current = state.items[nextIndex] || null;
+        if (!state.current) return;
         state.picked = Array.from(state.current.hangul).map(() => null);
         state.activeCol = 0;
         state.judging = false;
@@ -276,6 +290,7 @@
         const items = parseCSV(DEFAULT_CSV);
         state.items = items.slice();
         state.optionGroups = buildOptionGroups(parsePairGroups(PAIR));
+        resetQuestionOrder();
         updateStat();
         nextQuestion();
       }

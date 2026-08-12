@@ -37,6 +37,8 @@
     <script>
       const state = {
         items: [],
+        questionOrder: [],
+        questionIndex: 0,
         current: null,
         answered: false,
         score: { ok: 0, ng: 0, total: 0 }
@@ -186,6 +188,22 @@
         quizCommon.updateStat('#statPill', state.score);
       }
 
+      function resetQuestionOrder() {
+        state.questionOrder = quizCommon.shuffle(state.items.map((_, index) => index));
+        state.questionIndex = 0;
+      }
+
+      function pickNextQuestion() {
+        if (!state.items.length) return null;
+        if (!state.questionOrder.length || state.questionIndex >= state.questionOrder.length) {
+          resetQuestionOrder();
+        }
+
+        const index = state.questionOrder[state.questionIndex];
+        state.questionIndex += 1;
+        return state.items[index] || null;
+      }
+
       function renderQuestion() {
         if (!state.current) return;
         const promptValue = state.current.values[Math.floor(Math.random() * state.current.values.length)];
@@ -243,9 +261,8 @@
       }
 
       function nextQuestion() {
-        if (!state.items.length) return;
-        const index = Math.floor(Math.random() * state.items.length);
-        state.current = state.items[index];
+        state.current = pickNextQuestion();
+        if (!state.current) return;
         renderQuestion();
       }
 
@@ -266,6 +283,7 @@
         state.items = parseEntries(text);
         await loadOptionGroups();
         await loadExcludedWords();
+        resetQuestionOrder();
         updateStat();
         nextQuestion();
       }
