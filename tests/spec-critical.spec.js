@@ -16,6 +16,44 @@ async function waitForQuiz01Or02Evaluation(page) {
   }, { timeout: 3000 });
 }
 
+async function reachQuiz01WrongAnswer(page, maxAttempts = 8) {
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    const columnCount = await page.locator("#quizTable .hangulCell").count();
+    await answerColumnsWithKeyOne(page, columnCount);
+    await waitForQuiz01Or02Evaluation(page);
+
+    const feedbackText = await page.locator("#answerFeedback").textContent();
+    if ((feedbackText || "").includes("不正解")) {
+      return true;
+    }
+
+    if (await page.locator("#correctPopup.show").count()) {
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#quizTable .hangulCell").first()).toBeVisible();
+    }
+  }
+  return false;
+}
+
+async function reachQuiz02WrongAnswer(page, maxAttempts = 8) {
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    const columnCount = await page.locator("#quizTable .questionCell").count();
+    await answerColumnsWithKeyOne(page, columnCount);
+    await waitForQuiz01Or02Evaluation(page);
+
+    const feedbackText = await page.locator("#answerFeedback").textContent();
+    if ((feedbackText || "").includes("不正解")) {
+      return true;
+    }
+
+    if (await page.locator("#correctPopup.show").count()) {
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#quizTable .questionCell").first()).toBeVisible();
+    }
+  }
+  return false;
+}
+
 test.describe("Quiz01/Quiz02 key and auto judge", () => {
   test("Quiz01 supports number key selection and auto judge", async ({ page }) => {
     await page.goto("/quiz01.html");
@@ -40,6 +78,28 @@ test.describe("Quiz01/Quiz02 key and auto judge", () => {
 
     await page.keyboard.press("Enter");
     await expect(page.locator("#quizTable .cellBtn.selected")).toHaveCount(0);
+  });
+
+  test("Quiz01 highlights the correct option after a wrong answer", async ({ page }) => {
+    await page.goto("/quiz01.html");
+    await expect(page.locator("#quizTable .hangulCell").first()).toBeVisible();
+
+    const sawWrongAnswer = await reachQuiz01WrongAnswer(page);
+    expect(sawWrongAnswer).toBe(true);
+
+    await expect(page.locator("#quizTable .cellBtn.correct")).not.toHaveCount(0);
+    await expect(page.locator("#quizTable .cellBtn.wrong")).not.toHaveCount(0);
+  });
+
+  test("Quiz02 highlights the correct option after a wrong answer", async ({ page }) => {
+    await page.goto("/quiz02.html");
+    await expect(page.locator("#quizTable .questionCell").first()).toBeVisible();
+
+    const sawWrongAnswer = await reachQuiz02WrongAnswer(page);
+    expect(sawWrongAnswer).toBe(true);
+
+    await expect(page.locator("#quizTable .cellBtn.correct")).not.toHaveCount(0);
+    await expect(page.locator("#quizTable .cellBtn.wrong")).not.toHaveCount(0);
   });
 });
 

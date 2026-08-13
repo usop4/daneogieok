@@ -256,6 +256,8 @@ function renderTable(){
     const col = Number(btn.dataset.col);
     const k = btn.dataset.k;
 
+    clearChoiceResultMarks();
+
     state.activeCol = col;
     state.picked[col] = k;
 
@@ -274,6 +276,31 @@ function renderTable(){
   updateStat();
 }
 
+function clearChoiceResultMarks(){
+  const table = $("#quizTable");
+  if (!table) return;
+  table.querySelectorAll(".cellBtn.correct, .cellBtn.wrong").forEach((button) => {
+    button.classList.remove("correct", "wrong");
+  });
+}
+
+function markCorrectChoicesOnWrongAnswer(){
+  const table = $("#quizTable");
+  if (!table || !state.current) return;
+  const correctChars = Array.from(state.current.kanji);
+  for (let col = 0; col < correctChars.length; col++){
+    const buttons = Array.from(table.querySelectorAll(`.cellBtn[data-col="${col}"]`));
+    const correctKanji = correctChars[col];
+    const selectedKanji = state.picked[col];
+    const correctButton = buttons.find((button) => button.dataset.k === correctKanji);
+    if (correctButton) correctButton.classList.add("correct");
+    if (selectedKanji && selectedKanji !== correctKanji){
+      const wrongButton = buttons.find((button) => button.dataset.k === selectedKanji);
+      if (wrongButton) wrongButton.classList.add("wrong");
+    }
+  }
+}
+
 function selectOptionByKey(key){
   if (!state.current) return;
 
@@ -287,6 +314,8 @@ function selectOptionByKey(key){
   const options = Array.from(buttons).map(b => b.dataset.k);
   const index = key === "0" ? 9 : Number(key) - 1;
   if (!options[index]) return;
+
+  clearChoiceResultMarks();
 
   const k = options[index];
   state.picked[col] = k;
@@ -333,6 +362,7 @@ function judgeAnswer(){
     state.score.ng += 1;
     quizCommon.recordDailyQuizOutcome("quiz01", false);
     console.log("[quiz01] 不正解単語:", state.current.hangul);
+    markCorrectChoicesOnWrongAnswer();
     showResult(`不正解：${guess} / 正解=${correct}`, "ng");
     updateStat();
     if (state.progress) {

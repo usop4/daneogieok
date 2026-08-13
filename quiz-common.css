@@ -311,6 +311,14 @@ button.cellBtn.selected {
   border-color: rgba(122,162,255,.75);
   background: rgba(122,162,255,.16);
 }
+button.cellBtn.correct {
+  border-color: rgba(38,208,124,.75);
+  background: rgba(38,208,124,.16);
+}
+button.cellBtn.wrong {
+  border-color: rgba(255,90,122,.75);
+  background: rgba(255,90,122,.14);
+}
 button.cellBtn.active {
   outline: 1px solid rgba(122,162,255,.45);
   outline-offset: -1px;

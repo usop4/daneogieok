@@ -219,6 +219,7 @@
           if (!btn) return;
           const col = Number(btn.dataset.col);
           const ch = btn.dataset.h;
+          clearChoiceResultMarks();
           state.activeCol = col;
           state.picked[col] = ch;
           table.querySelectorAll(`.cellBtn[data-col="${col}"]`).forEach((b) => b.classList.remove("selected"));
@@ -233,6 +234,31 @@
         updateStat();
       }
 
+      function clearChoiceResultMarks(){
+        const table = $("#quizTable");
+        if (!table) return;
+        table.querySelectorAll(".cellBtn.correct, .cellBtn.wrong").forEach((button) => {
+          button.classList.remove("correct", "wrong");
+        });
+      }
+
+      function markCorrectChoicesOnWrongAnswer(){
+        const table = $("#quizTable");
+        if (!table || !state.current) return;
+        const correctChars = Array.from(state.current.hangul);
+        for (let col = 0; col < correctChars.length; col++){
+          const buttons = Array.from(table.querySelectorAll(`.cellBtn[data-col="${col}"]`));
+          const correctHangul = correctChars[col];
+          const selectedHangul = state.picked[col];
+          const correctButton = buttons.find((button) => button.dataset.h === correctHangul);
+          if (correctButton) correctButton.classList.add("correct");
+          if (selectedHangul && selectedHangul !== correctHangul){
+            const wrongButton = buttons.find((button) => button.dataset.h === selectedHangul);
+            if (wrongButton) wrongButton.classList.add("wrong");
+          }
+        }
+      }
+
       function selectOptionByKey(key){
         if (!state.current) return;
         const col = state.activeCol !== null && state.activeCol !== undefined ? state.activeCol : state.picked.findIndex((v) => v === null);
@@ -242,6 +268,7 @@
         const options = Array.from(buttons).map((b) => b.dataset.h);
         const index = key === "0" ? 9 : Number(key) - 1;
         if (!options[index]) return;
+        clearChoiceResultMarks();
         const ch = options[index];
         state.picked[col] = ch;
         buttons.forEach((b) => b.classList.remove("selected"));
@@ -283,6 +310,7 @@
           state.score.ng += 1;
           quizCommon.recordDailyQuizOutcome("quiz02", false);
           console.log("[quiz02] 不正解単語:", state.current.hangul);
+          markCorrectChoicesOnWrongAnswer();
           showResult(`不正解：${guess} / 正解=${correct}`, "ng");
           updateStat();
           if (state.progress) {
