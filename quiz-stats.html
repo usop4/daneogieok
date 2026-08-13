@@ -60,7 +60,7 @@
         tbody.innerHTML = rows.map((row) => {
           const cells = quizIds.map((quizId) => {
             const result = row.quizzes[quizId] || { ok: 0, ng: 0 };
-            return `<td><span class="okText">OK ${escapeHtml(`${result.ok}`)}</span> / <span class="ngText">NG ${escapeHtml(`${result.ng}`)}</span></td>`;
+            return `<td><span class="okText">${escapeHtml(`${result.ok}`)}</span> / <span class="ngText"> ${escapeHtml(`${result.ng}`)}</span></td>`;
           }).join('');
           return `<tr><td>${escapeHtml(row.date)}</td>${cells}</tr>`;
         }).join('');

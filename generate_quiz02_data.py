@@ -4,7 +4,7 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from common_setting import INITIAL_FAMILY, MEDIAL_FAMILY
 
@@ -17,7 +17,7 @@ def extract_default_csv(js_path: Path) -> str:
     return match.group(1)
 
 
-def decompose_hangul(ch: str) -> Tuple[str, str] | None:
+def decompose_hangul(ch: str) -> Optional[Tuple[str, str]]:
     if not re.fullmatch(r"[가-힣]", ch):
         return None
 

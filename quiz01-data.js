@@ -112,7 +112,6 @@ const DEFAULT_CSV = `# format: hangul,kanji[,supplement]
 기회,機会
 기후,気候
 긴장감,緊張感
-낙엽,落葉
 난방,暖房
 남녀평등,男女平等
 남부,南部
@@ -183,7 +182,7 @@ const DEFAULT_CSV = `# format: hangul,kanji[,supplement]
 문명,文明
 문제점,問題点
 문학,文学
-물가,物価
+물가,物価,물가가 올라서 음식값을 올렸어요.物価が上がったので、食事代を値上げしました。
 물질,物質
 물품,物品
 미소,微笑

@@ -4,7 +4,7 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import DefaultDict, List, Tuple
+from typing import DefaultDict, List, Optional, Tuple
 
 from common_setting import FAMILY_DISPLAY_NAMES, INITIAL_FAMILY, MEDIAL_FAMILY
 
@@ -40,7 +40,7 @@ def parse_entries(csv_text: str) -> List[Tuple[str, List[str]]]:
     return entries
 
 
-def decompose_hangul(ch: str) -> Tuple[str, str] | None:
+def decompose_hangul(ch: str) -> Optional[Tuple[str, str]]:
     if not re.fullmatch(r"[가-힣]", ch):
         return None
 
@@ -56,7 +56,7 @@ def decompose_hangul(ch: str) -> Tuple[str, str] | None:
     return initial_chars[initial_index], medial_chars[medial_index]
 
 
-def build_suffix_key(hangul: str) -> str | None:
+def build_suffix_key(hangul: str) -> Optional[str]:
     if len(hangul) < 2:
         return None
 

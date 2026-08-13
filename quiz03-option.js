@@ -22,13 +22,13 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "늘리다",
         "values": [
-          "増やす、増す、豊かにする"
+          "増やす、伸ばす、豊かにする"
         ]
       },
       {
         "hangul": "늘어나다",
         "values": [
-          "増える、増す、豊かになる"
+          "増える、伸びる、豊かになる"
         ]
       }
     ]
@@ -131,7 +131,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "몰리다",
         "values": [
-          "寄り集まる、押し寄せる、追い込まれる、殺到する"
+          "寄り集まる、押し寄せる"
         ]
       }
     ]
@@ -868,7 +868,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "지나치다",
         "values": [
-          "度を越す、度外れる"
+          "通り過ぎる、行きすぎる"
         ]
       },
       {
@@ -1127,7 +1127,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "돌려보내다",
         "values": [
-          "帰す・返す"
+          "返す、帰らせる、送り返す"
         ]
       },
       {
@@ -1157,7 +1157,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "돌아보다",
         "values": [
-          "振り返る、見回る"
+          "振り返る"
         ]
       },
       {
@@ -1269,7 +1269,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "잠그다",
         "values": [
-          "閉ざす、止める"
+          "締める、掛ける、鍵をかける"
         ]
       },
       {
@@ -1642,7 +1642,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "몰리다",
         "values": [
-          "寄り集まる、押し寄せる、追い込まれる、殺到する"
+          "寄り集まる、押し寄せる"
         ]
       },
       {
@@ -1931,7 +1931,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "지나치다",
         "values": [
-          "度を越す、度外れる"
+          "通り過ぎる、行きすぎる"
         ]
       },
       {
@@ -2114,7 +2114,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "늘리다",
         "values": [
-          "増やす、増す、豊かにする"
+          "増やす、伸ばす、豊かにする"
         ]
       }
     ]
@@ -2390,7 +2390,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "돌아보다",
         "values": [
-          "振り返る、見回る"
+          "振り返る"
         ]
       },
       {
@@ -2402,7 +2402,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "둘러보다",
         "values": [
-          "見回す・見廻す、見回る"
+          "ぐるっと見回す（周囲など）"
         ]
       }
     ]
