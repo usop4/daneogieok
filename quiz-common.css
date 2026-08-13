@@ -166,6 +166,46 @@ table.quiz td {
   background: transparent;
 }
 
+table.quiz th {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  padding: 2px 0;
+}
+
+table.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+table.stats-table th,
+table.stats-table td {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 8px 10px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+table.stats-table th {
+  color: var(--muted);
+}
+
+table.stats-table td:first-child,
+table.stats-table th:first-child {
+  text-align: left;
+}
+
+.okText {
+  color: var(--ok);
+}
+
+.ngText {
+  color: var(--ng);
+}
+
 .hangulCell {
   font-size: 36px;
   padding: 10px 8px;

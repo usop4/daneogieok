@@ -184,7 +184,129 @@
     };
   }
 
+  const DAILY_STATS_STORAGE_KEY = 'quiz-daily-stats-v1';
+
+  function toDateKey(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  function createEmptyDailyRecord() {
+    return { ok: 0, ng: 0 };
+  }
+
+  function isValidDailyRecord(value) {
+    return Boolean(
+      value
+      && typeof value === 'object'
+      && Number.isFinite(Number(value.ok))
+      && Number.isFinite(Number(value.ng))
+    );
+  }
+
+  function parseDailyStats(raw) {
+    if (!raw || typeof raw !== 'object') return {};
+    const parsed = {};
+    for (const [dateKey, perQuiz] of Object.entries(raw)) {
+      if (!dateKey || typeof perQuiz !== 'object' || !perQuiz) continue;
+      const quizMap = {};
+      for (const [quizId, value] of Object.entries(perQuiz)) {
+        if (!quizId || !isValidDailyRecord(value)) continue;
+        quizMap[quizId] = {
+          ok: Number(value.ok) || 0,
+          ng: Number(value.ng) || 0
+        };
+      }
+      parsed[dateKey] = quizMap;
+    }
+    return parsed;
+  }
+
+  function loadDailyStats() {
+    try {
+      const raw = localStorage.getItem(DAILY_STATS_STORAGE_KEY);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      return parseDailyStats(parsed);
+    } catch (error) {
+      console.warn('[quizCommon] Failed to load daily stats:', error);
+      return {};
+    }
+  }
+
+  function saveDailyStats(stats) {
+    try {
+      localStorage.setItem(DAILY_STATS_STORAGE_KEY, JSON.stringify(stats || {}));
+    } catch (error) {
+      console.warn('[quizCommon] Failed to save daily stats:', error);
+    }
+  }
+
+  function trimDailyStatsToLastNDays(stats, days = 7, refDate = new Date()) {
+    const target = stats && typeof stats === 'object' ? { ...stats } : {};
+    const keep = new Set();
+    for (let offset = 0; offset < days; offset++) {
+      const d = new Date(refDate);
+      d.setDate(refDate.getDate() - offset);
+      keep.add(toDateKey(d));
+    }
+    for (const key of Object.keys(target)) {
+      if (!keep.has(key)) {
+        delete target[key];
+      }
+    }
+    return target;
+  }
+
+  function recordDailyQuizOutcome(quizId, isCorrect, date = new Date()) {
+    if (!quizId) return;
+    const dateKey = toDateKey(date);
+    const stats = trimDailyStatsToLastNDays(loadDailyStats(), 7, date);
+    if (!stats[dateKey]) stats[dateKey] = {};
+    if (!stats[dateKey][quizId]) stats[dateKey][quizId] = createEmptyDailyRecord();
+    if (isCorrect) {
+      stats[dateKey][quizId].ok += 1;
+    } else {
+      stats[dateKey][quizId].ng += 1;
+    }
+    saveDailyStats(stats);
+  }
+
+  function getRecentDailyQuizStats(quizIds, days = 7, refDate = new Date()) {
+    const ids = Array.isArray(quizIds) ? quizIds.filter(Boolean) : [];
+    const stats = trimDailyStatsToLastNDays(loadDailyStats(), days, refDate);
+    const rows = [];
+
+    for (let offset = days - 1; offset >= 0; offset--) {
+      const d = new Date(refDate);
+      d.setDate(refDate.getDate() - offset);
+      const dateKey = toDateKey(d);
+      const perQuiz = {};
+      for (const quizId of ids) {
+        const source = stats?.[dateKey]?.[quizId];
+        perQuiz[quizId] = source
+          ? { ok: Number(source.ok) || 0, ng: Number(source.ng) || 0 }
+          : createEmptyDailyRecord();
+      }
+      rows.push({ date: dateKey, quizzes: perQuiz });
+    }
+
+    return rows;
+  }
+
   global.quizCommon = {
-    $, normalizeLine, escapeHtml, escapeAttr, sampleOne, shuffle, updateStat, renderEmptyTable, createOutcomeProgress
+    $,
+    normalizeLine,
+    escapeHtml,
+    escapeAttr,
+    sampleOne,
+    shuffle,
+    updateStat,
+    renderEmptyTable,
+    createOutcomeProgress,
+    recordDailyQuizOutcome,
+    getRecentDailyQuizStats
   };
 })(window);

@@ -12,7 +12,7 @@ for (const quiz of quizPages) {
     await page.goto(quiz.path);
     await expect(page).toHaveTitle(new RegExp(quiz.title));
     await expect(page.locator(quiz.questionSelector).first()).toBeVisible();
-    await expect(page.locator(".quiz-nav a")).toHaveCount(4);
+    await expect(page.locator(".quiz-nav a")).toHaveCount(5);
 
     if (quiz.title === "Quiz01" || quiz.title === "Quiz02") {
       await expect(page.locator("#quizTable .cellBtn:not(.dummy)").first()).toBeVisible();
@@ -21,3 +21,11 @@ for (const quiz of quizPages) {
     }
   });
 }
+
+test("Quiz stats page shows last 7 days for all quizzes", async ({ page }) => {
+  await page.goto("/quiz-stats.html");
+  await expect(page).toHaveTitle(/Quiz Stats/);
+  await expect(page.locator("table.stats-table thead th")).toHaveCount(5);
+  await expect(page.locator("table.stats-table tbody tr")).toHaveCount(7);
+  await expect(page.locator(".quiz-nav a")).toHaveCount(5);
+});

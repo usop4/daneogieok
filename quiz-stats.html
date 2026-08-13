@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Quiz Stats - 過去7日 OK/NG</title>
+    <link rel="stylesheet" href="quiz-common.css" />
+    <script src="quiz-common.js"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="card">
+        <div class="hd">
+          <div class="row">
+            <strong>Quiz Stats（過去7日）</strong>
+          </div>
+          <div class="row">
+            <button class="btn primary" id="refreshBtn" type="button">更新</button>
+          </div>
+        </div>
+        <div class="bd">
+          <div class="tableWrap">
+            <table class="stats-table" aria-label="daily quiz stats table">
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>Quiz01</th>
+                  <th>Quiz02</th>
+                  <th>Quiz03</th>
+                  <th>Quiz04</th>
+                </tr>
+              </thead>
+              <tbody id="statsBody"></tbody>
+            </table>
+          </div>
+          <p class="small">表示形式: OK x / NG y</p>
+        </div>
+      </section>
+
+      <div class="quiz-nav" aria-label="Quiz navigation">
+        <a href="quiz01.html">Quiz01</a>
+        <a href="quiz02.html">Quiz02</a>
+        <a href="quiz03.html">Quiz03</a>
+        <a href="quiz04.html">Quiz04</a>
+        <a href="quiz-stats.html">Stats</a>
+      </div>
+    </div>
+
+    <script>
+      const quizIds = ['quiz01', 'quiz02', 'quiz03', 'quiz04'];
+
+      function escapeHtml(value) {
+        return quizCommon.escapeHtml(value);
+      }
+
+      function renderStats() {
+        const rows = quizCommon.getRecentDailyQuizStats(quizIds, 7).slice().reverse();
+        const tbody = document.getElementById('statsBody');
+        if (!tbody) return;
+
+        tbody.innerHTML = rows.map((row) => {
+          const cells = quizIds.map((quizId) => {
+            const result = row.quizzes[quizId] || { ok: 0, ng: 0 };
+            return `<td><span class="okText">OK ${escapeHtml(`${result.ok}`)}</span> / <span class="ngText">NG ${escapeHtml(`${result.ng}`)}</span></td>`;
+          }).join('');
+          return `<tr><td>${escapeHtml(row.date)}</td>${cells}</tr>`;
+        }).join('');
+      }
+
+      document.getElementById('refreshBtn').addEventListener('click', renderStats);
+      renderStats();
+    </script>
+  </body>
+</html>
