@@ -75,12 +75,13 @@
         const lines = text.split("\n").map(normalizeLine).filter((line) => line.length > 0);
         for (const line of lines){
           if (line.startsWith("#")) continue;
-          const idx = line.indexOf(",");
-          if (idx === -1) continue;
-          const hangul = line.slice(0, idx).trim();
-          const kanji = line.slice(idx + 1).trim();
+          const parts = line.split(",");
+          if (parts.length < 2) continue;
+          const hangul = (parts[0] || "").trim();
+          const kanji = (parts[1] || "").trim();
+          const supplement = parts.slice(2).join(",").trim();
           if (!hangul || !kanji) continue;
-          items.push({ hangul, kanji });
+          items.push({ hangul, kanji, supplement });
         }
         return items;
       }
@@ -270,7 +271,7 @@
           state.score.ok += 1;
           quizCommon.recordDailyQuizOutcome("quiz02", true);
           hideResult();
-          showCorrectPopup(`${state.current.kanji} = ${correct}`);
+          showCorrectPopup(state.current, `${state.current.kanji} = ${correct}`);
           updateStat();
           if (state.progress) {
             state.progress.recordOutcome(state.current, true);
@@ -302,11 +303,16 @@
         panel.className = "answerPanel";
         $("#answerFeedback").textContent = "";
       }
-      function showCorrectPopup(text){
+      function buildCorrectPopupText(item, mainText){
+        const supplement = item?.supplement || "";
+        if (!supplement) return mainText;
+        return `${mainText} / 補足: ${supplement}`;
+      }
+      function showCorrectPopup(item, text){
         const popup = $("#correctPopup");
         const popupText = $("#correctPopupText");
         if (!popup || !popupText) return;
-        popupText.textContent = text;
+        popupText.textContent = buildCorrectPopupText(item, text);
         popup.classList.add("show");
         popup.removeAttribute("hidden");
         state.popupVisible = true;
@@ -344,8 +350,8 @@
         if (!state.items.length) return;
         const incorrectWords = state.progress ? state.progress.getIncorrectKeys(state.items) : [];
         console.log("[quiz02] 不正解単語一覧:", incorrectWords);
-        if (state.progress) state.progress.resetForStatPill();
         resetQuestionOrderPrioritized();
+        if (state.progress) state.progress.resetForStatPill({ clearOutcomes: true });
         updateStat();
         nextQuestion();
       });

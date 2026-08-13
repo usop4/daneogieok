@@ -1,4 +1,4 @@
-const DEFAULT_CSV = `# sample
+const DEFAULT_CSV = `# format: hangul,kanji[,supplement]
 가게부,家計簿
 가사,家事
 가상,仮想
@@ -68,7 +68,6 @@ const DEFAULT_CSV = `# sample
 과로,過労
 과삭,過食
 과소비,過消費
-과장,課長
 과장,課長
 과정,過程
 과제,課題

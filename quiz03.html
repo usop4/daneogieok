@@ -328,8 +328,8 @@
         if (!state.items.length) return;
         const incorrectWords = getIncorrectWords();
         console.log('[quiz03] 不正解単語一覧:', incorrectWords);
-        if (state.progress) state.progress.resetForStatPill();
         resetQuestionOrder(true);
+        if (state.progress) state.progress.resetForStatPill({ clearOutcomes: true });
         updateStat();
         nextQuestion();
       });

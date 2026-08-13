@@ -37,12 +37,13 @@ function parseQuiz01Csv(text) {
   const lines = text.split("\n").map(normalizeLine).filter(Boolean);
   for (const line of lines) {
     if (line.startsWith("#")) continue;
-    const commaIndex = line.indexOf(",");
-    if (commaIndex === -1) continue;
-    const hangul = line.slice(0, commaIndex).trim();
-    const kanji = line.slice(commaIndex + 1).trim();
+    const parts = line.split(",");
+    if (parts.length < 2) continue;
+    const hangul = (parts[0] || "").trim();
+    const kanji = (parts[1] || "").trim();
+    const supplement = parts.slice(2).join(",").trim();
     if (!hangul || !kanji) continue;
-    rows.push({ hangul, kanji });
+    rows.push({ hangul, kanji, supplement });
   }
   return rows;
 }

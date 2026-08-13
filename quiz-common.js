@@ -131,11 +131,15 @@
       return keys;
     }
 
-    function resetForStatPill() {
+    function resetForStatPill(options = {}) {
+      const clearOutcomes = options?.clearOutcomes === true;
       if (score) {
         score.ok = 0;
         score.ng = 0;
         score.total = 0;
+      }
+      if (clearOutcomes) {
+        outcomes.clear();
       }
       persist();
     }
