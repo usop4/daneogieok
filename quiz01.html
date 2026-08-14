@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="ja">
-  <script src="quiz01-data.js"></script>
-
+  <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Quiz01 - 漢字語（韓→日）</title>
@@ -414,8 +413,23 @@ function closePopupAndAdvance(){
   nextQuestion();
 }
 
-function loadDefaultData(){
-  const items = parseCSV(DEFAULT_CSV);
+async function loadDefaultData(){
+  let text;
+  try {
+    const response = await fetch("quiz01-data.txt");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    text = await response.text();
+  } catch (error) {
+    console.error("[quiz01] Failed to load question data:", error);
+    renderEmptyTable("問題データを読み込めませんでした。");
+    return;
+  }
+
+  const items = parseCSV(text);
+  if (!items.length) {
+    renderEmptyTable("データがありません。");
+    return;
+  }
   state.items = items.slice();
   state.dict = buildDict(items);
   state.progress = quizCommon.createOutcomeProgress({

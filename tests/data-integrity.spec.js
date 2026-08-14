@@ -80,12 +80,11 @@ function loadQuiz03OptionGroups(source) {
 
 test.describe("Data integrity", () => {
   test("quiz01/02 data templates are valid and non-empty", async () => {
-    const quiz01Source = readFile("quiz01-data.js");
+    const quiz01Source = readFile("quiz01-data.txt");
     const quiz02Source = readFile("quiz02-data.js");
-    const defaultCsv = extractTemplateLiteral(quiz01Source, "DEFAULT_CSV");
     const pair = extractTemplateLiteral(quiz02Source, "PAIR");
 
-    const quiz01Rows = parseQuiz01Csv(defaultCsv);
+    const quiz01Rows = parseQuiz01Csv(quiz01Source);
     const pairGroups = parsePairGroups(pair);
     expect(quiz01Rows.length).toBeGreaterThan(0);
     expect(pairGroups.length).toBeGreaterThan(0);
@@ -101,9 +100,9 @@ test.describe("Data integrity", () => {
   });
 
   test("quiz02 pair groups cover all hangul chars used in quiz01", async () => {
-    const quiz01Source = readFile("quiz01-data.js");
+    const quiz01Source = readFile("quiz01-data.txt");
     const quiz02Source = readFile("quiz02-data.js");
-    const quiz01Rows = parseQuiz01Csv(extractTemplateLiteral(quiz01Source, "DEFAULT_CSV"));
+    const quiz01Rows = parseQuiz01Csv(quiz01Source);
     const pairGroups = parsePairGroups(extractTemplateLiteral(quiz02Source, "PAIR"));
 
     const usedHangulChars = new Set();
@@ -119,10 +118,9 @@ test.describe("Data integrity", () => {
   });
 
   test("quiz03 data and option groups are consistent", async () => {
-    const quiz03DataSource = readFile("quiz03-data.js");
+    const quiz03DataSource = readFile("quiz03-data.txt");
     const quiz03OptionSource = readFile("quiz03-option.js");
-    const defaultTxt = extractTemplateLiteral(quiz03DataSource, "DEFAULT_TXT");
-    const entries = parseQuiz03Entries(defaultTxt);
+    const entries = parseQuiz03Entries(quiz03DataSource);
     const optionGroups = loadQuiz03OptionGroups(quiz03OptionSource);
 
     expect(entries.length).toBeGreaterThan(0);

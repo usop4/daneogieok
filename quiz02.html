@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Quiz02 - 漢字語（日→韓）</title>
-    <script src="quiz01-data.js"></script>
     <script src="quiz02-data.js"></script>
     <link rel="stylesheet" href="quiz-common.css" />
     <script src="quiz-common.js"></script>
@@ -151,7 +150,7 @@
       function nextQuestion(){
         hideCorrectPopup();
         if (state.items.length === 0){
-          renderEmptyTable("CSVが空です。quiz01-data.js を確認してください。" );
+          renderEmptyTable("CSVが空です。quiz01-data.txt を確認してください。" );
           return;
         }
         if (!state.questionOrder.length || state.questionIndex >= state.questionOrder.length){
@@ -353,8 +352,23 @@
         state.popupVisible = false;
       }
 
-      function init(){
-        const items = parseCSV(DEFAULT_CSV);
+      async function init(){
+        let text;
+        try {
+          const response = await fetch("quiz01-data.txt");
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          text = await response.text();
+        } catch (error) {
+          console.error("[quiz02] Failed to load question data:", error);
+          renderEmptyTable("問題データを読み込めませんでした。");
+          return;
+        }
+
+        const items = parseCSV(text);
+        if (!items.length) {
+          renderEmptyTable("データがありません。");
+          return;
+        }
         state.items = items.slice();
         state.optionGroups = buildOptionGroups(parsePairGroups(PAIR));
         state.progress = quizCommon.createOutcomeProgress({

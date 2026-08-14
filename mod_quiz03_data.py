@@ -42,27 +42,14 @@ def transform_csv_block(text: str) -> str:
     return "\n".join(transform_line(line) for line in lines)
 
 
-def rewrite_js_file(input_path: Path, output_path: Path) -> None:
+def rewrite_data_file(input_path: Path, output_path: Path) -> None:
     text = input_path.read_text(encoding="utf-8")
-    markers = ["const DEFAULT_TXT = `", "const DEFAULT_CSV = `"]
-    marker = next((m for m in markers if m in text), None)
-    if marker is None:
-        raise ValueError(f"Could not find a supported DEFAULT_* block in {input_path}")
-
-    start = text.index(marker) + len(marker)
-    end = text.find("`", start)
-    if end == -1:
-        end = len(text)
-
-    body = text[start:end]
-    new_body = transform_csv_block(body)
-    new_text = text[:start] + new_body + text[end:]
-    output_path.write_text(new_text, encoding="utf-8")
+    output_path.write_text(transform_csv_block(text), encoding="utf-8")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Normalize quiz03 Japanese gloss entries in the data file")
-    parser.add_argument("--input", default="quiz03-data.js", help="Path to the input JavaScript file")
+    parser.add_argument("--input", default="quiz03-data.txt", help="Path to the input text file")
     parser.add_argument("--output", default=None, help="Path to the output JavaScript file. Defaults to overwriting the input file")
     parser.add_argument("--in-place", action="store_true", help="Overwrite the input file in place")
     args = parser.parse_args()
@@ -75,7 +62,7 @@ def main() -> None:
     if args.in_place:
         output_path = input_path
 
-    rewrite_js_file(input_path, output_path)
+    rewrite_data_file(input_path, output_path)
     print(f"Wrote transformed data to {output_path}")
 
 

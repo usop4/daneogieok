@@ -1,4 +1,4 @@
-const DEFAULT_CSV = `# format: hangul,kanji[,supplement]
+# format: hangul,kanji[,supplement]
 가게부,家計簿
 가사,家事
 가상,仮想
@@ -736,4 +736,3 @@ const DEFAULT_CSV = `# format: hangul,kanji[,supplement]
 책임,責任
 정확,正確
 
-`;

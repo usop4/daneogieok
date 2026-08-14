@@ -9,17 +9,8 @@ from typing import DefaultDict, List, Optional, Tuple
 from common_setting import FAMILY_DISPLAY_NAMES, INITIAL_FAMILY, MEDIAL_FAMILY
 
 
-def extract_default_csv(js_path: Path) -> str:
-    text = js_path.read_text(encoding="utf-8")
-    marker = "const DEFAULT_TXT = `"
-    if marker not in text:
-        raise ValueError(f"Could not find DEFAULT_TXT in {js_path}")
-
-    start = text.index(marker) + len(marker)
-    end = text.find("`", start)
-    if end == -1:
-        end = len(text)
-    return text[start:end]
+def read_data_file(data_path: Path) -> str:
+    return data_path.read_text(encoding="utf-8")
 
 
 def parse_entries(csv_text: str) -> List[Tuple[str, List[str]]]:
@@ -164,8 +155,8 @@ def format_js_output(groups: List[Tuple[str, List[Tuple[str, List[str]]]]]) -> s
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate grouped quiz option output from quiz03-data.js")
-    parser.add_argument("--input", default="quiz03-data.js", help="Path to the quiz03 data file")
+    parser = argparse.ArgumentParser(description="Generate grouped quiz option output from quiz03-data.txt")
+    parser.add_argument("--input", default="quiz03-data.txt", help="Path to the quiz03 data file")
     parser.add_argument("--output", default="quiz03-option.txt", help="Optional output file path")
     args = parser.parse_args()
 
@@ -173,7 +164,7 @@ def main() -> None:
     if not input_path.is_absolute():
         input_path = Path(__file__).resolve().parent / input_path
 
-    csv_text = extract_default_csv(input_path)
+    csv_text = read_data_file(input_path)
     entries = parse_entries(csv_text)
     groups, ungrouped_entries = build_groups(entries)
     output_text = format_output(groups, ungrouped_entries)

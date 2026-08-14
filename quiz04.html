@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Quiz04 - 動詞（日→韓）</title>
-    <script src="quiz03-data.js"></script>
     <script src="quiz03-option.js"></script>
     <link rel="stylesheet" href="quiz-common.css" />
     <script src="quiz-common.js"></script>
@@ -317,8 +316,19 @@
       });
 
       async function init() {
-        const text = typeof DEFAULT_TXT === 'string' ? DEFAULT_TXT : '';
-        state.items = parseEntries(text);
+        try {
+          const response = await fetch('quiz03-data.txt');
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          state.items = parseEntries(await response.text());
+        } catch (error) {
+          console.error('[quiz04] Failed to load question data:', error);
+          document.getElementById('hintText').textContent = '問題データを読み込めませんでした。';
+          return;
+        }
+        if (!state.items.length) {
+          document.getElementById('hintText').textContent = 'データがありません。';
+          return;
+        }
         state.progress = quizCommon.createOutcomeProgress({
           storageKey: 'quiz04-progress-v1',
           getItemKey: (item) => item?.hangul,

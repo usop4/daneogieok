@@ -9,12 +9,8 @@ from typing import Dict, List, Optional, Tuple
 from common_setting import INITIAL_FAMILY, MEDIAL_FAMILY
 
 
-def extract_default_csv(js_path: Path) -> str:
-    text = js_path.read_text(encoding="utf-8")
-    match = re.search(r"const\s+DEFAULT_CSV\s*=\s*`([\s\S]*?)`", text)
-    if not match:
-        raise ValueError(f"Could not find DEFAULT_CSV in {js_path}")
-    return match.group(1)
+def read_data_file(data_path: Path) -> str:
+    return data_path.read_text(encoding="utf-8")
 
 
 def decompose_hangul(ch: str) -> Optional[Tuple[str, str]]:
@@ -80,8 +76,8 @@ def format_output(groups: Dict[Tuple[str, str], List[str]], output_format: str) 
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate quiz02 candidate groups from quiz01-data.js")
-    parser.add_argument("--input", default="quiz01-data.js", help="Path to the JavaScript data file")
+    parser = argparse.ArgumentParser(description="Generate quiz02 candidate groups from quiz01-data.txt")
+    parser.add_argument("--input", default="quiz01-data.txt", help="Path to the text data file")
     parser.add_argument("--output", default=None, help="Optional output file path")
     parser.add_argument("--format", choices=["text", "json", "js"], default="js", help="Output format")
     args = parser.parse_args()
@@ -90,7 +86,7 @@ def main() -> None:
     if not input_path.is_absolute():
         input_path = Path(__file__).resolve().parent / input_path
 
-    csv_text = extract_default_csv(input_path)
+    csv_text = read_data_file(input_path)
     chars = extract_hangul_chars(csv_text)
     groups = build_quiz02_groups(chars)
     output_text = format_output(groups, args.format)
