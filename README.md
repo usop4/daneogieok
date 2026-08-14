@@ -1,21 +1,45 @@
-# タノキオ
 
-似たような韓国語を絞り込んで覚えられるようにする学習ゲームです。
+## 漢字語と仲良くなるクイズ
 
-## 使い方
+例えば「具体的」を示す「구채젹」の１文字目の「구」は「具」だけでなく「購」とか「求」とかも示すので、２文字目とか３文字目も見て、この１文字目は何を示すかを見ないといけないですね。
 
-- Quiz01: ハングルを見て漢字を選ぶクイズ
-  - [https://usop4.github.io/daneogieok/quiz01.html](https://usop4.github.io/daneogieok/quiz01.html)
+紙に書いて頭を整理するのが王道なんでしょうけど、アプリでプチプチやりたいですよね。そういう観点でクイズを作ってみました。
 
-- Quiz02: 漢字を見てハングルを選ぶ逆引きクイズ
-  - [https://usop4.github.io/daneogieok/quiz02.html](https://usop4.github.io/daneogieok/quiz02.html)
+<img src="img/quiz01.png">
 
-- Quiz03: 韓国語の動詞（３文字以上）を見て意味を選ぶクイズ
-  - [https://usop4.github.io/daneogieok/quiz03.html](https://usop4.github.io/daneogieok/quiz03.html)
+逆バージョンもあります。こちらは「翻訳」の「翻」が「번」なのか「범」なのか混乱する人に優しく正しい方を教えてくれる作りになってます。不正解を選んだら赤、正しい答えが緑になってるのは全ての画面で共通です。
 
-- Quiz04: 日本語から韓国語の動詞（３文字以上）を選ぶクイズ
-  - [https://usop4.github.io/daneogieok/quiz04.html](https://usop4.github.io/daneogieok/quiz04.html)
+<img src="img/quiz02.png">
 
-- Stats: Quiz01〜Quiz04 の過去7日分 OK/NG 件数を確認するページ
-  - [https://usop4.github.io/daneogieok/quiz-stats.html](https://usop4.github.io/daneogieok/quiz-stats.html)
+[quiz01.html](quiz01.html)
+[quiz02.html](quiz02.html)
+
+
+## 動詞と仲良くなるクイズ
+
+単語を覚えてて漢字語と同じぐらい苦労するのが動詞ですよね。というか「ㄷ」で始まる動詞って多すぎませんか。
+
+というわけで似ている動詞だけ集めたクイズにしてみました。裏では前方一致とか後方一致とか子音とかでグループ化して選択肢を作っています。でも、気にせず楽しんで解いてみてください。
+
+<img src="img/quiz03.png">
+
+こちらも逆バージョンあります。正解・不正解を表示した後に、他の選択肢の意味も表示するようにしていますので、この画面をじっくり見て頭に叩き込んでください。
+
+<img src="img/quiz04.png">
+
+[quiz03.html](quiz03.html)
+[quiz04.html](quiz04.html)
+
+
+## もちろん進捗管理もバッチリ
+
+画面の左上に「正解10/不正解2」のように進捗ボタンがあります。不正解が溜まってきたら進捗ボタンをクリックしてみてください。出題順を並び替えて、不正解だった単語から順に解くことができます。
+
+また統計画面を用意し、１日に何問正解したかを確認することもできます。
+
+[quiz01.html](quiz01.html)
+[quiz02.html](quiz02.html)
+[quiz03.html](quiz03.html)
+[quiz04.html](quiz04.html)
+
 
