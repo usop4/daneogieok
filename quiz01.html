@@ -149,15 +149,12 @@ function getDisplayedOptions(hChar, correctKanji){
 
   const unique = Array.from(new Set(base));
   if (unique.length <= 7){
-    const opts = unique.slice();
-    shuffle(opts);
+    const opts = shuffle(unique.slice()); // 修正
     return opts;
   }
 
-  const others = unique.filter(k => k !== correctKanji);
-  shuffle(others);
-  const opts = [correctKanji, ...others.slice(0, 6)];
-  shuffle(opts);
+  const others = shuffle(unique.filter(k => k !== correctKanji)); // 修正
+  const opts = shuffle([correctKanji, ...others.slice(0, 6)]); // 修正
   return opts;
 }
 

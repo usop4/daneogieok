@@ -125,13 +125,13 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "몰려들다",
         "values": [
-          "押し掛ける、押し寄せる"
+          "押し寄せる（群れをなして中に入る）"
         ]
       },
       {
         "hangul": "몰리다",
         "values": [
-          "寄り集まる、押し寄せる"
+          "押し寄せられる、追い込まれる"
         ]
       }
     ]
@@ -215,15 +215,15 @@ window.QUIZ03_OPTION_GROUPS = [
         ]
       },
       {
-        "hangul": "좁히다",
-        "values": [
-          "狭める、詰める"
-        ]
-      },
-      {
         "hangul": "졸리다",
         "values": [
           "眠い、眠くなる"
+        ]
+      },
+      {
+        "hangul": "좁히다",
+        "values": [
+          "狭める、詰める"
         ]
       }
     ]
@@ -530,41 +530,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㄷ系_eu",
-    "entries": [
-      {
-        "hangul": "들려주다",
-        "values": [
-          "聞かせる"
-        ]
-      },
-      {
-        "hangul": "들르다",
-        "values": [
-          "寄る、立ち寄る"
-        ]
-      },
-      {
-        "hangul": "들리다",
-        "values": [
-          "聞こえる"
-        ]
-      },
-      {
-        "hangul": "들어주다",
-        "values": [
-          "聞き入れる"
-        ]
-      },
-      {
-        "hangul": "들이다",
-        "values": [
-          "入れる、買い入れる"
-        ]
-      }
-    ]
-  },
-  {
     "name": "ㅁ系_u",
     "entries": [
       {
@@ -860,6 +825,12 @@ window.QUIZ03_OPTION_GROUPS = [
     "name": "ㅈ系_i",
     "entries": [
       {
+        "hangul": "지겹다",
+        "values": [
+          "うんざりする、飽きる"
+        ]
+      },
+      {
         "hangul": "지나가다",
         "values": [
           "過ぎる、終わる、意味なく言う"
@@ -887,12 +858,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "지켜보다",
         "values": [
           "見守る、見届ける"
-        ]
-      },
-      {
-        "hangul": "지겹다",
-        "values": [
-          "うんざりする、飽きる"
         ]
       }
     ]
@@ -987,6 +952,53 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "튀기다",
         "values": [
           "揚げる、弾けさせる"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ㄷ系_eu",
+    "entries": [
+      {
+        "hangul": "들려주다",
+        "values": [
+          "聞かせる"
+        ]
+      },
+      {
+        "hangul": "들르다",
+        "values": [
+          "寄る、立ち寄る"
+        ]
+      },
+      {
+        "hangul": "들리다",
+        "values": [
+          "聞こえる"
+        ]
+      },
+      {
+        "hangul": "들어오다",
+        "values": [
+          "入っていく"
+        ]
+      },
+      {
+        "hangul": "들어오다",
+        "values": [
+          "入ってくる"
+        ]
+      },
+      {
+        "hangul": "들어주다",
+        "values": [
+          "聞いてくれる、聞いてあげる、聞き入れる"
+        ]
+      },
+      {
+        "hangul": "들이다",
+        "values": [
+          "入れる、買い入れる"
         ]
       }
     ]
@@ -1164,6 +1176,18 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "돌아서다",
         "values": [
           "向き直る、回る"
+        ]
+      },
+      {
+        "hangul": "돌어오다",
+        "values": [
+          "戻っていく、帰る"
+        ]
+      },
+      {
+        "hangul": "돌어오다",
+        "values": [
+          "戻ってくる"
         ]
       },
       {
@@ -1417,7 +1441,13 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "다가오다",
         "values": [
-          "近付く、近寄る"
+          "近づいていく"
+        ]
+      },
+      {
+        "hangul": "다가오다",
+        "values": [
+          "近づいてくる"
         ]
       },
       {
@@ -1642,7 +1672,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "몰리다",
         "values": [
-          "寄り集まる、押し寄せる"
+          "押し寄せられる、追い込まれる"
         ]
       },
       {
@@ -1700,23 +1730,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "흘리다",
         "values": [
           "こぼす、落とす、流す"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "suffix_오다_ㄷ系",
-    "entries": [
-      {
-        "hangul": "다가오다",
-        "values": [
-          "近付く、近寄る"
-        ]
-      },
-      {
-        "hangul": "데려오다",
-        "values": [
-          "連れて来る"
         ]
       }
     ]
@@ -2206,7 +2219,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "들어주다",
         "values": [
-          "聞き入れる"
+          "聞いてくれる、聞いてあげる、聞き入れる"
         ]
       }
     ]
@@ -2461,6 +2474,53 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "피하다",
         "values": [
           "避ける、忌む、離れる"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "suffix_오다_ㄷ系",
+    "entries": [
+      {
+        "hangul": "다가오다",
+        "values": [
+          "近づいていく"
+        ]
+      },
+      {
+        "hangul": "다가오다",
+        "values": [
+          "近づいてくる"
+        ]
+      },
+      {
+        "hangul": "데려오다",
+        "values": [
+          "連れて来る"
+        ]
+      },
+      {
+        "hangul": "돌어오다",
+        "values": [
+          "戻っていく、帰る"
+        ]
+      },
+      {
+        "hangul": "돌어오다",
+        "values": [
+          "戻ってくる"
+        ]
+      },
+      {
+        "hangul": "들어오다",
+        "values": [
+          "入っていく"
+        ]
+      },
+      {
+        "hangul": "들어오다",
+        "values": [
+          "入ってくる"
         ]
       }
     ]
