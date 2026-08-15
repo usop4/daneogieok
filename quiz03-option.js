@@ -670,41 +670,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㅇ系_a",
-    "entries": [
-      {
-        "hangul": "앞두다",
-        "values": [
-          "控える"
-        ]
-      },
-      {
-        "hangul": "야단맞다",
-        "values": [
-          "叱られる、咎められる"
-        ]
-      },
-      {
-        "hangul": "야단치다",
-        "values": [
-          "叱る、咎める"
-        ]
-      },
-      {
-        "hangul": "외우다",
-        "values": [
-          "暗記する、覚える"
-        ]
-      },
-      {
-        "hangul": "외치다",
-        "values": [
-          "叫ぶ、喚く・叫く"
-        ]
-      }
-    ]
-  },
-  {
     "name": "ㅈ系_u",
     "entries": [
       {
@@ -763,7 +728,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "망설이다",
         "values": [
-          "躊躇する"
+          "躊躇する、ためらう"
         ]
       },
       {
@@ -817,6 +782,47 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "펼치다",
         "values": [
           "広げる、繰り広げる"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ㅇ系_a",
+    "entries": [
+      {
+        "hangul": "아까다",
+        "values": [
+          "節約する、惜しむ、大事にする"
+        ]
+      },
+      {
+        "hangul": "앞두다",
+        "values": [
+          "控える"
+        ]
+      },
+      {
+        "hangul": "야단맞다",
+        "values": [
+          "叱られる、咎められる"
+        ]
+      },
+      {
+        "hangul": "야단치다",
+        "values": [
+          "叱る、咎める"
+        ]
+      },
+      {
+        "hangul": "외우다",
+        "values": [
+          "暗記する、覚える"
+        ]
+      },
+      {
+        "hangul": "외치다",
+        "values": [
+          "叫ぶ、喚く・叫く"
         ]
       }
     ]
@@ -1122,83 +1128,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㄷ系_o",
-    "entries": [
-      {
-        "hangul": "도망가다",
-        "values": [
-          "逃亡する、逃げて行く"
-        ]
-      },
-      {
-        "hangul": "돌려받다",
-        "values": [
-          "返してもらう、返却される"
-        ]
-      },
-      {
-        "hangul": "돌려보내다",
-        "values": [
-          "返す、帰らせる、送り返す"
-        ]
-      },
-      {
-        "hangul": "돌려주다",
-        "values": [
-          "返す、返却する"
-        ]
-      },
-      {
-        "hangul": "돌리다",
-        "values": [
-          "回す、動かす、融通する"
-        ]
-      },
-      {
-        "hangul": "돌보다",
-        "values": [
-          "面倒を見る、世話をする"
-        ]
-      },
-      {
-        "hangul": "돌아다니다",
-        "values": [
-          "巡る、歩き回る"
-        ]
-      },
-      {
-        "hangul": "돌아보다",
-        "values": [
-          "振り返る"
-        ]
-      },
-      {
-        "hangul": "돌아서다",
-        "values": [
-          "向き直る、回る"
-        ]
-      },
-      {
-        "hangul": "돌어오다",
-        "values": [
-          "戻っていく、帰る"
-        ]
-      },
-      {
-        "hangul": "돌어오다",
-        "values": [
-          "戻ってくる"
-        ]
-      },
-      {
-        "hangul": "토하다",
-        "values": [
-          "吐く、戻す、吐き出す"
-        ]
-      }
-    ]
-  },
-  {
     "name": "ㅇ系_i",
     "entries": [
       {
@@ -1353,6 +1282,89 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "ㄷ系_o",
+    "entries": [
+      {
+        "hangul": "도망가다",
+        "values": [
+          "逃亡する、逃げて行く"
+        ]
+      },
+      {
+        "hangul": "도망치다",
+        "values": [
+          "逃げる"
+        ]
+      },
+      {
+        "hangul": "돌려받다",
+        "values": [
+          "返してもらう、返却される"
+        ]
+      },
+      {
+        "hangul": "돌려보내다",
+        "values": [
+          "返す、帰らせる、送り返す"
+        ]
+      },
+      {
+        "hangul": "돌려주다",
+        "values": [
+          "返す、返却する"
+        ]
+      },
+      {
+        "hangul": "돌리다",
+        "values": [
+          "回す、動かす、融通する"
+        ]
+      },
+      {
+        "hangul": "돌보다",
+        "values": [
+          "面倒を見る、世話をする"
+        ]
+      },
+      {
+        "hangul": "돌아다니다",
+        "values": [
+          "巡る、歩き回る"
+        ]
+      },
+      {
+        "hangul": "돌아보다",
+        "values": [
+          "振り返る"
+        ]
+      },
+      {
+        "hangul": "돌아서다",
+        "values": [
+          "向き直る、回る"
+        ]
+      },
+      {
+        "hangul": "돌어오다",
+        "values": [
+          "戻っていく、帰る"
+        ]
+      },
+      {
+        "hangul": "돌어오다",
+        "values": [
+          "戻ってくる"
+        ]
+      },
+      {
+        "hangul": "토하다",
+        "values": [
+          "吐く、戻す、吐き出す"
+        ]
+      }
+    ]
+  },
+  {
     "name": "ㅅ系_a",
     "entries": [
       {
@@ -1412,7 +1424,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "상하다",
         "values": [
-          "負傷する、窶れる"
+          "負傷する"
         ]
       },
       {
@@ -1883,6 +1895,23 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "놓치다",
         "values": [
           "落とす、逃す、乗り損なう"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "suffix_치다_ㄷ系",
+    "entries": [
+      {
+        "hangul": "데치다",
+        "values": [
+          "茹でる"
+        ]
+      },
+      {
+        "hangul": "도망치다",
+        "values": [
+          "逃げる"
         ]
       }
     ]
