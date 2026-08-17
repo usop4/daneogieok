@@ -2067,7 +2067,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "당기다",
         "values": [
-          "湧く、引く、繰り上げる"
+          "引っ張る"
         ]
       },
       {
@@ -2187,6 +2187,12 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "동일하다",
         "values": [
           "同じである"
+        ]
+      },
+      {
+        "hangul": "떠들다",
+        "values": [
+          "騒ぐ"
         ]
       },
       {
@@ -2874,7 +2880,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "당기다",
         "values": [
-          "湧く、引く、繰り上げる"
+          "引っ張る"
         ]
       },
       {
