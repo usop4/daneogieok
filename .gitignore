@@ -1,6 +1,9 @@
 temp
+sorted
+
 *.sh
 *.ipynb
+
 __pycache__/
 node_modules/
 playwright-report/
