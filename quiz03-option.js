@@ -232,41 +232,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㅎ系_o",
-    "entries": [
-      {
-        "hangul": "험하다",
-        "values": [
-          "険しい"
-        ]
-      },
-      {
-        "hangul": "혼나다",
-        "values": [
-          "ひどい目にあう、痛い目にあう"
-        ]
-      },
-      {
-        "hangul": "혼내다",
-        "values": [
-          "叱る、懲らしめる"
-        ]
-      },
-      {
-        "hangul": "홀륭하다",
-        "values": [
-          "立派だ"
-        ]
-      },
-      {
-        "hangul": "홈치다",
-        "values": [
-          "ふく、盗む、手探りをする、あさる"
-        ]
-      }
-    ]
-  },
-  {
     "name": "ㅎ系_u",
     "entries": [
       {
@@ -297,47 +262,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "흘리다",
         "values": [
           "こぼす、落とす、流す"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "ㄱ系_o",
-    "entries": [
-      {
-        "hangul": "고달프다",
-        "values": [
-          "疲れ切ってだるい、辛い"
-        ]
-      },
-      {
-        "hangul": "고소하다",
-        "values": [
-          "香ばしい"
-        ]
-      },
-      {
-        "hangul": "공손하다",
-        "values": [
-          "礼儀正しい"
-        ]
-      },
-      {
-        "hangul": "꺼지다",
-        "values": [
-          "消える、止まる"
-        ]
-      },
-      {
-        "hangul": "꼼꼼하다",
-        "values": [
-          "几帳面だ"
-        ]
-      },
-      {
-        "hangul": "커다럏다",
-        "values": [
-          "非常に大きい"
         ]
       }
     ]
@@ -507,6 +431,53 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "ㄱ系_o",
+    "entries": [
+      {
+        "hangul": "거침없다",
+        "values": [
+          "よどみない"
+        ]
+      },
+      {
+        "hangul": "고달프다",
+        "values": [
+          "疲れ切ってだるい、辛い"
+        ]
+      },
+      {
+        "hangul": "고소하다",
+        "values": [
+          "香ばしい"
+        ]
+      },
+      {
+        "hangul": "공손하다",
+        "values": [
+          "礼儀正しい"
+        ]
+      },
+      {
+        "hangul": "꺼지다",
+        "values": [
+          "消える、止まる"
+        ]
+      },
+      {
+        "hangul": "꼼꼼하다",
+        "values": [
+          "几帳面だ"
+        ]
+      },
+      {
+        "hangul": "커다럏다",
+        "values": [
+          "非常に大きい"
+        ]
+      }
+    ]
+  },
+  {
     "name": "ㅁ系_i",
     "entries": [
       {
@@ -589,7 +560,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "물리다",
         "values": [
-          "飽きる"
+          "飽きる、噛まれる"
         ]
       },
       {
@@ -653,7 +624,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "한가하다",
         "values": [
-          "暇だ"
+          "暇だ(閑暇)"
         ]
       },
       {
@@ -695,54 +666,48 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㄱ系_a",
+    "name": "ㅎ系_o",
     "entries": [
       {
-        "hangul": "가꾸다",
+        "hangul": "험하다",
         "values": [
-          "栽培する、装う"
+          "険しい"
         ]
       },
       {
-        "hangul": "가라앉다",
+        "hangul": "혼나다",
         "values": [
-          "沈む、収まる、和らぐ"
+          "ひどい目にあう、痛い目にあう"
         ]
       },
       {
-        "hangul": "가렵다",
+        "hangul": "혼내다",
         "values": [
-          "かゆい"
+          "叱る、懲らしめる"
         ]
       },
       {
-        "hangul": "가리키다",
+        "hangul": "혼란스럽다",
         "values": [
-          "指す、示す、指名する"
+          "混乱している"
         ]
       },
       {
-        "hangul": "간직하다",
+        "hangul": "홀가분하다",
         "values": [
-          "大切にしまっておく"
+          "気楽だ"
         ]
       },
       {
-        "hangul": "강하다",
+        "hangul": "홀륭하다",
         "values": [
-          "強い"
+          "立派だ"
         ]
       },
       {
-        "hangul": "까다롭다",
+        "hangul": "홈치다",
         "values": [
-          "気難しい"
-        ]
-      },
-      {
-        "hangul": "캄캄하다",
-        "values": [
-          "真っ暗だ"
+          "ふく、盗む、手探りをする、あさる"
         ]
       }
     ]
@@ -849,6 +814,65 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "얌전하다",
         "values": [
           "おとなしい"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ㄱ系_a",
+    "entries": [
+      {
+        "hangul": "가꾸다",
+        "values": [
+          "栽培する、装う"
+        ]
+      },
+      {
+        "hangul": "가라앉다",
+        "values": [
+          "沈む、収まる、和らぐ"
+        ]
+      },
+      {
+        "hangul": "가렵다",
+        "values": [
+          "かゆい"
+        ]
+      },
+      {
+        "hangul": "가리키다",
+        "values": [
+          "指す、示す、指名する"
+        ]
+      },
+      {
+        "hangul": "간직하다",
+        "values": [
+          "大切にしまっておく"
+        ]
+      },
+      {
+        "hangul": "감추다",
+        "values": [
+          "隠す"
+        ]
+      },
+      {
+        "hangul": "강하다",
+        "values": [
+          "強い"
+        ]
+      },
+      {
+        "hangul": "까다롭다",
+        "values": [
+          "気難しい"
+        ]
+      },
+      {
+        "hangul": "캄캄하다",
+        "values": [
+          "真っ暗だ"
         ]
       }
     ]
@@ -1031,71 +1055,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㅂ系_u",
-    "entries": [
-      {
-        "hangul": "부끄럽다",
-        "values": [
-          "恥ずかしい"
-        ]
-      },
-      {
-        "hangul": "부딪치다",
-        "values": [
-          "（能動的に）ぶつかる、衝突する、直面する"
-        ]
-      },
-      {
-        "hangul": "부딪히다",
-        "values": [
-          "直面する、（受動的に）ぶつかる"
-        ]
-      },
-      {
-        "hangul": "부러지다",
-        "values": [
-          "折れる、はっきりする、しっかりする"
-        ]
-      },
-      {
-        "hangul": "부럽다",
-        "values": [
-          "羨ましい"
-        ]
-      },
-      {
-        "hangul": "부서지다",
-        "values": [
-          "壊れる、破損する"
-        ]
-      },
-      {
-        "hangul": "분명하다",
-        "values": [
-          "明らかだ"
-        ]
-      },
-      {
-        "hangul": "불쌍하다",
-        "values": [
-          "哀れだ"
-        ]
-      },
-      {
-        "hangul": "푸르다",
-        "values": [
-          "青い"
-        ]
-      },
-      {
-        "hangul": "풀리다",
-        "values": [
-          "解ける、晴れる"
-        ]
-      }
-    ]
-  },
-  {
     "name": "ㄴ系_a",
     "entries": [
       {
@@ -1238,6 +1197,77 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "ㅂ系_u",
+    "entries": [
+      {
+        "hangul": "부끄럽다",
+        "values": [
+          "恥ずかしい"
+        ]
+      },
+      {
+        "hangul": "부딪치다",
+        "values": [
+          "（能動的に）ぶつかる、衝突する、直面する"
+        ]
+      },
+      {
+        "hangul": "부딪히다",
+        "values": [
+          "直面する、（受動的に）ぶつかる"
+        ]
+      },
+      {
+        "hangul": "부러지다",
+        "values": [
+          "折れる、はっきりする、しっかりする"
+        ]
+      },
+      {
+        "hangul": "부럽다",
+        "values": [
+          "羨ましい"
+        ]
+      },
+      {
+        "hangul": "부서지다",
+        "values": [
+          "壊れる、破損する"
+        ]
+      },
+      {
+        "hangul": "분명하다",
+        "values": [
+          "明らかだ"
+        ]
+      },
+      {
+        "hangul": "불쌍하다",
+        "values": [
+          "哀れだ"
+        ]
+      },
+      {
+        "hangul": "붙잡히다",
+        "values": [
+          "捕まる"
+        ]
+      },
+      {
+        "hangul": "푸르다",
+        "values": [
+          "青い"
+        ]
+      },
+      {
+        "hangul": "풀리다",
+        "values": [
+          "解ける、晴れる"
+        ]
+      }
+    ]
+  },
+  {
     "name": "ㅇ系_o",
     "entries": [
       {
@@ -1304,77 +1334,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "옳다",
         "values": [
           "正しい"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "ㅈ系_a",
-    "entries": [
-      {
-        "hangul": "자라다",
-        "values": [
-          "育つ、成長する"
-        ]
-      },
-      {
-        "hangul": "자렴하다",
-        "values": [
-          "安い"
-        ]
-      },
-      {
-        "hangul": "작아지다",
-        "values": [
-          "小さくなる、縮まる"
-        ]
-      },
-      {
-        "hangul": "잠그다",
-        "values": [
-          "締める、掛ける、鍵をかける"
-        ]
-      },
-      {
-        "hangul": "잠기다",
-        "values": [
-          "浸かる、包まれる"
-        ]
-      },
-      {
-        "hangul": "잠들다",
-        "values": [
-          "眠る、寝入る"
-        ]
-      },
-      {
-        "hangul": "잡수다",
-        "values": [
-          "召し上がる"
-        ]
-      },
-      {
-        "hangul": "차분하다",
-        "values": [
-          "物静かだ"
-        ]
-      },
-      {
-        "hangul": "찾아내다",
-        "values": [
-          "探し出す、見付ける"
-        ]
-      },
-      {
-        "hangul": "찾아다니다",
-        "values": [
-          "探し回る"
-        ]
-      },
-      {
-        "hangul": "찾아보다",
-        "values": [
-          "訪ねる、訪れる"
         ]
       }
     ]
@@ -1522,83 +1481,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㄱ系_e",
-    "entries": [
-      {
-        "hangul": "게으르다",
-        "values": [
-          "怠ける"
-        ]
-      },
-      {
-        "hangul": "견디다",
-        "values": [
-          "耐える、忍ぶ"
-        ]
-      },
-      {
-        "hangul": "겹치다",
-        "values": [
-          "重なる"
-        ]
-      },
-      {
-        "hangul": "괴롭다",
-        "values": [
-          "つらい"
-        ]
-      },
-      {
-        "hangul": "괴롭히다",
-        "values": [
-          "苦しめる"
-        ]
-      },
-      {
-        "hangul": "권하다",
-        "values": [
-          "勧める"
-        ]
-      },
-      {
-        "hangul": "귀찮다",
-        "values": [
-          "面倒くさい"
-        ]
-      },
-      {
-        "hangul": "귀하다",
-        "values": [
-          "尊い"
-        ]
-      },
-      {
-        "hangul": "깨닫다",
-        "values": [
-          "悟る、目覚める"
-        ]
-      },
-      {
-        "hangul": "깨뜨리다",
-        "values": [
-          "破る、割る、ぶち壊す"
-        ]
-      },
-      {
-        "hangul": "깨우다",
-        "values": [
-          "覚ます、起こす"
-        ]
-      },
-      {
-        "hangul": "꾀하다",
-        "values": [
-          "企む、計画する、図る"
-        ]
-      }
-    ]
-  },
-  {
     "name": "ㅅ系_o",
     "entries": [
       {
@@ -1671,6 +1553,166 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "쏟아지다",
         "values": [
           "降り注ぐ"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ㅈ系_a",
+    "entries": [
+      {
+        "hangul": "자라다",
+        "values": [
+          "育つ、成長する"
+        ]
+      },
+      {
+        "hangul": "자렴하다",
+        "values": [
+          "安い"
+        ]
+      },
+      {
+        "hangul": "작아지다",
+        "values": [
+          "小さくなる、縮まる"
+        ]
+      },
+      {
+        "hangul": "잘나다",
+        "values": [
+          "立派だ（皮肉混じり）"
+        ]
+      },
+      {
+        "hangul": "잠그다",
+        "values": [
+          "締める、掛ける、鍵をかける"
+        ]
+      },
+      {
+        "hangul": "잠기다",
+        "values": [
+          "浸かる、包まれる"
+        ]
+      },
+      {
+        "hangul": "잠들다",
+        "values": [
+          "眠る、寝入る"
+        ]
+      },
+      {
+        "hangul": "잡수다",
+        "values": [
+          "召し上がる"
+        ]
+      },
+      {
+        "hangul": "차분하다",
+        "values": [
+          "物静かだ"
+        ]
+      },
+      {
+        "hangul": "찾아내다",
+        "values": [
+          "探し出す、見付ける"
+        ]
+      },
+      {
+        "hangul": "찾아다니다",
+        "values": [
+          "探し回る"
+        ]
+      },
+      {
+        "hangul": "찾아보다",
+        "values": [
+          "訪ねる、訪れる"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ㄱ系_e",
+    "entries": [
+      {
+        "hangul": "게으르다",
+        "values": [
+          "怠ける"
+        ]
+      },
+      {
+        "hangul": "견디다",
+        "values": [
+          "耐える、忍ぶ"
+        ]
+      },
+      {
+        "hangul": "겹치다",
+        "values": [
+          "重なる"
+        ]
+      },
+      {
+        "hangul": "경사스럽다",
+        "values": [
+          "めでたい"
+        ]
+      },
+      {
+        "hangul": "괴롭다",
+        "values": [
+          "つらい"
+        ]
+      },
+      {
+        "hangul": "괴롭히다",
+        "values": [
+          "苦しめる"
+        ]
+      },
+      {
+        "hangul": "권하다",
+        "values": [
+          "勧める"
+        ]
+      },
+      {
+        "hangul": "귀찮다",
+        "values": [
+          "面倒くさい"
+        ]
+      },
+      {
+        "hangul": "귀하다",
+        "values": [
+          "尊い"
+        ]
+      },
+      {
+        "hangul": "깨닫다",
+        "values": [
+          "悟る、目覚める"
+        ]
+      },
+      {
+        "hangul": "깨뜨리다",
+        "values": [
+          "破る、割る、ぶち壊す"
+        ]
+      },
+      {
+        "hangul": "깨우다",
+        "values": [
+          "覚ます、起こす"
+        ]
+      },
+      {
+        "hangul": "꾀하다",
+        "values": [
+          "企む、計画する、図る"
         ]
       }
     ]
@@ -1812,7 +1854,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "살피다",
         "values": [
-          "察する、窺う"
+          "調べる、観察する"
         ]
       },
       {
@@ -1949,6 +1991,107 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "ㅇ系_i",
+    "entries": [
+      {
+        "hangul": "의하다",
+        "values": [
+          "依る、基づく"
+        ]
+      },
+      {
+        "hangul": "이기다",
+        "values": [
+          "勝つ、抑える、乗り越える"
+        ]
+      },
+      {
+        "hangul": "이끌다",
+        "values": [
+          "引っ張る、引く・惹く"
+        ]
+      },
+      {
+        "hangul": "이루다",
+        "values": [
+          "成す、遂げる、就く"
+        ]
+      },
+      {
+        "hangul": "이루어지다",
+        "values": [
+          "成る、叶う、出来上がる"
+        ]
+      },
+      {
+        "hangul": "이름나다",
+        "values": [
+          "名高い、有名だ"
+        ]
+      },
+      {
+        "hangul": "이어지다",
+        "values": [
+          "繋がる、続く、引き継がれる"
+        ]
+      },
+      {
+        "hangul": "익숙하다",
+        "values": [
+          "慣れる"
+        ]
+      },
+      {
+        "hangul": "익히다",
+        "values": [
+          "身に付ける、覚える"
+        ]
+      },
+      {
+        "hangul": "인정받다",
+        "values": [
+          "認定される、認められる"
+        ]
+      },
+      {
+        "hangul": "인하다",
+        "values": [
+          "因る、基づく"
+        ]
+      },
+      {
+        "hangul": "일깨우다",
+        "values": [
+          "悟らせる"
+        ]
+      },
+      {
+        "hangul": "일으키다",
+        "values": [
+          "起こす、引き起こす"
+        ]
+      },
+      {
+        "hangul": "일컫다",
+        "values": [
+          "称する"
+        ]
+      },
+      {
+        "hangul": "읽히다",
+        "values": [
+          "読まれる、読み取られる"
+        ]
+      },
+      {
+        "hangul": "입히다",
+        "values": [
+          "着せる、与える"
+        ]
+      }
+    ]
+  },
+  {
     "name": "ㄷ系_u",
     "entries": [
       {
@@ -2006,7 +2149,7 @@ window.QUIZ03_OPTION_GROUPS = [
         ]
       },
       {
-        "hangul": "들어오다",
+        "hangul": "들어가다",
         "values": [
           "入っていく"
         ]
@@ -2036,6 +2179,12 @@ window.QUIZ03_OPTION_GROUPS = [
         ]
       },
       {
+        "hangul": "뜬금없다",
+        "values": [
+          "唐突だ"
+        ]
+      },
+      {
         "hangul": "튼튼하다",
         "values": [
           "丈夫だ"
@@ -2045,113 +2194,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "틀림없다",
         "values": [
           "間違いない"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "ㅇ系_i",
-    "entries": [
-      {
-        "hangul": "의하다",
-        "values": [
-          "因る・由る・依る・拠る"
-        ]
-      },
-      {
-        "hangul": "이기다",
-        "values": [
-          "勝つ、抑える、乗り越える"
-        ]
-      },
-      {
-        "hangul": "이끌다",
-        "values": [
-          "引っ張る、引く・惹く"
-        ]
-      },
-      {
-        "hangul": "이루다",
-        "values": [
-          "成す、遂げる、就く"
-        ]
-      },
-      {
-        "hangul": "이루어지다",
-        "values": [
-          "成る、叶う、出来上がる"
-        ]
-      },
-      {
-        "hangul": "이름나다",
-        "values": [
-          "名高い、有名だ"
-        ]
-      },
-      {
-        "hangul": "이어지다",
-        "values": [
-          "繋がる"
-        ]
-      },
-      {
-        "hangul": "이어지다",
-        "values": [
-          "繋がる、続く、引き継がれる"
-        ]
-      },
-      {
-        "hangul": "익숙하다",
-        "values": [
-          "慣れる"
-        ]
-      },
-      {
-        "hangul": "익히다",
-        "values": [
-          "身に付ける、覚える"
-        ]
-      },
-      {
-        "hangul": "인정받다",
-        "values": [
-          "認定される、認められる"
-        ]
-      },
-      {
-        "hangul": "인하다",
-        "values": [
-          "因る、基づく、原因による"
-        ]
-      },
-      {
-        "hangul": "일깨우다",
-        "values": [
-          "悟らせる"
-        ]
-      },
-      {
-        "hangul": "일으키다",
-        "values": [
-          "起こす、引き起こす"
-        ]
-      },
-      {
-        "hangul": "일컫다",
-        "values": [
-          "称する"
-        ]
-      },
-      {
-        "hangul": "읽히다",
-        "values": [
-          "読まれる、読み取られる"
-        ]
-      },
-      {
-        "hangul": "입히다",
-        "values": [
-          "着せる、与える"
         ]
       }
     ]
@@ -2205,6 +2247,12 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "달라지다",
         "values": [
           "変わる"
+        ]
+      },
+      {
+        "hangul": "달래다",
+        "values": [
+          "なぐさめる"
         ]
       },
       {
@@ -2707,7 +2755,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "물리다",
         "values": [
-          "飽きる"
+          "飽きる、噛まれる"
         ]
       }
     ]
@@ -2776,6 +2824,40 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "넘어서다",
         "values": [
           "超える、上回る"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "suffix_없다_ㄱ系",
+    "entries": [
+      {
+        "hangul": "거침없다",
+        "values": [
+          "よどみない"
+        ]
+      },
+      {
+        "hangul": "끓임없다",
+        "values": [
+          "絶え間ない"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "suffix_없다_ㄷ系",
+    "entries": [
+      {
+        "hangul": "뜬금없다",
+        "values": [
+          "唐突だ"
+        ]
+      },
+      {
+        "hangul": "틀림없다",
+        "values": [
+          "間違いない"
         ]
       }
     ]
@@ -2934,6 +3016,23 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "suffix_지다_ㅇ系",
+    "entries": [
+      {
+        "hangul": "이루어지다",
+        "values": [
+          "成る、叶う、出来上がる"
+        ]
+      },
+      {
+        "hangul": "이어지다",
+        "values": [
+          "繋がる、続く、引き継がれる"
+        ]
+      }
+    ]
+  },
+  {
     "name": "suffix_추다_ㅁ系",
     "entries": [
       {
@@ -3048,23 +3147,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "지치다",
         "values": [
           "疲れる、疲労する"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "suffix_히다_ㅂ系",
-    "entries": [
-      {
-        "hangul": "밝히다",
-        "values": [
-          "明らかにする"
-        ]
-      },
-      {
-        "hangul": "부딪히다",
-        "values": [
-          "直面する、（受動的に）ぶつかる"
         ]
       }
     ]
@@ -3277,29 +3359,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "suffix_지다_ㅇ系",
-    "entries": [
-      {
-        "hangul": "이루어지다",
-        "values": [
-          "成る、叶う、出来上がる"
-        ]
-      },
-      {
-        "hangul": "이어지다",
-        "values": [
-          "繋がる"
-        ]
-      },
-      {
-        "hangul": "이어지다",
-        "values": [
-          "繋がる、続く、引き継がれる"
-        ]
-      }
-    ]
-  },
-  {
     "name": "suffix_치다_ㅎ系",
     "entries": [
       {
@@ -3318,6 +3377,29 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "홈치다",
         "values": [
           "ふく、盗む、手探りをする、あさる"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "suffix_히다_ㅂ系",
+    "entries": [
+      {
+        "hangul": "밝히다",
+        "values": [
+          "明らかにする"
+        ]
+      },
+      {
+        "hangul": "부딪히다",
+        "values": [
+          "直面する、（受動的に）ぶつかる"
+        ]
+      },
+      {
+        "hangul": "붙잡히다",
+        "values": [
+          "捕まる"
         ]
       }
     ]
@@ -3457,41 +3539,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "뭉클하다",
         "values": [
           "(胸に)じんとくる"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "suffix_가다_ㄷ系",
-    "entries": [
-      {
-        "hangul": "다녀가다",
-        "values": [
-          "立ち寄る"
-        ]
-      },
-      {
-        "hangul": "달려가다",
-        "values": [
-          "走って行く、駆ける"
-        ]
-      },
-      {
-        "hangul": "도망가다",
-        "values": [
-          "逃亡する、逃げて行く"
-        ]
-      },
-      {
-        "hangul": "뛰어가다",
-        "values": [
-          "走って行く、駆ける"
-        ]
-      },
-      {
-        "hangul": "뛰쳐나가다",
-        "values": [
-          "飛び出す、飛び出る"
         ]
       }
     ]
@@ -3637,6 +3684,47 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "suffix_가다_ㄷ系",
+    "entries": [
+      {
+        "hangul": "다녀가다",
+        "values": [
+          "立ち寄る"
+        ]
+      },
+      {
+        "hangul": "달려가다",
+        "values": [
+          "走って行く、駆ける"
+        ]
+      },
+      {
+        "hangul": "도망가다",
+        "values": [
+          "逃亡する、逃げて行く"
+        ]
+      },
+      {
+        "hangul": "들어가다",
+        "values": [
+          "入っていく"
+        ]
+      },
+      {
+        "hangul": "뛰어가다",
+        "values": [
+          "走って行く、駆ける"
+        ]
+      },
+      {
+        "hangul": "뛰쳐나가다",
+        "values": [
+          "飛び出す、飛び出る"
+        ]
+      }
+    ]
+  },
+  {
     "name": "suffix_리다_ㄷ系",
     "entries": [
       {
@@ -3708,12 +3796,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "돌어오다",
         "values": [
           "戻ってくる"
-        ]
-      },
-      {
-        "hangul": "들어오다",
-        "values": [
-          "入っていく"
         ]
       },
       {
@@ -3813,7 +3895,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "의하다",
         "values": [
-          "因る・由る・依る・拠る"
+          "依る、基づく"
         ]
       },
       {
@@ -3825,7 +3907,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "인하다",
         "values": [
-          "因る、基づく、原因による"
+          "因る、基づく"
         ]
       }
     ]
@@ -3836,7 +3918,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "한가하다",
         "values": [
-          "暇だ"
+          "暇だ(閑暇)"
         ]
       },
       {
@@ -3855,6 +3937,12 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "험하다",
         "values": [
           "険しい"
+        ]
+      },
+      {
+        "hangul": "홀가분하다",
+        "values": [
+          "気楽だ"
         ]
       },
       {

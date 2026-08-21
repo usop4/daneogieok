@@ -237,7 +237,7 @@
           btn.className = 'choice';
           btn.dataset.value = option.hangul;
           btn.dataset.japanese = option.japanese;
-          btn.innerHTML = `<span class="choice-text">${option.hangul}</span><span class="hangul-label">（${option.japanese || ''}）</span>`;
+          btn.innerHTML = `<span class="choice-text">${option.hangul}</span><span class="hangul-label">${option.japanese || ''}</span>`;
           btn.addEventListener('click', () => evaluateAnswer(option.hangul));
           choicesBox.appendChild(btn);
         });

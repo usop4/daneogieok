@@ -267,7 +267,7 @@
           btn.className = 'choice';
           btn.dataset.value = option.value;
           btn.dataset.hangul = option.hangul;
-          btn.innerHTML = `<span class="choice-text">${option.value}</span><span class="hangul-label">（${option.hangul}）</span>`;
+          btn.innerHTML = `<span class="choice-text">${option.value}</span><span class="hangul-label">${option.hangul}</span>`;
           btn.addEventListener('click', () => evaluateAnswer(option.value));
           choicesBox.appendChild(btn);
         });
