@@ -333,7 +333,8 @@
       function buildCorrectPopupText(item, mainText){
         const supplement = item?.supplement || "";
         if (!supplement) return mainText;
-        return `${mainText} / 補足: ${supplement}`;
+        // return `${mainText} / 補足: ${supplement}`;
+        return `${supplement}`;
       }
       function showCorrectPopup(item, text){
         const popup = $("#correctPopup");

@@ -384,7 +384,8 @@ function hideResult(){
 function buildCorrectPopupText(item, mainText){
   const supplement = item?.supplement || "";
   if (!supplement) return mainText;
-  return `${mainText} : ${supplement}`;
+  //return `${mainText} : ${supplement}`;
+  return `${supplement}`;
 }
 function showCorrectPopup(item, text){
   const popup = $("#correctPopup");
