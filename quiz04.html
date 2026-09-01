@@ -307,7 +307,12 @@
       });
 
       document.addEventListener('keydown', (event) => {
-        if (!state.current || state.answered) return;
+        if (!state.current) return;
+        if (event.key === 'Enter' && state.answered) {
+          nextQuestion();
+          return;
+        }
+        if (state.answered) return;
         const key = Number(event.key);
         if (Number.isInteger(key) && key >= 1 && key <= 4) {
           const buttons = Array.from(document.querySelectorAll('.choice'));

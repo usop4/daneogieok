@@ -54,6 +54,30 @@ async function reachQuiz02WrongAnswer(page, maxAttempts = 8) {
   return false;
 }
 
+async function pressCorrectQuiz03Or04Key(page, quizPath) {
+  const prompt = await page.locator("#questionText").textContent();
+  const answers = { "가다": "行く", "나다": "出る", "다다": "届く", "라다": "言う" };
+  const correctValue = quizPath === "/quiz03.html"
+    ? answers[prompt]
+    : { "行く": "가다", "出る": "나다", "届く": "다다", "言う": "라다" }[prompt];
+  const choiceTexts = await page.locator("#choices .choice-text").allTextContents();
+  const correctIndex = choiceTexts.indexOf(correctValue);
+  expect(correctIndex).toBeGreaterThanOrEqual(0);
+  await page.keyboard.press(String(correctIndex + 1));
+}
+
+async function setQuiz03Or04Fixture(page) {
+  await page.route("**/quiz03-data.txt", (route) => route.fulfill({
+    contentType: "text/plain; charset=utf-8",
+    body: [
+      "가다,行く",
+      "나다,出る",
+      "다다,届く",
+      "라다,言う"
+    ].join("\n")
+  }));
+}
+
 test.describe("Quiz01/Quiz02 key and auto judge", () => {
   test("Quiz01 supports number key selection and auto judge", async ({ page }) => {
     await page.goto("/quiz01.html");
@@ -122,6 +146,40 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
       await page.keyboard.press("1");
 
       await expect(page.locator("#hintText")).toContainText("共通例文です。");
+    });
+  }
+
+  for (const quizPath of ["/quiz03.html", "/quiz04.html"]) {
+    test(`${quizPath} advances with Enter after a correct keyboard answer`, async ({ page }) => {
+      await setQuiz03Or04Fixture(page);
+      await page.goto(quizPath);
+      await expect(page.locator("#choices .choice")).toHaveCount(4);
+      const firstQuestion = await page.locator("#questionText").textContent();
+
+      await pressCorrectQuiz03Or04Key(page, quizPath);
+      await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
+      await page.keyboard.press("Enter");
+
+      await expect(page.locator("#questionText")).not.toHaveText(firstQuestion || "");
+    });
+
+    test(`${quizPath} advances with Enter after an incorrect answer but not before answering`, async ({ page }) => {
+      await setQuiz03Or04Fixture(page);
+      await page.goto(quizPath);
+      await expect(page.locator("#choices .choice")).toHaveCount(4);
+      const firstQuestion = await page.locator("#questionText").textContent();
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#questionText")).toHaveText(firstQuestion || "");
+
+      const choiceTexts = await page.locator("#choices .choice-text").allTextContents();
+      const correctText = quizPath === "/quiz03.html"
+        ? { "가다": "行く", "나다": "出る", "다다": "届く", "라다": "言う" }[firstQuestion]
+        : { "行く": "가다", "出る": "나다", "届く": "다다", "言う": "라다" }[firstQuestion];
+      const wrongIndex = choiceTexts.findIndex((text) => text !== correctText);
+      await page.keyboard.press(String(wrongIndex + 1));
+      await expect(page.locator("#choices .choice.wrong")).toHaveCount(1);
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#questionText")).not.toHaveText(firstQuestion || "");
     });
   }
 
