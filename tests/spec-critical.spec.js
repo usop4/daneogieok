@@ -104,6 +104,27 @@ test.describe("Quiz01/Quiz02 key and auto judge", () => {
 });
 
 test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
+  for (const quizPath of ["/quiz03.html", "/quiz04.html"]) {
+    test(`${quizPath} shows an example in the hint only after answering`, async ({ page }) => {
+      await page.route("**/quiz03-data.txt", (route) => route.fulfill({
+        contentType: "text/plain; charset=utf-8",
+        body: [
+          "가다,行く,共通例文です。",
+          "나다,出る,共通例文です。",
+          "다다,届く,共通例文です。",
+          "라다,言う,共通例文です。"
+        ].join("\n")
+      }));
+      await page.goto(quizPath);
+      await expect(page.locator("#choices .choice")).toHaveCount(4);
+      await expect(page.locator("#hintText")).not.toContainText("共通例文です。");
+
+      await page.keyboard.press("1");
+
+      await expect(page.locator("#hintText")).toContainText("共通例文です。");
+    });
+  }
+
   test("Quiz03 reveals labels and marks correctness after answering", async ({ page }) => {
     await page.goto("/quiz03.html");
     await expect(page.locator("#choices .choice")).toHaveCount(4);

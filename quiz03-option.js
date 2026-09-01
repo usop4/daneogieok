@@ -103,7 +103,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "채우다",
         "values": [
-          "詰める、満たす・充たす"
+          "詰める、満たす、補う"
         ]
       },
       {
@@ -596,59 +596,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㄱ系_o",
-    "entries": [
-      {
-        "hangul": "거치다",
-        "values": [
-          "経る"
-        ]
-      },
-      {
-        "hangul": "거침없다",
-        "values": [
-          "よどみない"
-        ]
-      },
-      {
-        "hangul": "고달프다",
-        "values": [
-          "疲れ切ってだるい、辛い"
-        ]
-      },
-      {
-        "hangul": "고소하다",
-        "values": [
-          "香ばしい"
-        ]
-      },
-      {
-        "hangul": "공손하다",
-        "values": [
-          "礼儀正しい"
-        ]
-      },
-      {
-        "hangul": "꺼지다",
-        "values": [
-          "消える、止まる"
-        ]
-      },
-      {
-        "hangul": "꼼꼼하다",
-        "values": [
-          "几帳面だ"
-        ]
-      },
-      {
-        "hangul": "커다럏다",
-        "values": [
-          "非常に大きい"
-        ]
-      }
-    ]
-  },
-  {
     "name": "ㅇ系_e",
     "entries": [
       {
@@ -761,6 +708,65 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "ㄱ系_o",
+    "entries": [
+      {
+        "hangul": "거치다",
+        "values": [
+          "経る"
+        ]
+      },
+      {
+        "hangul": "거침없다",
+        "values": [
+          "よどみない"
+        ]
+      },
+      {
+        "hangul": "고달프다",
+        "values": [
+          "疲れ切ってだるい、辛い"
+        ]
+      },
+      {
+        "hangul": "고소하다",
+        "values": [
+          "香ばしい"
+        ]
+      },
+      {
+        "hangul": "공손하다",
+        "values": [
+          "礼儀正しい"
+        ]
+      },
+      {
+        "hangul": "꺼지다",
+        "values": [
+          "消える、止まる"
+        ]
+      },
+      {
+        "hangul": "꼼꼼하다",
+        "values": [
+          "几帳面だ"
+        ]
+      },
+      {
+        "hangul": "커다럏다",
+        "values": [
+          "非常に大きい"
+        ]
+      },
+      {
+        "hangul": "커지다",
+        "values": [
+          "大きくなる"
+        ]
+      }
+    ]
+  },
+  {
     "name": "ㄱ系_u",
     "entries": [
       {
@@ -815,65 +821,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "끓임없다",
         "values": [
           "絶え間ない"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "ㅁ系_a",
-    "entries": [
-      {
-        "hangul": "마련하다",
-        "values": [
-          "用意する、工夫する"
-        ]
-      },
-      {
-        "hangul": "마주치다",
-        "values": [
-          "偶然会う"
-        ]
-      },
-      {
-        "hangul": "만하다",
-        "values": [
-          "する価値がある"
-        ]
-      },
-      {
-        "hangul": "말리다",
-        "values": [
-          "引き止める"
-        ]
-      },
-      {
-        "hangul": "망가지다",
-        "values": [
-          "壊れる、駄目になる"
-        ]
-      },
-      {
-        "hangul": "망설이다",
-        "values": [
-          "躊躇する、ためらう"
-        ]
-      },
-      {
-        "hangul": "망하다",
-        "values": [
-          "滅びる、台無しになる"
-        ]
-      },
-      {
-        "hangul": "맞추다",
-        "values": [
-          "合わせる"
-        ]
-      },
-      {
-        "hangul": "맡다",
-        "values": [
-          "引き受ける"
         ]
       }
     ]
@@ -1083,6 +1030,12 @@ window.QUIZ03_OPTION_GROUPS = [
         ]
       },
       {
+        "hangul": "알아주다",
+        "values": [
+          "認める"
+        ]
+      },
+      {
         "hangul": "앞두다",
         "values": [
           "控える"
@@ -1186,72 +1139,72 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㅂ系_a",
+    "name": "ㅁ系_a",
     "entries": [
       {
-        "hangul": "바닥나다",
+        "hangul": "마련하다",
         "values": [
-          "破れる、擦り切れる・摺り切れる"
+          "用意する、工夫する"
         ]
       },
       {
-        "hangul": "바라보다",
+        "hangul": "마주보다",
         "values": [
-          "眺める、見る、手が届く"
+          "向き合う"
         ]
       },
       {
-        "hangul": "반짝이다",
+        "hangul": "마주치다",
         "values": [
-          "輝く"
+          "偶然会う"
         ]
       },
       {
-        "hangul": "반하다",
+        "hangul": "만가뜨리다",
         "values": [
-          "惚れる"
+          "壊す"
         ]
       },
       {
-        "hangul": "받아들이다",
+        "hangul": "만하다",
         "values": [
-          "受け取る、受け入れる"
+          "する価値がある"
         ]
       },
       {
-        "hangul": "발그레하다",
+        "hangul": "말리다",
         "values": [
-          "ほんのり赤い"
+          "引き止める"
         ]
       },
       {
-        "hangul": "밝히다",
+        "hangul": "망가지다",
         "values": [
-          "明らかにする"
+          "壊れる、駄目になる"
         ]
       },
       {
-        "hangul": "빠뜨리다",
+        "hangul": "망설이다",
         "values": [
-          "落とす、陥れる・落し入れる"
+          "躊躇する、ためらう"
         ]
       },
       {
-        "hangul": "빠지다",
+        "hangul": "망하다",
         "values": [
-          "落ちる、陥る、耽る"
+          "滅びる、台無しになる"
         ]
       },
       {
-        "hangul": "빨개지다",
+        "hangul": "맞추다",
         "values": [
-          "赤くなる、赤らむ"
+          "合わせる"
         ]
       },
       {
-        "hangul": "팍팍하다",
+        "hangul": "맡다",
         "values": [
-          "(生活などが)厳しい"
+          "引き受ける"
         ]
       }
     ]
@@ -1323,6 +1276,83 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "찢어지다",
         "values": [
           "破れる、裂かれる"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ㅂ系_a",
+    "entries": [
+      {
+        "hangul": "바닥나다",
+        "values": [
+          "破れる、擦り切れる・摺り切れる"
+        ]
+      },
+      {
+        "hangul": "바라보다",
+        "values": [
+          "眺める、見る、手が届く"
+        ]
+      },
+      {
+        "hangul": "반짝이다",
+        "values": [
+          "輝く"
+        ]
+      },
+      {
+        "hangul": "반하다",
+        "values": [
+          "惚れる"
+        ]
+      },
+      {
+        "hangul": "받아들이다",
+        "values": [
+          "受け取る、受け入れる"
+        ]
+      },
+      {
+        "hangul": "발그레하다",
+        "values": [
+          "ほんのり赤い"
+        ]
+      },
+      {
+        "hangul": "밝히다",
+        "values": [
+          "明らかにする"
+        ]
+      },
+      {
+        "hangul": "빠뜨리다",
+        "values": [
+          "落とす、陥れる・落し入れる"
+        ]
+      },
+      {
+        "hangul": "빠지다",
+        "values": [
+          "落ちる、陥る、耽る"
+        ]
+      },
+      {
+        "hangul": "빨개지다",
+        "values": [
+          "赤くなる、赤らむ"
+        ]
+      },
+      {
+        "hangul": "파다",
+        "values": [
+          "掘る"
+        ]
+      },
+      {
+        "hangul": "팍팍하다",
+        "values": [
+          "(生活などが)厳しい"
         ]
       }
     ]
@@ -1636,89 +1666,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "ㄱ系_e",
-    "entries": [
-      {
-        "hangul": "게으르다",
-        "values": [
-          "怠ける"
-        ]
-      },
-      {
-        "hangul": "견디다",
-        "values": [
-          "耐える、忍ぶ"
-        ]
-      },
-      {
-        "hangul": "겹치다",
-        "values": [
-          "重なる"
-        ]
-      },
-      {
-        "hangul": "경사스럽다",
-        "values": [
-          "めでたい"
-        ]
-      },
-      {
-        "hangul": "괴롭다",
-        "values": [
-          "つらい"
-        ]
-      },
-      {
-        "hangul": "괴롭히다",
-        "values": [
-          "苦しめる"
-        ]
-      },
-      {
-        "hangul": "권하다",
-        "values": [
-          "勧める"
-        ]
-      },
-      {
-        "hangul": "귀찮다",
-        "values": [
-          "面倒くさい"
-        ]
-      },
-      {
-        "hangul": "귀하다",
-        "values": [
-          "尊い"
-        ]
-      },
-      {
-        "hangul": "깨닫다",
-        "values": [
-          "悟る、目覚める"
-        ]
-      },
-      {
-        "hangul": "깨뜨리다",
-        "values": [
-          "破る、割る、ぶち壊す"
-        ]
-      },
-      {
-        "hangul": "깨우다",
-        "values": [
-          "覚ます、起こす"
-        ]
-      },
-      {
-        "hangul": "꾀하다",
-        "values": [
-          "企む、計画する、図る"
-        ]
-      }
-    ]
-  },
-  {
     "name": "ㄴ系_o",
     "entries": [
       {
@@ -1880,6 +1827,95 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "찾아보다",
         "values": [
           "訪ねる、訪れる"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "ㄱ系_e",
+    "entries": [
+      {
+        "hangul": "게으르다",
+        "values": [
+          "怠ける"
+        ]
+      },
+      {
+        "hangul": "견디다",
+        "values": [
+          "耐える、忍ぶ"
+        ]
+      },
+      {
+        "hangul": "겹치다",
+        "values": [
+          "重なる"
+        ]
+      },
+      {
+        "hangul": "경사스럽다",
+        "values": [
+          "めでたい"
+        ]
+      },
+      {
+        "hangul": "괴롭다",
+        "values": [
+          "つらい"
+        ]
+      },
+      {
+        "hangul": "괴롭히다",
+        "values": [
+          "苦しめる"
+        ]
+      },
+      {
+        "hangul": "권하다",
+        "values": [
+          "勧める"
+        ]
+      },
+      {
+        "hangul": "귀찮다",
+        "values": [
+          "面倒くさい"
+        ]
+      },
+      {
+        "hangul": "귀하다",
+        "values": [
+          "尊い"
+        ]
+      },
+      {
+        "hangul": "깨닫다",
+        "values": [
+          "悟る、目覚める"
+        ]
+      },
+      {
+        "hangul": "깨뜨리다",
+        "values": [
+          "破る、割る、ぶち壊す"
+        ]
+      },
+      {
+        "hangul": "깨우다",
+        "values": [
+          "覚ます、起こす"
+        ]
+      },
+      {
+        "hangul": "꾀하다",
+        "values": [
+          "企む、計画する、図る"
+        ]
+      },
+      {
+        "hangul": "켜지다",
+        "values": [
+          "(火・電灯が)つく"
         ]
       }
     ]
@@ -2954,6 +2990,23 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "suffix_보다_ㅁ系",
+    "entries": [
+      {
+        "hangul": "마주보다",
+        "values": [
+          "向き合う"
+        ]
+      },
+      {
+        "hangul": "몰라보다",
+        "values": [
+          "わからない"
+        ]
+      }
+    ]
+  },
+  {
     "name": "suffix_서다_ㄴ系",
     "entries": [
       {
@@ -3050,7 +3103,7 @@ window.QUIZ03_OPTION_GROUPS = [
       {
         "hangul": "채우다",
         "values": [
-          "詰める、満たす・充たす"
+          "詰める、満たす、補う"
         ]
       }
     ]
@@ -3119,23 +3172,6 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "줄이다",
         "values": [
           "減らす、減少させる"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "suffix_지다_ㄱ系",
-    "entries": [
-      {
-        "hangul": "꺼지다",
-        "values": [
-          "消える、止まる"
-        ]
-      },
-      {
-        "hangul": "끊어지다",
-        "values": [
-          "切れる、絶える、止まる"
         ]
       }
     ]
@@ -3455,29 +3491,6 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
-    "name": "suffix_리다_ㅁ系",
-    "entries": [
-      {
-        "hangul": "말리다",
-        "values": [
-          "引き止める"
-        ]
-      },
-      {
-        "hangul": "몰리다",
-        "values": [
-          "押し寄せられる、追い込まれる"
-        ]
-      },
-      {
-        "hangul": "물리다",
-        "values": [
-          "飽きる、噛まれる"
-        ]
-      }
-    ]
-  },
-  {
     "name": "suffix_리다_ㅂ系",
     "entries": [
       {
@@ -3668,6 +3681,35 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "suffix_리다_ㅁ系",
+    "entries": [
+      {
+        "hangul": "만가뜨리다",
+        "values": [
+          "壊す"
+        ]
+      },
+      {
+        "hangul": "말리다",
+        "values": [
+          "引き止める"
+        ]
+      },
+      {
+        "hangul": "몰리다",
+        "values": [
+          "押し寄せられる、追い込まれる"
+        ]
+      },
+      {
+        "hangul": "물리다",
+        "values": [
+          "飽きる、噛まれる"
+        ]
+      }
+    ]
+  },
+  {
     "name": "suffix_보다_ㄷ系",
     "entries": [
       {
@@ -3692,6 +3734,35 @@ window.QUIZ03_OPTION_GROUPS = [
         "hangul": "둘러보다",
         "values": [
           "ぐるっと見回す（周囲など）"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "suffix_지다_ㄱ系",
+    "entries": [
+      {
+        "hangul": "꺼지다",
+        "values": [
+          "消える、止まる"
+        ]
+      },
+      {
+        "hangul": "끊어지다",
+        "values": [
+          "切れる、絶える、止まる"
+        ]
+      },
+      {
+        "hangul": "커지다",
+        "values": [
+          "大きくなる"
+        ]
+      },
+      {
+        "hangul": "켜지다",
+        "values": [
+          "(火・電灯が)つく"
         ]
       }
     ]

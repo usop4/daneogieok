@@ -19,22 +19,20 @@ def transform_line(line: str) -> str:
     if not stripped or stripped.startswith("#"):
         return line
 
-    idx = 0
-    while idx < len(stripped) and HANGUL_RE.fullmatch(stripped[idx]):
-        idx += 1
-
-    if idx == 0 or idx >= len(stripped):
+    parts = [part.strip() for part in stripped.split(",")]
+    if len(parts) < 2:
         return line
 
-    prefix = stripped[:idx]
-    suffix = stripped[idx:]
-    suffix = suffix.lstrip()
-
-    suffix = normalize_japanese_text(suffix)
-    if not JAPANESE_RE.search(suffix):
+    hangul = parts[0]
+    japanese = parts[1]
+    if not hangul or not HANGUL_RE.fullmatch(hangul[0]):
         return line
 
-    return f"{prefix} {suffix}"
+    japanese = normalize_japanese_text(japanese)
+    if not JAPANESE_RE.search(japanese):
+        return line
+
+    return ",".join([hangul, japanese, *parts[2:]])
 
 
 def transform_csv_block(text: str) -> str:

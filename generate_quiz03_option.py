@@ -20,12 +20,14 @@ def parse_entries(csv_text: str) -> List[Tuple[str, List[str]]]:
         if not line or line.startswith("#"):
             continue
 
-        parts = [p.strip() for p in line.split(" ", 1) if p.strip()]
+        parts = [part.strip() for part in line.split(",")]
         if len(parts) < 2:
             continue
 
         hangul = parts[0]
-        japanese_values = [parts[1]]
+        japanese_values = [parts[1]] if parts[1] else []
+        if not hangul or not japanese_values:
+            continue
         entries.append((hangul, japanese_values))
 
     return entries

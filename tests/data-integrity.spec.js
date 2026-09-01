@@ -63,11 +63,13 @@ function parseQuiz03Entries(text) {
   const lines = text.split("\n").map(normalizeLine).filter(Boolean);
   for (const line of lines) {
     if (line.startsWith("#")) continue;
-    const hangul = line.split(/\s+/, 1)[0];
-    const valuesText = line.slice(hangul.length).trim();
-    const values = valuesText.split(",").map((value) => value.trim()).filter(Boolean);
-    if (!hangul || values.length === 0) continue;
-    entries.push({ hangul, values });
+    const parts = line.split(",");
+    if (parts.length < 2) continue;
+    const hangul = (parts[0] || "").trim();
+    const japanese = (parts[1] || "").trim();
+    const example = parts.slice(2).join(",").trim();
+    if (!hangul || !japanese) continue;
+    entries.push({ hangul, values: [japanese], example });
   }
   return entries;
 }
@@ -130,6 +132,7 @@ test.describe("Data integrity", () => {
     const knownHangulWords = new Set(entries.map((entry) => entry.hangul));
     for (const entry of entries) {
       expect(entry.values.length).toBeGreaterThan(0);
+      expect(entry.values).not.toContain(entry.example);
     }
 
     for (const group of optionGroups) {
