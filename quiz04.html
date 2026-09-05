@@ -251,7 +251,6 @@
         state.answered = true;
         const buttons = Array.from(document.querySelectorAll('.choice'));
         const selectedIsCorrect = state.current.hangul === selectedValue;
-        const correctAnswerText = state.current.hangul;
         buttons.forEach((btn) => {
           btn.classList.add('locked');
           btn.classList.add('revealed');
@@ -279,8 +278,7 @@
           state.progress.recordOutcome(state.current, selectedIsCorrect);
           state.progress.persist();
         }
-        const resultText = selectedIsCorrect ? '正解です。' : `不正解です。正解は ${correctAnswerText} です。`;
-        document.getElementById('hintText').textContent = state.current.example ? `${resultText} ${state.current.example}` : resultText;
+        document.getElementById('hintText').textContent = state.current.example || '正解です。';
         updateStat();
 
         const correctButton = buttons.find((btn) => state.current.hangul === btn.dataset.value);
