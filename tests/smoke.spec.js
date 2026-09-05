@@ -23,11 +23,16 @@ for (const quiz of quizPages) {
 }
 
 test("Quiz stats page shows last 7 days for all quizzes", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("quiz01-progress-v1", JSON.stringify({ score: { ok: 12, ng: 3 } }));
+  });
   await page.goto("/quiz-stats.html");
   await expect(page).toHaveTitle(/Quiz Stats/);
   await expect(page.locator("table.stats-table thead th")).toHaveCount(5);
   await expect(page.locator("table.stats-table thead th a.statsQuizLink")).toHaveCount(4);
-  await expect(page.locator("table.stats-table thead th [data-quiz-total]")).toHaveCount(4);
+  await expect(page.locator("table.stats-table thead th [data-quiz-score]")).toHaveCount(4);
+  await expect(page.locator('[data-quiz-score="quiz01"]')).toHaveText("12 / 3");
+  await expect(page.locator('[data-quiz-score="quiz02"]')).toHaveText("0 / 0");
   await expect(page.locator("table.stats-table tbody tr")).toHaveCount(7);
   await expect(page.locator("table.stats-table tbody tr").first().locator(".dateSubcount")).toHaveText(/^\d+ \/ \d+$/);
   await expect(page.locator(".quiz-nav a")).toHaveCount(5);

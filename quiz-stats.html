@@ -24,10 +24,10 @@
               <thead>
                 <tr>
                   <th></th>
-                  <th><a class="statsQuizLink" href="quiz01.html">Quiz01</a><span class="statsSubcount" data-quiz-total="quiz01"></span></th>
-                  <th><a class="statsQuizLink" href="quiz02.html">Quiz02</a><span class="statsSubcount" data-quiz-total="quiz02"></span></th>
-                  <th><a class="statsQuizLink" href="quiz03.html">Quiz03</a><span class="statsSubcount" data-quiz-total="quiz03"></span></th>
-                  <th><a class="statsQuizLink" href="quiz04.html">Quiz04</a><span class="statsSubcount" data-quiz-total="quiz04"></span></th>
+                  <th><a class="statsQuizLink" href="quiz01.html">Quiz01</a><span class="statsSubcount" data-quiz-score="quiz01"></span></th>
+                  <th><a class="statsQuizLink" href="quiz02.html">Quiz02</a><span class="statsSubcount" data-quiz-score="quiz02"></span></th>
+                  <th><a class="statsQuizLink" href="quiz03.html">Quiz03</a><span class="statsSubcount" data-quiz-score="quiz03"></span></th>
+                  <th><a class="statsQuizLink" href="quiz04.html">Quiz04</a><span class="statsSubcount" data-quiz-score="quiz04"></span></th>
                 </tr>
               </thead>
               <tbody id="statsBody"></tbody>
@@ -52,22 +52,28 @@
         return quizCommon.escapeHtml(value);
       }
 
+      function getStoredQuizScore(quizId) {
+        try {
+          const stored = JSON.parse(localStorage.getItem(`${quizId}-progress-v1`) || '{}');
+          const score = stored?.score || {};
+          return {
+            ok: Number(score.ok) || 0,
+            ng: Number(score.ng) || 0
+          };
+        } catch (error) {
+          return { ok: 0, ng: 0 };
+        }
+      }
+
       function renderStats() {
         const rows = quizCommon.getRecentDailyQuizStats(quizIds, 7).slice().reverse();
         const tbody = document.getElementById('statsBody');
         if (!tbody) return;
 
-        const quizTotals = Object.fromEntries(quizIds.map((quizId) => [quizId, { ok: 0, ng: 0 }]));
-        rows.forEach((row) => {
-          quizIds.forEach((quizId) => {
-            quizTotals[quizId].ok += row.quizzes[quizId].ok;
-            quizTotals[quizId].ng += row.quizzes[quizId].ng;
-          });
-        });
         quizIds.forEach((quizId) => {
-          const total = quizTotals[quizId];
-          const target = document.querySelector(`[data-quiz-total="${quizId}"]`);
-          if (target) target.innerHTML = `<span class="okText">${total.ok}</span> / <span class="ngText">${total.ng}</span>`;
+          const score = getStoredQuizScore(quizId);
+          const target = document.querySelector(`[data-quiz-score="${quizId}"]`);
+          if (target) target.innerHTML = `<span class="okText">${score.ok}</span> / <span class="ngText">${score.ng}</span>`;
         });
 
         tbody.innerHTML = rows.map((row) => {
