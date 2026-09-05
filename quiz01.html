@@ -58,6 +58,8 @@ const $ = quizCommon.$;
 
 const state = {
   dict: new Map(), // hangulChar -> Set(kanjiChar)
+  kanjiFrequency: new Map(), // columnIndex -> Map(kanjiChar -> occurrence count)
+  kanjiFirstSeen: new Map(), // columnIndex -> Map(kanjiChar -> first-seen order)
   items: [],       // quiz selection items
   questionOrder: [],
   questionIndex: 0,
@@ -93,6 +95,9 @@ function parseCSV(text){
 
 function buildDict(items){
   const dict = new Map();
+  const kanjiFrequency = new Map();
+  const kanjiFirstSeen = new Map();
+  let firstSeenOrder = 0;
   for (const { hangul, kanji } of items){
     const hChars = Array.from(hangul);
     const kChars = Array.from(kanji);
@@ -105,9 +110,19 @@ function buildDict(items){
       const k = kChars[i];
       if (!dict.has(h)) dict.set(h, new Set());
       dict.get(h).add(k);
+
+      if (!kanjiFrequency.has(i)) kanjiFrequency.set(i, new Map());
+      if (!kanjiFirstSeen.has(i)) kanjiFirstSeen.set(i, new Map());
+      const frequency = kanjiFrequency.get(i);
+      const firstSeen = kanjiFirstSeen.get(i);
+      frequency.set(k, (frequency.get(k) || 0) + 1);
+      if (!firstSeen.has(k)) {
+        firstSeen.set(k, firstSeenOrder);
+        firstSeenOrder += 1;
+      }
     }
   }
-  return dict;
+  return { dict, kanjiFrequency, kanjiFirstSeen };
 }
 
 function updateStat(){
@@ -143,19 +158,31 @@ function shuffle(arr){
   return quizCommon.shuffle(arr);
 }
 
-function getDisplayedOptions(hChar, correctKanji){
+function getDisplayedOptions(hChar, columnIndex, correctKanji){
   const base = Array.from(state.dict.get(hChar) || new Set([correctKanji]));
   if (!base.includes(correctKanji)) base.push(correctKanji);
 
-  const unique = Array.from(new Set(base));
-  if (unique.length <= 7){
-    const opts = shuffle(unique.slice()); // 修正
-    return opts;
-  }
+  const frequency = state.kanjiFrequency.get(columnIndex) || new Map();
+  const firstSeen = state.kanjiFirstSeen.get(columnIndex) || new Map();
+  const unique = Array.from(new Set(base)).sort((left, right) => {
+    const frequencyDifference = (frequency.get(right) || 0) - (frequency.get(left) || 0);
+    if (frequencyDifference !== 0) return frequencyDifference;
+    return (firstSeen.get(left) ?? Number.MAX_SAFE_INTEGER) - (firstSeen.get(right) ?? Number.MAX_SAFE_INTEGER);
+  });
 
-  const others = shuffle(unique.filter(k => k !== correctKanji)); // 修正
-  const opts = shuffle([correctKanji, ...others.slice(0, 6)]); // 修正
-  return opts;
+  if (unique.length <= 7) return unique;
+
+  const options = unique.slice(0, 7);
+  if (!options.includes(correctKanji)) {
+    options.pop();
+    options.push(correctKanji);
+    options.sort((left, right) => {
+      const frequencyDifference = (frequency.get(right) || 0) - (frequency.get(left) || 0);
+      if (frequencyDifference !== 0) return frequencyDifference;
+      return (firstSeen.get(left) ?? Number.MAX_SAFE_INTEGER) - (firstSeen.get(right) ?? Number.MAX_SAFE_INTEGER);
+    });
+  }
+  return options;
 }
 
 function nextQuestion(){
@@ -203,7 +230,7 @@ function renderTable(){
   // 列ごとの候補配列
   const colOptions = hangulChars.map((hChar, idx) => {
     const correctKanji = kanjiChars[idx];
-    return getDisplayedOptions(hChar, correctKanji);
+    return getDisplayedOptions(hChar, idx, correctKanji);
   });
 
   // 1行目（ハングル）
@@ -429,7 +456,10 @@ async function loadDefaultData(){
     return;
   }
   state.items = items.slice();
-  state.dict = buildDict(items);
+  const dictionaries = buildDict(items);
+  state.dict = dictionaries.dict;
+  state.kanjiFrequency = dictionaries.kanjiFrequency;
+  state.kanjiFirstSeen = dictionaries.kanjiFirstSeen;
   state.progress = quizCommon.createOutcomeProgress({
     storageKey: "quiz01-progress-v1",
     getItemKey: (item) => item?.hangul,

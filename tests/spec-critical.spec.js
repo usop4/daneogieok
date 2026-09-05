@@ -79,6 +79,22 @@ async function setQuiz03Or04Fixture(page) {
 }
 
 test.describe("Quiz01/Quiz02 key and auto judge", () => {
+  test("Quiz01 orders kanji options by occurrence frequency", async ({ page }) => {
+    await page.route("**/quiz01-data.txt", (route) => route.fulfill({
+      contentType: "text/plain; charset=utf-8",
+      body: [
+        "가나,甲乙",
+        "가다,甲丙",
+        "가라,甲丁",
+        "가마,己戊"
+      ].join("\n")
+    }));
+    await page.goto("/quiz01.html");
+
+    await expect(page.locator("#quizTable .hangulCell").first()).toHaveText("가");
+    await expect(page.locator('#quizTable .cellBtn[data-col="0"]')).toHaveText(["1. 甲", "2. 己"]);
+  });
+
   test("Quiz01 supports number key selection and auto judge", async ({ page }) => {
     await page.goto("/quiz01.html");
     await expect(page.locator("#quizTable .hangulCell").first()).toBeVisible();
