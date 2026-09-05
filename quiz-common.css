@@ -193,6 +193,22 @@ table.stats-table th {
   color: var(--muted);
 }
 
+.statsQuizLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.statsSubcount,
+.dateSubcount {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
 table.stats-table td:first-child,
 table.stats-table th:first-child {
   text-align: left;

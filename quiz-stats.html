@@ -24,10 +24,10 @@
               <thead>
                 <tr>
                   <th></th>
-                  <th>Quiz01</th>
-                  <th>Quiz02</th>
-                  <th>Quiz03</th>
-                  <th>Quiz04</th>
+                  <th><a class="statsQuizLink" href="quiz01.html">Quiz01</a><span class="statsSubcount" data-quiz-total="quiz01"></span></th>
+                  <th><a class="statsQuizLink" href="quiz02.html">Quiz02</a><span class="statsSubcount" data-quiz-total="quiz02"></span></th>
+                  <th><a class="statsQuizLink" href="quiz03.html">Quiz03</a><span class="statsSubcount" data-quiz-total="quiz03"></span></th>
+                  <th><a class="statsQuizLink" href="quiz04.html">Quiz04</a><span class="statsSubcount" data-quiz-total="quiz04"></span></th>
                 </tr>
               </thead>
               <tbody id="statsBody"></tbody>
@@ -57,12 +57,29 @@
         const tbody = document.getElementById('statsBody');
         if (!tbody) return;
 
+        const quizTotals = Object.fromEntries(quizIds.map((quizId) => [quizId, { ok: 0, ng: 0 }]));
+        rows.forEach((row) => {
+          quizIds.forEach((quizId) => {
+            quizTotals[quizId].ok += row.quizzes[quizId].ok;
+            quizTotals[quizId].ng += row.quizzes[quizId].ng;
+          });
+        });
+        quizIds.forEach((quizId) => {
+          const total = quizTotals[quizId];
+          const target = document.querySelector(`[data-quiz-total="${quizId}"]`);
+          if (target) target.innerHTML = `<span class="okText">${total.ok}</span> / <span class="ngText">${total.ng}</span>`;
+        });
+
         tbody.innerHTML = rows.map((row) => {
+          const dailyTotal = quizIds.reduce((total, quizId) => ({
+            ok: total.ok + row.quizzes[quizId].ok,
+            ng: total.ng + row.quizzes[quizId].ng
+          }), { ok: 0, ng: 0 });
           const cells = quizIds.map((quizId) => {
             const result = row.quizzes[quizId] || { ok: 0, ng: 0 };
             return `<td><span class="okText">${escapeHtml(`${result.ok}`)}</span> / <span class="ngText"> ${escapeHtml(`${result.ng}`)}</span></td>`;
           }).join('');
-          return `<tr><td>${escapeHtml(row.date)}</td>${cells}</tr>`;
+          return `<tr><td><div>${escapeHtml(row.date)}</div><div class="dateSubcount"><span class="okText">${dailyTotal.ok}</span> / <span class="ngText">${dailyTotal.ng}</span></div></td>${cells}</tr>`;
         }).join('');
       }
 

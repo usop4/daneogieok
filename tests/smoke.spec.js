@@ -26,6 +26,9 @@ test("Quiz stats page shows last 7 days for all quizzes", async ({ page }) => {
   await page.goto("/quiz-stats.html");
   await expect(page).toHaveTitle(/Quiz Stats/);
   await expect(page.locator("table.stats-table thead th")).toHaveCount(5);
+  await expect(page.locator("table.stats-table thead th a.statsQuizLink")).toHaveCount(4);
+  await expect(page.locator("table.stats-table thead th [data-quiz-total]")).toHaveCount(4);
   await expect(page.locator("table.stats-table tbody tr")).toHaveCount(7);
+  await expect(page.locator("table.stats-table tbody tr").first().locator(".dateSubcount")).toHaveText(/^\d+ \/ \d+$/);
   await expect(page.locator(".quiz-nav a")).toHaveCount(5);
 });
