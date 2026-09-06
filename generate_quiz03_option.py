@@ -99,9 +99,9 @@ def build_groups(
             if len(family_entries) < 2:
                 continue
             display_family = FAMILY_DISPLAY_NAMES.get(family, family)
-            suffix_items.append((f"suffix_{suffix}_{display_family}", family_entries))
+            suffix_items.append((f"{display_family}_{suffix}", family_entries))
 
-    suffix_items.sort(key=lambda item: (len(item[1]), item[0]))
+    suffix_items.sort(key=lambda item: item[0])
 
     grouped: DefaultDict[Tuple[str, str], List[Tuple[str, List[str]]]] = defaultdict(list)
     for hangul, japanese_values in valid_entries:
@@ -114,7 +114,7 @@ def build_groups(
         grouped[key].append((hangul, japanese_values))
 
     grouped_items = [(f"{FAMILY_DISPLAY_NAMES.get(initial, initial)}_{medial}", entries_for_group) for (initial, medial), entries_for_group in grouped.items() if len(entries_for_group) > 1]
-    grouped_items.sort(key=lambda item: (len(item[1]), item[0]))
+    grouped_items.sort(key=lambda item: item[0])
 
     groups = grouped_items + suffix_items
     grouped_words = {hangul for _, entries_for_group in groups for hangul, _ in entries_for_group}
@@ -128,16 +128,14 @@ def format_output(groups: List[Tuple[str, List[Tuple[str, List[str]]]]], ungroup
     lines: List[str] = []
     for name, entries in groups:
         lines.append(f"[{name}]")
-        for hangul, japanese_values in entries:
-            values_text = ", ".join(japanese_values)
-            lines.append(f"{hangul} {values_text}")
+        for hangul, _ in entries:
+            lines.append(hangul)
         lines.append("")
 
     if ungrouped_entries:
         lines.append("[グループなし]")
-        for hangul, japanese_values in sorted(ungrouped_entries, key=lambda item: item[0]):
-            values_text = ", ".join(japanese_values)
-            lines.append(f"{hangul} {values_text}")
+        for hangul, _ in sorted(ungrouped_entries, key=lambda item: item[0]):
+            lines.append(hangul)
 
     return "\n".join(lines).rstrip() + "\n"
 
@@ -147,10 +145,7 @@ def format_js_output(groups: List[Tuple[str, List[Tuple[str, List[str]]]]]) -> s
     for name, entries in groups:
         payload.append({
             "name": name,
-            "entries": [
-                {"hangul": hangul, "values": japanese_values}
-                for hangul, japanese_values in entries
-            ],
+            "entries": [hangul for hangul, _ in entries],
         })
 
     return "window.QUIZ03_OPTION_GROUPS = " + json.dumps(payload, ensure_ascii=False, indent=2) + ";\n"

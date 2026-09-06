@@ -109,7 +109,8 @@
   - 第 3 列以降は補足情報／例文として分類先に引き継ぐ
 - **generate_enc.py**: quiz01-data.txt および quiz03-data.txt を AES-GCM 暗号化し、Base64 ペイロードとして quiz01-data.enc および quiz03-data.enc を出力する
 - **generate_quiz03_option.py**: quiz03-data.txt を元に選択肢候補をグルーピングし、quiz03-option.txt（確認用）と quiz03-option.js（ブラウザ読込用）を出力する
-  - 語尾一致によるグループ分類に加え、後方一致グループをさらに先頭文字の子音ファミリー別に再分割する（例: `suffix_하다_ㄱ系`, `suffix_하다_ㄷ系`）
+  - 語尾一致によるグループ分類に加え、後方一致グループをさらに先頭文字の子音ファミリー別に再分割する（例: `ㄱ_하다`, `ㄷ_하다`）
+  - 日本語訳データ（values）は重複保持を避けるため出力せず単語リストのみ保持し、選択肢生成時に復号データ（quiz03-data.enc）から補完する
   - 1 語が複数グループに属することを許容する
   - quiz03-exclude.txt による除外はこのスクリプトでは行わず、quiz03.html / quiz04.html 側の選択肢生成時に適用する
 

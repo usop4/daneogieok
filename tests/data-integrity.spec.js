@@ -171,12 +171,10 @@ test.describe("Data integrity", () => {
       expect(Array.isArray(group.entries)).toBe(true);
       expect(group.entries.length).toBeGreaterThan(0);
 
-      for (const entry of group.entries) {
-        expect(typeof entry.hangul).toBe("string");
-        expect(entry.hangul.length).toBeGreaterThan(0);
-        expect(knownHangulWords.has(entry.hangul)).toBe(true);
-        expect(Array.isArray(entry.values)).toBe(true);
-        expect(entry.values.length).toBeGreaterThan(0);
+      for (const hangul of group.entries) {
+        expect(typeof hangul).toBe("string");
+        expect(hangul.length).toBeGreaterThan(0);
+        expect(knownHangulWords.has(hangul)).toBe(true);
       }
     }
   });

@@ -116,15 +116,17 @@
       }
 
       function getGroupCandidates(item) {
+        const itemMap = new Map((state.items || []).map((it) => [it.hangul, it]));
+
         const groups = Array.isArray(window.QUIZ03_OPTION_GROUPS)
-          ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.some((entry) => entry.hangul === item.hangul))
+          ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.includes(item.hangul))
           : [];
 
         console.log(`[quiz04] 出題日本語: ${item.values[0]}`);
         console.log(`[quiz04] 所属グループ:`, groups.map((group) => group.name));
         if (groups.length) {
           console.log(`[quiz04] グループ内単語:`, groups.map((group) => ({
-            words: (group.entries || []).map((entry) => entry.hangul)
+            words: group.entries || []
           })));
         }
 
@@ -132,16 +134,16 @@
         const seenKeys = new Set();
 
         for (const group of groups) {
-          const otherEntries = (group.entries || []).filter((entry) => entry.hangul !== item.hangul);
-          for (const entry of otherEntries) {
-            if (!entry.hangul) continue;
-            if (isExcludedWord(entry.hangul)) continue;
-            const key = entry.hangul;
-            if (seenKeys.has(key)) continue;
-            seenKeys.add(key);
+          const otherHanguls = (group.entries || []).filter((h) => h !== item.hangul);
+          for (const h of otherHanguls) {
+            if (!h) continue;
+            if (isExcludedWord(h)) continue;
+            if (seenKeys.has(h)) continue;
+            seenKeys.add(h);
+            const targetItem = itemMap.get(h);
             selected.push({
-              hangul: entry.hangul,
-              japanese: (entry.values || [])[0] || '',
+              hangul: h,
+              japanese: (targetItem && targetItem.values && targetItem.values[0]) || '',
               isCorrect: false
             });
           }

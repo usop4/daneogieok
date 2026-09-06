@@ -67,13 +67,9 @@
           }
 
           if (!currentGroup) continue;
-          const parts = rawLine.split(/\s+/, 2);
-          if (parts.length < 2) continue;
-          const hangul = parts[0].trim();
-          const rest = rawLine.slice(hangul.length).trim();
-          const values = rest.split(',').map((value) => value.trim()).filter(Boolean);
-          if (!hangul || values.length === 0) continue;
-          currentGroup.entries.push({ hangul, values });
+          const hangul = rawLine.trim().split(/\s+/, 1)[0];
+          if (!hangul) continue;
+          currentGroup.entries.push(hangul);
         }
 
         return groups;
@@ -153,15 +149,17 @@
       }
 
       function getGroupCandidates(item) {
+        const itemMap = new Map((state.items || []).map((it) => [it.hangul, it]));
+
         const groups = Array.isArray(window.QUIZ03_OPTION_GROUPS)
-          ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.some((entry) => entry.hangul === item.hangul))
+          ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.includes(item.hangul))
           : [];
 
         console.log(`[quiz03] 出題単語: ${item.hangul}`);
         console.log(`[quiz03] 所属グループ:`, groups.map((group) => group.name));
         if (groups.length) {
           console.log(`[quiz03] グループ内単語:`, groups.map((group) => ({
-            words: (group.entries || []).map((entry) => entry.hangul)
+            words: group.entries || []
           })));
         }
 
@@ -169,15 +167,17 @@
         const seenKeys = new Set();
 
         for (const group of groups) {
-          const otherEntries = (group.entries || []).filter((entry) => entry.hangul !== item.hangul);
-          for (const entry of otherEntries) {
-            if (isExcludedWord(entry.hangul)) continue;
-            for (const value of entry.values || []) {
+          const otherHanguls = (group.entries || []).filter((h) => h !== item.hangul);
+          for (const h of otherHanguls) {
+            if (isExcludedWord(h)) continue;
+            const targetItem = itemMap.get(h);
+            if (!targetItem || !targetItem.values) continue;
+            for (const value of targetItem.values) {
               if (!value) continue;
-              const key = `${entry.hangul}::${value}`;
+              const key = `${h}::${value}`;
               if (seenKeys.has(key)) continue;
               seenKeys.add(key);
-              selected.push({ hangul: entry.hangul, value, isCorrect: false });
+              selected.push({ hangul: h, value, isCorrect: false });
             }
           }
         }
