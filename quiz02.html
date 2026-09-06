@@ -142,7 +142,7 @@
         const base = Array.from(state.optionGroups.get(correctHangul) || [correctHangul]);
         if (!base.includes(correctHangul)) base.unshift(correctHangul);
         const unique = Array.from(new Set(base));
-        const limited = unique.filter((ch) => ch !== correctHangul).slice(0, 6);
+        const limited = shuffle(unique.filter((ch) => ch !== correctHangul)).slice(0, 6);
         const opts = [correctHangul, ...limited];
         return sortHangulOptions(opts).slice(0, 7);
       }
