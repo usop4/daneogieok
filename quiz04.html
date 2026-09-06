@@ -122,13 +122,13 @@
           ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.includes(item.hangul))
           : [];
 
-        console.log(`[quiz04] 出題日本語: ${item.values[0]}`);
-        console.log(`[quiz04] 所属グループ:`, groups.map((group) => group.name));
-        if (groups.length) {
+        //console.log(`[quiz04] 出題日本語: ${item.values[0]}`);
+        //console.log(`[quiz04] 所属グループ:`, groups.map((group) => group.name));
+        /*if (groups.length) {
           console.log(`[quiz04] グループ内単語:`, groups.map((group) => ({
             words: group.entries || []
           })));
-        }
+        }*/
 
         const selected = [];
         const seenKeys = new Set();
@@ -273,7 +273,7 @@
         } else {
           state.score.ng += 1;
           quizCommon.recordDailyQuizOutcome('quiz04', false);
-          console.log('[quiz04] 不正解単語:', state.current.hangul);
+          //console.log('[quiz04] 不正解単語:', state.current.hangul);
         }
         state.score.total += 1;
         if (state.progress) {
@@ -299,7 +299,7 @@
       document.getElementById('statPill').addEventListener('click', () => {
         if (!state.items.length) return;
         const incorrectWords = state.progress ? state.progress.getIncorrectKeys(state.items) : [];
-        console.log('[quiz04] 不正解単語一覧:', incorrectWords);
+        //console.log('[quiz04] 不正解単語一覧:', incorrectWords);
         resetQuestionOrderPrioritized();
         if (state.progress) state.progress.resetForStatPill({ clearOutcomes: true });
         updateStat();
