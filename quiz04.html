@@ -321,9 +321,8 @@
 
       async function init() {
         try {
-          const response = await fetch('quiz03-data.txt');
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          state.items = parseEntries(await response.text());
+          const text = await quizCommon.fetchEncryptedData('quiz03-data.enc');
+          state.items = parseEntries(text);
         } catch (error) {
           console.error('[quiz04] Failed to load question data:', error);
           document.getElementById('hintText').textContent = '問題データを読み込めませんでした。';

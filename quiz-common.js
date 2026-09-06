@@ -300,6 +300,35 @@
     return rows;
   }
 
+  const DEFAULT_AES_KEY_B64 = "vprfFpIV6x3Q2XFxZhURgpq0ADgil4WnZ16APa5RPTc=";
+
+  function b64ToBuf(b64) {
+    return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  }
+
+  async function decryptText(base64Payload, keyB64 = DEFAULT_AES_KEY_B64) {
+    const raw = b64ToBuf(base64Payload);
+    const nonce = raw.slice(0, 12);
+    const ciphertext = raw.slice(12);
+
+    const key = await crypto.subtle.importKey(
+      "raw", b64ToBuf(keyB64), "AES-GCM", false, ["decrypt"]
+    );
+    const plainBuf = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: nonce },
+      key,
+      ciphertext
+    );
+    return new TextDecoder("utf-8").decode(plainBuf);
+  }
+
+  async function fetchEncryptedData(url, keyB64 = DEFAULT_AES_KEY_B64) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const encryptedPayload = await response.text();
+    return await decryptText(encryptedPayload, keyB64);
+  }
+
   global.quizCommon = {
     $,
     normalizeLine,
@@ -311,6 +340,10 @@
     renderEmptyTable,
     createOutcomeProgress,
     recordDailyQuizOutcome,
-    getRecentDailyQuizStats
+    getRecentDailyQuizStats,
+    DEFAULT_AES_KEY_B64,
+    b64ToBuf,
+    decryptText,
+    fetchEncryptedData
   };
 })(window);

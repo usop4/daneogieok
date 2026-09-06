@@ -441,9 +441,7 @@ function closePopupAndAdvance(){
 async function loadDefaultData(){
   let text;
   try {
-    const response = await fetch("quiz01-data.txt");
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    text = await response.text();
+    text = await quizCommon.fetchEncryptedData("quiz01-data.enc");
   } catch (error) {
     console.error("[quiz01] Failed to load question data:", error);
     renderEmptyTable("問題データを読み込めませんでした。");

@@ -1,12 +1,42 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
+const crypto = require("node:crypto");
 const { test, expect } = require("@playwright/test");
 
 const rootDir = path.resolve(__dirname, "..");
 
+const AES_KEY_B64 = "vprfFpIV6x3Q2XFxZhURgpq0ADgil4WnZ16APa5RPTc=";
+
+function decryptPayload(base64Payload, keyB64 = AES_KEY_B64) {
+  const key = Buffer.from(keyB64, "base64");
+  const raw = Buffer.from(base64Payload, "base64");
+  const nonce = raw.subarray(0, 12);
+  const ciphertextAndTag = raw.subarray(12);
+  const ciphertext = ciphertextAndTag.subarray(0, ciphertextAndTag.length - 16);
+  const authTag = ciphertextAndTag.subarray(ciphertextAndTag.length - 16);
+
+  const decipher = crypto.createDecipheriv("aes-256-gcm", key, nonce);
+  decipher.setAuthTag(authTag);
+  const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+  return decrypted.toString("utf8");
+}
+
 function readFile(relativePath) {
   return fs.readFileSync(path.join(rootDir, relativePath), "utf8");
+}
+
+function readDataFile(encRelativePath, txtRelativePath) {
+  const encPath = path.join(rootDir, encRelativePath);
+  if (fs.existsSync(encPath)) {
+    const encryptedContent = fs.readFileSync(encPath, "utf8").trim();
+    return decryptPayload(encryptedContent);
+  }
+  const txtPath = path.join(rootDir, txtRelativePath);
+  if (fs.existsSync(txtPath)) {
+    return fs.readFileSync(txtPath, "utf8");
+  }
+  throw new Error(`Neither ${encRelativePath} nor ${txtRelativePath} exists`);
 }
 
 function extractTemplateLiteral(source, variableName) {
@@ -82,7 +112,7 @@ function loadQuiz03OptionGroups(source) {
 
 test.describe("Data integrity", () => {
   test("quiz01/02 data templates are valid and non-empty", async () => {
-    const quiz01Source = readFile("quiz01-data.txt");
+    const quiz01Source = readDataFile("quiz01-data.enc", "quiz01-data.txt");
     const quiz02Source = readFile("quiz02-data.js");
     const pair = extractTemplateLiteral(quiz02Source, "PAIR");
 
@@ -102,7 +132,7 @@ test.describe("Data integrity", () => {
   });
 
   test("quiz02 pair groups cover all hangul chars used in quiz01", async () => {
-    const quiz01Source = readFile("quiz01-data.txt");
+    const quiz01Source = readDataFile("quiz01-data.enc", "quiz01-data.txt");
     const quiz02Source = readFile("quiz02-data.js");
     const quiz01Rows = parseQuiz01Csv(quiz01Source);
     const pairGroups = parsePairGroups(extractTemplateLiteral(quiz02Source, "PAIR"));
@@ -120,7 +150,7 @@ test.describe("Data integrity", () => {
   });
 
   test("quiz03 data and option groups are consistent", async () => {
-    const quiz03DataSource = readFile("quiz03-data.txt");
+    const quiz03DataSource = readDataFile("quiz03-data.enc", "quiz03-data.txt");
     const quiz03OptionSource = readFile("quiz03-option.js");
     const entries = parseQuiz03Entries(quiz03DataSource);
     const optionGroups = loadQuiz03OptionGroups(quiz03OptionSource);

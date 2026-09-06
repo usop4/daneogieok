@@ -1,6 +1,10 @@
 temp
 sorted
 
+word.txt
+quiz01-data.txt
+quiz03-data.txt
+
 *.sh
 *.ipynb
 

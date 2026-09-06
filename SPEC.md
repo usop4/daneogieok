@@ -4,19 +4,21 @@
 
 似たような韓国語の意味・音を混同しやすい語彙を学ぶための 4 種類のクイズと、進捗確認用の Stats 画面を提供する。
 
-- Quiz01: 対象=漢字語、方向=韓→日、問題データ=quiz01-data.txt、選択肢データ=内部辞書（自動生成）、判定単位=複数列・全列自動判定、正誤表示=ポップアップ + answerPanel
-- Quiz02: 対象=漢字語、方向=日→韓、問題データ=quiz01-data.txt、選択肢データ=quiz02-data.js、判定単位=複数列・全列自動判定、正誤表示=ポップアップ + answerPanel（赤/緑枠）
-- Quiz03: 対象=動詞、方向=韓→日、問題データ=quiz03-data.txt、選択肢データ=quiz03-option.txt/js、判定単位=単一選択、正誤表示=hintText（赤/緑）
-- Quiz04: 対象=動詞、方向=日→韓、問題データ=quiz03-data.txt、選択肢データ=quiz03-option.txt/js、判定単位=単一選択、正誤表示=hintText（赤/緑）
+- Quiz01: 対象=漢字語、方向=韓→日、問題データ=quiz01-data.enc（quiz01-data.txt を AES-GCM 暗号化）、選択肢データ=内部辞書（自動生成）、判定単位=複数列・全列自動判定、正誤表示=ポップアップ + answerPanel
+- Quiz02: 対象=漢字語、方向=日→韓、問題データ=quiz01-data.enc（quiz01-data.txt を AES-GCM 暗号化）、選択肢データ=quiz02-data.js、判定単位=複数列・全列自動判定、正誤表示=ポップアップ + answerPanel（赤/緑枠）
+- Quiz03: 対象=動詞、方向=韓→日、問題データ=quiz03-data.enc（quiz03-data.txt を AES-GCM 暗号化）、選択肢データ=quiz03-option.txt/js、判定単位=単一選択、正誤表示=hintText（赤/緑）
+- Quiz04: 対象=動詞、方向=日→韓、問題データ=quiz03-data.enc（quiz03-data.txt を AES-GCM 暗号化）、選択肢データ=quiz03-option.txt/js、判定単位=単一選択、正誤表示=hintText（赤/緑）
 
 ## 1. データファイル
 
-- quiz01-data.txt: `ハングル語,漢字語[,補足]` の CSV。Quiz01/02 の問題元
+- quiz01-data.enc: `quiz01-data.txt` を AES-GCM 暗号化した Base64 テキスト。Quiz01/02 のウェブ画面用問題データ
+- quiz03-data.enc: `quiz03-data.txt` を AES-GCM 暗号化した Base64 テキスト。Quiz03/04 のウェブ画面用問題データ
+- quiz01-data.txt: `ハングル語,漢字語[,補足]` の CSV。Quiz01/02 の問題元（ビルド中間生成物。.gitignore 対象）
 - quiz02-data.js: Quiz02 用「似ているハングル群」定義（選択肢生成に使用）
-- quiz03-data.txt: `ハングル語,日本語訳[,例文...]` の CSV。Quiz03/04 の問題元。3 列目以降は例文で選択肢生成には使わない
+- quiz03-data.txt: `ハングル語,日本語訳[,例文...]` の CSV。Quiz03/04 の問題元（ビルド中間生成物。.gitignore 対象）
 - quiz03-option.txt / quiz03-option.js: Quiz03/04 共通の選択肢グルーピングデータ（テキスト確認用・ブラウザ読込用）
 - quiz03-exclude.txt: Quiz03/04 の選択肢候補から除外する語
-- word.txt: 元データ。generate_quiz0103_data.py の入力
+- word.txt: 元データ。generate_quiz0103_data.py の入力（.gitignore 対象）
 
 ## 2. 画面構成（共通）
 
@@ -24,7 +26,7 @@
 - Quiz01/02: answerPanel に正解/不正解メッセージ、正解時ポップアップ表示
 - Quiz03/04: 問題下のヒント領域（hintText）に判定結果を表示（ポップアップなし）。CSV 3 列目以降に例文があれば例文だけを表示し、なければ「正解です。」と表示
 - 共通のカード型レイアウトと下部ナビゲーション（Quiz01/02/03/04/Stats へのリンク）
-- 共通スタイル: quiz-common.css、共通ユーティリティ（DOM 取得・エスケープ・シャッフル・統計更新・空テーブル表示等）: quiz-common.js
+- 共通スタイル: quiz-common.css、共通ユーティリティ（DOM 取得・エスケープ・シャッフル・統計更新・空テーブル表示・AES-GCM データ復号 `fetchEncryptedData` 等）: quiz-common.js
 - Quiz03/04: 選択肢本文 18px、判定後に表示する訳/韓国語ラベルは 16px
 
 ## 3. 操作方法（共通）
@@ -98,13 +100,14 @@
 - 選択肢生成: Quiz03 と同一ロジック（quiz03-option.txt/js を参照したグループベース抽出 → quiz03-exclude.txt で除外 → 正解含め 4 択程度に整形 → 不足時フォールバック）。カナダラ順で表示
 - 判定: Quiz03 と同一（共通ルール4章＋判定前非表示/判定後緑赤表示）。判定後は例文があれば例文だけを表示し、なければ「正解です。」と表示
 
-## 9. 選択肢グルーピング生成（Quiz03/04 共通の補助スクリプト）
+## 9. 選択肢グルーピング・暗号化データ生成（スクリプト群）
 
 - **generate_quiz0103_data.py**: word.txt（CSV）から quiz01-data.txt と quiz03-data.txt を生成する
   - 第 1 列が `다` で終わる行 → Quiz03 用データに分類
   - 動詞に該当せず、第 1 列と第 2 列の文字数が一致する行 → Quiz01 用データに分類
   - それ以外・空行・コメント行・2 列未満の行は出力しない
   - 第 3 列以降は補足情報／例文として分類先に引き継ぐ
+- **generate_enc.py**: quiz01-data.txt および quiz03-data.txt を AES-GCM 暗号化し、Base64 ペイロードとして quiz01-data.enc および quiz03-data.enc を出力する
 - **generate_quiz03_option.py**: quiz03-data.txt を元に選択肢候補をグルーピングし、quiz03-option.txt（確認用）と quiz03-option.js（ブラウザ読込用）を出力する
   - 語尾一致によるグループ分類に加え、後方一致グループをさらに先頭文字の子音ファミリー別に再分割する（例: `suffix_하다_ㄱ系`, `suffix_하다_ㄷ系`）
   - 1 語が複数グループに属することを許容する

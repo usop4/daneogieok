@@ -1,4 +1,17 @@
+const crypto = require("node:crypto");
 const { test, expect } = require("@playwright/test");
+
+const AES_KEY_B64 = "vprfFpIV6x3Q2XFxZhURgpq0ADgil4WnZ16APa5RPTc=";
+
+function encryptPayload(plaintext, keyB64 = AES_KEY_B64) {
+  const key = Buffer.from(keyB64, "base64");
+  const nonce = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv("aes-256-gcm", key, nonce);
+  const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
+  const authTag = cipher.getAuthTag();
+  const payload = Buffer.concat([nonce, encrypted, authTag]);
+  return payload.toString("base64");
+}
 
 async function answerColumnsWithKeyOne(page, count) {
   for (let i = 0; i < count; i += 1) {
@@ -67,27 +80,27 @@ async function pressCorrectQuiz03Or04Key(page, quizPath) {
 }
 
 async function setQuiz03Or04Fixture(page) {
-  await page.route("**/quiz03-data.txt", (route) => route.fulfill({
+  await page.route("**/quiz03-data.enc", (route) => route.fulfill({
     contentType: "text/plain; charset=utf-8",
-    body: [
+    body: encryptPayload([
       "가다,行く",
       "나다,出る",
       "다다,届く",
       "라다,言う"
-    ].join("\n")
+    ].join("\n"))
   }));
 }
 
 test.describe("Quiz01/Quiz02 key and auto judge", () => {
   test("Quiz01 orders kanji options by occurrence frequency", async ({ page }) => {
-    await page.route("**/quiz01-data.txt", (route) => route.fulfill({
+    await page.route("**/quiz01-data.enc", (route) => route.fulfill({
       contentType: "text/plain; charset=utf-8",
-      body: [
+      body: encryptPayload([
         "가나,甲乙",
         "가다,甲丙",
         "가라,甲丁",
         "가마,己戊"
-      ].join("\n")
+      ].join("\n"))
     }));
     await page.goto("/quiz01.html");
 
@@ -146,14 +159,14 @@ test.describe("Quiz01/Quiz02 key and auto judge", () => {
 test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
   for (const quizPath of ["/quiz03.html", "/quiz04.html"]) {
     test(`${quizPath} shows an example in the hint only after answering`, async ({ page }) => {
-      await page.route("**/quiz03-data.txt", (route) => route.fulfill({
+      await page.route("**/quiz03-data.enc", (route) => route.fulfill({
         contentType: "text/plain; charset=utf-8",
-        body: [
+        body: encryptPayload([
           "가다,行く,共通例文です。",
           "나다,出る,共通例文です。",
           "다다,届く,共通例文です。",
           "라다,言う,共通例文です。"
-        ].join("\n")
+        ].join("\n"))
       }));
       await page.goto(quizPath);
       await expect(page.locator("#choices .choice")).toHaveCount(4);

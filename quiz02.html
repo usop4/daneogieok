@@ -150,7 +150,7 @@
       function nextQuestion(){
         hideCorrectPopup();
         if (state.items.length === 0){
-          renderEmptyTable("CSVが空です。quiz01-data.txt を確認してください。" );
+          renderEmptyTable("CSVが空です。quiz01-data.enc を確認してください。" );
           return;
         }
         if (!state.questionOrder.length || state.questionIndex >= state.questionOrder.length){
@@ -356,9 +356,7 @@
       async function init(){
         let text;
         try {
-          const response = await fetch("quiz01-data.txt");
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          text = await response.text();
+          text = await quizCommon.fetchEncryptedData("quiz01-data.enc");
         } catch (error) {
           console.error("[quiz02] Failed to load question data:", error);
           renderEmptyTable("問題データを読み込めませんでした。");
