@@ -69,10 +69,10 @@ async function reachQuiz02WrongAnswer(page, maxAttempts = 8) {
 
 async function pressCorrectQuiz03Or04Key(page, quizPath) {
   const prompt = await page.locator("#questionText").textContent();
-  const answers = { "가다": "行く", "나다": "出る", "다다": "届く", "라다": "言う" };
+  const answers = { "가다": "行く", "나다": "出る", "다다": "届く", "라다": "言う", "마다": "来る" };
   const correctValue = quizPath === "/quiz03.html"
     ? answers[prompt]
-    : { "行く": "가다", "出る": "나다", "届く": "다다", "言う": "라다" }[prompt];
+    : { "行く": "가다", "出る": "나다", "届く": "다다", "言う": "라다", "来る": "마다" }[prompt];
   const choiceTexts = await page.locator("#choices .choice-text").allTextContents();
   const correctIndex = choiceTexts.indexOf(correctValue);
   expect(correctIndex).toBeGreaterThanOrEqual(0);
@@ -86,7 +86,8 @@ async function setQuiz03Or04Fixture(page) {
       "가다,行く",
       "나다,出る",
       "다다,届く",
-      "라다,言う"
+      "라다,言う",
+      "마다,来る"
     ].join("\n"))
   }));
 }
@@ -182,7 +183,7 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
     test(`${quizPath} advances with Enter after a correct keyboard answer`, async ({ page }) => {
       await setQuiz03Or04Fixture(page);
       await page.goto(quizPath);
-      await expect(page.locator("#choices .choice")).toHaveCount(4);
+      await expect(page.locator("#choices .choice")).toHaveCount(5);
       const firstQuestion = await page.locator("#questionText").textContent();
 
       await pressCorrectQuiz03Or04Key(page, quizPath);
@@ -195,15 +196,15 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
     test(`${quizPath} advances with Enter after an incorrect answer but not before answering`, async ({ page }) => {
       await setQuiz03Or04Fixture(page);
       await page.goto(quizPath);
-      await expect(page.locator("#choices .choice")).toHaveCount(4);
+      await expect(page.locator("#choices .choice")).toHaveCount(5);
       const firstQuestion = await page.locator("#questionText").textContent();
       await page.keyboard.press("Enter");
       await expect(page.locator("#questionText")).toHaveText(firstQuestion || "");
 
       const choiceTexts = await page.locator("#choices .choice-text").allTextContents();
       const correctText = quizPath === "/quiz03.html"
-        ? { "가다": "行く", "나다": "出る", "다다": "届く", "라다": "言う" }[firstQuestion]
-        : { "行く": "가다", "出る": "나다", "届く": "다다", "言う": "라다" }[firstQuestion];
+        ? { "가다": "行く", "나다": "出る", "다다": "届く", "라다": "言う", "마다": "来る" }[firstQuestion]
+        : { "行く": "가다", "出る": "나다", "届く": "다다", "言う": "라다", "来る": "마다" }[firstQuestion];
       const wrongIndex = choiceTexts.findIndex((text) => text !== correctText);
       await page.keyboard.press(String(wrongIndex + 1));
       await expect(page.locator("#choices .choice.wrong")).toHaveCount(1);
@@ -214,24 +215,24 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
 
   test("Quiz03 reveals labels and marks correctness after answering", async ({ page }) => {
     await page.goto("/quiz03.html");
-    await expect(page.locator("#choices .choice")).toHaveCount(4);
+    await expect(page.locator("#choices .choice")).toHaveCount(5);
     await expect(page.locator("#choices .choice .hangul-label").first()).toBeHidden();
 
     await page.keyboard.press("1");
 
-    await expect(page.locator("#choices .choice.revealed")).toHaveCount(4);
+    await expect(page.locator("#choices .choice.revealed")).toHaveCount(5);
     await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
     await expect(page.locator("#choices .choice .hangul-label").first()).toBeVisible();
   });
 
   test("Quiz04 reveals labels and marks correctness after answering", async ({ page }) => {
     await page.goto("/quiz04.html");
-    await expect(page.locator("#choices .choice")).toHaveCount(4);
+    await expect(page.locator("#choices .choice")).toHaveCount(5);
     await expect(page.locator("#choices .choice .hangul-label").first()).toBeHidden();
 
     await page.keyboard.press("1");
 
-    await expect(page.locator("#choices .choice.revealed")).toHaveCount(4);
+    await expect(page.locator("#choices .choice.revealed")).toHaveCount(5);
     await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
     await expect(page.locator("#choices .choice .hangul-label").first()).toBeVisible();
   });

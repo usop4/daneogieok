@@ -49,11 +49,11 @@ def decompose_hangul(ch: str) -> Optional[Tuple[str, str]]:
     return initial_chars[initial_index], medial_chars[medial_index]
 
 
-def build_suffix_key(hangul: str) -> Optional[str]:
-    if len(hangul) < 2:
+def build_suffix_key(hangul: str, length: int = 2) -> Optional[str]:
+    if len(hangul) < length:
         return None
 
-    suffix = hangul[-2:]
+    suffix = hangul[-length:]
     if not all(re.fullmatch(r"[가-힣]", ch) for ch in suffix):
         return None
 
@@ -71,9 +71,24 @@ def build_groups(
     if not valid_entries:
         return [], []
 
+    suffix3_groups: DefaultDict[str, List[Tuple[str, List[str]]]] = defaultdict(list)
+    for hangul, japanese_values in valid_entries:
+        suffix3_key = build_suffix_key(hangul, length=3)
+        if not suffix3_key:
+            continue
+        suffix3_groups[suffix3_key].append((hangul, japanese_values))
+
+    suffix3_items = []
+    for suffix3, entries_for_group in suffix3_groups.items():
+        if len(entries_for_group) < 2:
+            continue
+        suffix3_items.append((suffix3, entries_for_group))
+
+    suffix3_items.sort(key=lambda item: item[0])
+
     suffix_groups: DefaultDict[str, List[Tuple[str, List[str]]]] = defaultdict(list)
     for hangul, japanese_values in valid_entries:
-        suffix_key = build_suffix_key(hangul)
+        suffix_key = build_suffix_key(hangul, length=2)
         if not suffix_key:
             continue
         suffix_groups[suffix_key].append((hangul, japanese_values))
@@ -116,7 +131,7 @@ def build_groups(
     grouped_items = [(f"{FAMILY_DISPLAY_NAMES.get(initial, initial)}_{medial}", entries_for_group) for (initial, medial), entries_for_group in grouped.items() if len(entries_for_group) > 1]
     grouped_items.sort(key=lambda item: item[0])
 
-    groups = grouped_items + suffix_items
+    groups = grouped_items + suffix_items + suffix3_items
     grouped_words = {hangul for _, entries_for_group in groups for hangul, _ in entries_for_group}
     ungrouped_entries = [entry for entry in valid_entries if entry[0] not in grouped_words]
     ungrouped_entries.sort(key=lambda item: item[0])

@@ -193,7 +193,7 @@
 
         const selected = [];
         for (const candidate of groupCandidates) {
-          if (selected.length >= 3) break;
+          if (selected.length >= 4) break;
           if (seenValues.has(candidate.value)) continue;
           selected.push(candidate);
           seenValues.add(candidate.value);
@@ -207,13 +207,13 @@
 
         const fallback = shuffle(fallbackPool).filter((entry, index, arr) => arr.findIndex((candidate) => candidate.value === entry.value) === index);
         for (const candidate of fallback) {
-          if (selected.length >= 3) break;
+          if (selected.length >= 4) break;
           if (seenValues.has(candidate.value)) continue;
           selected.push({ hangul: candidate.hangul, value: candidate.value, isCorrect: false });
           seenValues.add(candidate.value);
         }
 
-        return shuffle([...options, ...selected]).slice(0, 4);
+        return shuffle([...options, ...selected]).slice(0, 5);
       }
 
       function updateStat() {
@@ -341,7 +341,7 @@
         }
         if (state.answered) return;
         const key = Number(event.key);
-        if (Number.isInteger(key) && key >= 1 && key <= 4) {
+        if (Number.isInteger(key) && key >= 1 && key <= 5) {
           const buttons = Array.from(document.querySelectorAll('.choice'));
           const target = buttons[key - 1];
           if (target) evaluateAnswer(target.dataset.value);
