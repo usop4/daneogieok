@@ -93,6 +93,54 @@ async function setQuiz03Or04Fixture(page) {
 }
 
 test.describe("Quiz01/Quiz02 key and auto judge", () => {
+  test("Quiz01 filters questions by initial family", async ({ page }) => {
+    await page.route("**/quiz01-data.enc", (route) => route.fulfill({
+      contentType: "text/plain; charset=utf-8",
+      body: encryptPayload([
+        "가나,甲乙",
+        "다라,丙丁"
+      ].join("\n"))
+    }));
+    await page.goto("/quiz01.html");
+
+    await expect(page.locator("#initialFilterOptions")).toBeHidden();
+    await page.locator("#initialFilterToggle").click();
+    await expect(page.locator("#initialFilterOptions")).toBeVisible();
+    await page.locator('#initialFamilyChecks input[value="ㄱ"]').check();
+
+    await expect(page.locator("#quizTable .hangulCell").first()).toHaveText("가");
+    await expect(page.locator("#quizTable .hangulCell").last()).toHaveText("나");
+  });
+
+  test("Quiz02 filters questions by initial family", async ({ page }) => {
+    await page.route("**/quiz01-data.enc", (route) => route.fulfill({
+      contentType: "text/plain; charset=utf-8",
+      body: encryptPayload([
+        "가나,甲乙",
+        "다라,丙丁"
+      ].join("\n"))
+    }));
+    await page.goto("/quiz02.html");
+
+    await page.locator("#initialFilterToggle").click();
+    await page.locator('#initialFamilyChecks input[value="ㄱ"]').check();
+
+    await expect(page.locator("#quizTable .questionCell").first()).toHaveText("甲");
+    await expect(page.locator("#quizTable .questionCell").last()).toHaveText("乙");
+  });
+
+  for (const quizPath of ["/quiz03.html", "/quiz04.html"]) {
+    test(`${quizPath} filters questions by initial family`, async ({ page }) => {
+      await setQuiz03Or04Fixture(page);
+      await page.goto(quizPath);
+
+      await page.locator("#initialFilterToggle").click();
+      await page.locator('#initialFamilyChecks input[value="ㄱ"]').check();
+
+      await expect(page.locator("#questionText")).toHaveText(quizPath === "/quiz03.html" ? "가다" : "行く");
+    });
+  }
+
   test("Quiz01 orders kanji options by occurrence frequency", async ({ page }) => {
     await page.route("**/quiz01-data.enc", (route) => route.fulfill({
       contentType: "text/plain; charset=utf-8",

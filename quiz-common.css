@@ -126,6 +126,24 @@ h1 {
 
 .filterWrap { margin-bottom: 12px; }
 .filterButtons { display: flex; gap: 8px; flex-wrap: wrap; }
+.filterToggle {
+  margin-top: 12px;
+  padding: 5px 8px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+.filterOptions {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  background: rgba(0,0,0,.12);
+}
+.filterLabel { display: block; margin-bottom: 8px; font-size: 13px; color: var(--muted); }
+.filterChecks { display: flex; gap: 8px 14px; flex-wrap: wrap; }
+.filterCheck { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+.filterCheck input { accent-color: var(--accent); }
+.filterOptions .small { display: block; margin-top: 8px; }
 .btn.filterBtn.active {
   border-color: rgba(122,162,255,.85);
   background: rgba(122,162,255,.18);

@@ -92,6 +92,7 @@ window.QUIZ03_OPTION_GROUPS = [
   {
     "name": "ㄴ_e",
     "entries": [
+      "내다",
       "내려다보다",
       "내밀다",
       "내보내다",
@@ -110,6 +111,7 @@ window.QUIZ03_OPTION_GROUPS = [
       "넘어가다",
       "넘어서다",
       "넘치다",
+      "넣다",
       "녹다",
       "놀랍다",
       "놀리다",
@@ -233,6 +235,7 @@ window.QUIZ03_OPTION_GROUPS = [
       "들음직하다",
       "들이다",
       "뚜렷하다",
+      "뜨다",
       "뜬금없다",
       "튼튼하다",
       "틀림없다"
@@ -252,6 +255,8 @@ window.QUIZ03_OPTION_GROUPS = [
       "망하다",
       "맞다",
       "맞추다",
+      "맞히다",
+      "맡기다",
       "맡다"
     ]
   },
@@ -553,7 +558,9 @@ window.QUIZ03_OPTION_GROUPS = [
       "잡아먹다",
       "장가가다",
       "짜증나다",
+      "차다",
       "차분하다",
+      "차이다",
       "창피하다",
       "찾아내다",
       "찾아다니다",
@@ -663,6 +670,7 @@ window.QUIZ03_OPTION_GROUPS = [
     "name": "ㅎ_u",
     "entries": [
       "흐르다",
+      "흐리다",
       "흔들다",
       "흔들리다",
       "흔하다",
@@ -757,6 +765,7 @@ window.QUIZ03_OPTION_GROUPS = [
     "name": "ㄴ_내다",
     "entries": [
       "나타내다",
+      "내다",
       "내보내다"
     ]
   },
@@ -953,6 +962,13 @@ window.QUIZ03_OPTION_GROUPS = [
     ]
   },
   {
+    "name": "ㅁ_기다",
+    "entries": [
+      "맡기다",
+      "못생기다"
+    ]
+  },
+  {
     "name": "ㅁ_들다",
     "entries": [
       "몰려들다",
@@ -1016,6 +1032,13 @@ window.QUIZ03_OPTION_GROUPS = [
       "먹음직하다",
       "뭉클하다",
       "믿음직하다"
+    ]
+  },
+  {
+    "name": "ㅁ_히다",
+    "entries": [
+      "맞히다",
+      "묻히다"
     ]
   },
   {
@@ -1347,7 +1370,8 @@ window.QUIZ03_OPTION_GROUPS = [
     "name": "ㅈ_이다",
     "entries": [
       "죽이다",
-      "줄이다"
+      "줄이다",
+      "차이다"
     ]
   },
   {
@@ -1408,6 +1432,7 @@ window.QUIZ03_OPTION_GROUPS = [
   {
     "name": "ㅎ_리다",
     "entries": [
+      "흐리다",
       "흔들리다",
       "흘리다"
     ]

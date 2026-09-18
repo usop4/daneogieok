@@ -21,6 +21,16 @@
         <div class="bd">
           <div class="question" id="questionText">-</div>
           <div id="choices" class="choices"></div>
+          <div class="filterWrap initialFilter" id="initialFilter">
+            <button class="btn filterToggle" id="initialFilterToggle" type="button" aria-expanded="false" aria-controls="initialFilterOptions">
+              Setting
+            </button>
+            <div class="filterOptions" id="initialFilterOptions" hidden>
+              <span class="filterLabel">出題する初声</span>
+              <div class="filterChecks" id="initialFamilyChecks"></div>
+              <span class="small">未選択時は全範囲</span>
+            </div>
+          </div>
           <div class="hint" id="hintText">選択肢を選んでください。</div>
         </div>
       </section>
@@ -37,6 +47,8 @@
     <script>
       const state = {
         items: [],
+        allItems: [],
+        selectedInitialFamilies: new Set(),
         questionOrder: [],
         questionIndex: 0,
         progress: null,
@@ -44,6 +56,52 @@
         answered: false,
         score: { ok: 0, ng: 0, total: 0 }
       };
+
+      const INITIAL_FAMILY_NAMES = ["ㄱ", "ㄷ", "ㅂ", "ㅈ", "ㅅ", "ㅎ", "ㄴ", "ㅁ", "ㄹ", "ㅇ"];
+      const INITIAL_FAMILY_BY_JAMO = {
+        "ㄱ": "ㄱ", "ㄲ": "ㄱ", "ㅋ": "ㄱ",
+        "ㄷ": "ㄷ", "ㄸ": "ㄷ", "ㅌ": "ㄷ",
+        "ㅂ": "ㅂ", "ㅃ": "ㅂ", "ㅍ": "ㅂ",
+        "ㅈ": "ㅈ", "ㅉ": "ㅈ", "ㅊ": "ㅈ",
+        "ㅅ": "ㅅ", "ㅆ": "ㅅ", "ㅎ": "ㅎ",
+        "ㄴ": "ㄴ", "ㅁ": "ㅁ", "ㄹ": "ㅇ", "ㅇ": "ㅇ"
+      };
+      const HANGUL_INITIALS = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
+
+      function getInitialFamily(word) {
+        const firstChar = Array.from(word || "")[0];
+        if (!firstChar) return null;
+        const initialIndex = Math.floor((firstChar.codePointAt(0) - 0xAC00) / 588);
+        const initialJamo = initialIndex >= 0 && initialIndex < HANGUL_INITIALS.length
+          ? HANGUL_INITIALS[initialIndex]
+          : null;
+        return INITIAL_FAMILY_BY_JAMO[initialJamo] || null;
+      }
+
+      function applyInitialFamilyFilter() {
+        state.items = !state.selectedInitialFamilies.size
+          ? state.allItems.slice()
+          : state.allItems.filter((item) => state.selectedInitialFamilies.has(getInitialFamily(item.hangul)));
+        resetQuestionOrderForStartup();
+        nextQuestion();
+      }
+
+      function renderInitialFamilyChecks() {
+        const container = document.getElementById('initialFamilyChecks');
+        container.innerHTML = INITIAL_FAMILY_NAMES.map((family) => `
+          <label class="filterCheck">
+            <input type="checkbox" value="${family}">
+            <span>${family}</span>
+          </label>
+        `).join('');
+        container.addEventListener('change', (event) => {
+          if (event.target?.type !== 'checkbox') return;
+          state.selectedInitialFamilies = new Set(
+            Array.from(container.querySelectorAll('input:checked'), (input) => input.value)
+          );
+          applyInitialFamilyFilter();
+        });
+      }
 
       function normalizeLine(line) {
         return quizCommon.normalizeLine(line);
@@ -322,6 +380,14 @@
         renderQuestion();
       }
 
+      renderInitialFamilyChecks();
+      document.getElementById('initialFilterToggle').addEventListener('click', () => {
+        const options = document.getElementById('initialFilterOptions');
+        const toggle = document.getElementById('initialFilterToggle');
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        options.hidden = expanded;
+      });
       document.getElementById('nextBtn').addEventListener('click', nextQuestion);
       document.getElementById('statPill').addEventListener('click', () => {
         if (!state.items.length) return;
@@ -351,7 +417,8 @@
       async function init() {
         try {
           const text = await quizCommon.fetchEncryptedData('quiz03-data.enc');
-          state.items = parseEntries(text);
+          state.allItems = parseEntries(text);
+          state.items = state.allItems.slice();
         } catch (error) {
           console.error('[quiz03] Failed to load question data:', error);
           document.getElementById('hintText').textContent = '問題データを読み込めませんでした。';
