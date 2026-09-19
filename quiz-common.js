@@ -7,6 +7,28 @@
     return String(line || '').replace(/\r/g, '').trim();
   }
 
+  function parseDelimitedLines(text, options = {}) {
+    const delimiter = options.delimiter || ',';
+    const minFields = Number(options.minFields) || 1;
+    return String(text || '')
+      .split('\n')
+      .map(normalizeLine)
+      .filter((line) => line.length > 0)
+      .filter((line) => options.skipComments === false || !line.startsWith('#'))
+      .map((line) => line.split(delimiter))
+      .filter((fields) => fields.length >= minFields);
+  }
+
+  function parseLineSet(text) {
+    return new Set(String(text || '')
+      .split('\n')
+      .map(normalizeLine)
+      .filter((line) => line.length > 0)
+      .filter((line) => !line.startsWith('#'))
+      .map((line) => line.split(/\s+/, 1)[0])
+      .filter(Boolean));
+  }
+
   function escapeHtml(value) {
     return String(value ?? '')
       .replaceAll('&', '&amp;')
@@ -46,6 +68,94 @@
     table.innerHTML = `
       <tr><td style="text-align:left;font-size:14px;color:#aab3d6;">${escapeHtml(msg)}</td></tr>
     `;
+  }
+
+  const INITIAL_FAMILY_NAMES = ['ㄱ', 'ㄷ', 'ㅂ', 'ㅈ', 'ㅅ', 'ㅎ', 'ㄴ', 'ㅁ', 'ㄹ', 'ㅇ'];
+  const INITIAL_FAMILY_BY_JAMO = {
+    'ㄱ': 'ㄱ', 'ㄲ': 'ㄱ', 'ㅋ': 'ㄱ',
+    'ㄷ': 'ㄷ', 'ㄸ': 'ㄷ', 'ㅌ': 'ㄷ',
+    'ㅂ': 'ㅂ', 'ㅃ': 'ㅂ', 'ㅍ': 'ㅂ',
+    'ㅈ': 'ㅈ', 'ㅉ': 'ㅈ', 'ㅊ': 'ㅈ',
+    'ㅅ': 'ㅅ', 'ㅆ': 'ㅅ', 'ㅎ': 'ㅎ',
+    'ㄴ': 'ㄴ', 'ㅁ': 'ㅁ', 'ㄹ': 'ㅇ', 'ㅇ': 'ㅇ'
+  };
+  const HANGUL_INITIALS = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+
+  function getInitialFamily(word) {
+    const firstChar = Array.from(word || '')[0];
+    if (!firstChar) return null;
+    const initialIndex = Math.floor((firstChar.codePointAt(0) - 0xAC00) / 588);
+    const initialJamo = initialIndex >= 0 && initialIndex < HANGUL_INITIALS.length
+      ? HANGUL_INITIALS[initialIndex]
+      : null;
+    return INITIAL_FAMILY_BY_JAMO[initialJamo] || null;
+  }
+
+  function createInitialFamilyFilter(options = {}) {
+    const getAllItems = options.getAllItems || (() => []);
+    const setItems = options.setItems || (() => {});
+    const resetQuestionOrder = options.resetQuestionOrder || (() => {});
+    const nextQuestion = options.nextQuestion || (() => {});
+    let selectedFamilies = new Set();
+
+    function apply() {
+      const allItems = getAllItems();
+      const items = selectedFamilies.size
+        ? allItems.filter((item) => selectedFamilies.has(getInitialFamily(options.getWord(item))))
+        : allItems.slice();
+      setItems(items);
+      resetQuestionOrder();
+      nextQuestion();
+    }
+
+    function render() {
+      const container = $('#initialFamilyChecks');
+      if (!container) return;
+      container.innerHTML = INITIAL_FAMILY_NAMES.map((family) => `
+        <label class="filterCheck">
+          <input type="checkbox" value="${family}">
+          <span>${family}</span>
+        </label>
+      `).join('');
+      container.addEventListener('change', (event) => {
+        if (event.target?.type !== 'checkbox') return;
+        selectedFamilies = new Set(
+          Array.from(container.querySelectorAll('input:checked'), (input) => input.value)
+        );
+        apply();
+      });
+
+      const toggle = $('#initialFilterToggle');
+      const optionsPanel = $('#initialFilterOptions');
+      toggle?.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        if (optionsPanel) optionsPanel.hidden = expanded;
+      });
+    }
+
+    return { render, apply };
+  }
+
+  function buildQuestionOrder(progress, items, mode, fallbackShuffle = shuffle) {
+    return progress
+      ? progress.buildQuestionOrder(items, mode)
+      : fallbackShuffle(items.map((_, index) => index));
+  }
+
+  function bindProgressReset(options = {}) {
+    const pill = typeof options.selector === 'string' ? $(options.selector) : options.selector;
+    if (!pill) return;
+    pill.addEventListener('click', () => {
+      const items = options.getItems ? options.getItems() : [];
+      if (!items.length) return;
+      const progress = options.getProgress ? options.getProgress() : options.progress;
+      progress?.getIncorrectKeys(items);
+      options.resetQuestionOrder?.();
+      progress?.resetForStatPill({ clearOutcomes: true });
+      options.updateStat?.();
+      options.nextQuestion?.();
+    });
   }
 
   function createOutcomeProgress(options) {
@@ -332,10 +442,16 @@
   global.quizCommon = {
     $,
     normalizeLine,
+    parseDelimitedLines,
+    parseLineSet,
     escapeHtml,
     escapeAttr,
     sampleOne,
     shuffle,
+    getInitialFamily,
+    createInitialFamilyFilter,
+    buildQuestionOrder,
+    bindProgressReset,
     updateStat,
     renderEmptyTable,
     createOutcomeProgress,
