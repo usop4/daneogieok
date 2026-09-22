@@ -35,9 +35,10 @@ def parse_entries(text: str) -> List[Entry]:
 	return entries
 
 
-def classify_entries(entries: Sequence[Entry]) -> Tuple[List[Entry], List[Entry]]:
+def classify_entries(entries: Sequence[Entry]) -> Tuple[List[Entry], List[Entry], List[Entry]]:
 	quiz01_entries: List[Entry] = []
 	quiz03_entries: List[Entry] = []
+	unclassified_entries: List[Entry] = []
 
 	for entry in entries:
 		hangul, meaning, _ = entry
@@ -45,8 +46,10 @@ def classify_entries(entries: Sequence[Entry]) -> Tuple[List[Entry], List[Entry]
 			quiz03_entries.append(entry)
 		elif len(hangul) == len(meaning):
 			quiz01_entries.append(entry)
+		else:
+			unclassified_entries.append(entry)
 
-	return quiz01_entries, quiz03_entries
+	return quiz01_entries, quiz03_entries, unclassified_entries
 
 
 def format_entries(entries: Sequence[Entry], header: str) -> str:
@@ -71,7 +74,7 @@ def main() -> None:
 	args = parser.parse_args()
 
 	entries = parse_entries(resolve_path(args.input).read_text(encoding="utf-8"))
-	quiz01_entries, quiz03_entries = classify_entries(entries)
+	quiz01_entries, quiz03_entries, unclassified_entries = classify_entries(entries)
 
 	quiz01_path = resolve_path(args.quiz01_output)
 	quiz03_path = resolve_path(args.quiz03_output)
@@ -80,6 +83,10 @@ def main() -> None:
 
 	print(f"Wrote {len(quiz01_entries)} entries to {quiz01_path}")
 	print(f"Wrote {len(quiz03_entries)} entries to {quiz03_path}")
+	print(f"Unclassified rows ({len(unclassified_entries)}):")
+	for hangul, meaning, supplements in unclassified_entries:
+		row = [hangul, meaning, *supplements]
+		print(",".join(row))
 
 
 if __name__ == "__main__":

@@ -321,6 +321,7 @@
       const initialFamilyFilter = quizCommon.createInitialFamilyFilter({
         getAllItems: () => state.allItems,
         getWord: (item) => item.hangul,
+        hasExample: (item) => Boolean(item.example),
         setItems: (items) => { state.items = items; },
         resetQuestionOrder: resetQuestionOrderForStartup,
         nextQuestion

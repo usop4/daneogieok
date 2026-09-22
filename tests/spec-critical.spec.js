@@ -141,6 +141,42 @@ test.describe("Quiz01/Quiz02 key and auto judge", () => {
     });
   }
 
+  test("Quiz01 and Quiz02 filter to questions with examples", async ({ page }) => {
+    await page.route("**/quiz01-data.enc", (route) => route.fulfill({
+      contentType: "text/plain; charset=utf-8",
+      body: encryptPayload([
+        "가나,甲乙,補足あり",
+        "다라,丙丁"
+      ].join("\n"))
+    }));
+
+    for (const quizPath of ["/quiz01.html", "/quiz02.html"]) {
+      await page.goto(quizPath);
+      await page.locator("#initialFilterToggle").click();
+      await page.locator("#exampleOnlyCheck").check();
+
+      const selector = quizPath === "/quiz01.html" ? ".hangulCell" : ".questionCell";
+      await expect(page.locator(`#quizTable ${selector}`).first()).toHaveText(quizPath === "/quiz01.html" ? "가" : "甲");
+    }
+  });
+
+  for (const quizPath of ["/quiz03.html", "/quiz04.html"]) {
+    test(`${quizPath} filters to questions with examples`, async ({ page }) => {
+      await page.route("**/quiz03-data.enc", (route) => route.fulfill({
+        contentType: "text/plain; charset=utf-8",
+        body: encryptPayload([
+          "가다,行く,例文あり",
+          "나다,出る"
+        ].join("\n"))
+      }));
+      await page.goto(quizPath);
+      await page.locator("#initialFilterToggle").click();
+      await page.locator("#exampleOnlyCheck").check();
+
+      await expect(page.locator("#questionText")).toHaveText(quizPath === "/quiz03.html" ? "가다" : "行く");
+    });
+  }
+
   test("Quiz01 orders kanji options by occurrence frequency", async ({ page }) => {
     await page.route("**/quiz01-data.enc", (route) => route.fulfill({
       contentType: "text/plain; charset=utf-8",

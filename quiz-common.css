@@ -142,6 +142,7 @@ h1 {
 .filterLabel { display: block; margin-bottom: 8px; font-size: 13px; color: var(--muted); }
 .filterChecks { display: flex; gap: 8px 14px; flex-wrap: wrap; }
 .filterCheck { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+.filterExampleCheck { display: flex; margin-top: 10px; }
 .filterCheck input { accent-color: var(--accent); }
 .filterOptions .small { display: block; margin-top: 8px; }
 .btn.filterBtn.active {

@@ -97,12 +97,16 @@
     const resetQuestionOrder = options.resetQuestionOrder || (() => {});
     const nextQuestion = options.nextQuestion || (() => {});
     let selectedFamilies = new Set();
+    let requireExample = false;
 
     function apply() {
       const allItems = getAllItems();
-      const items = selectedFamilies.size
-        ? allItems.filter((item) => selectedFamilies.has(getInitialFamily(options.getWord(item))))
-        : allItems.slice();
+      const items = allItems.filter((item) => {
+        const matchesFamily = !selectedFamilies.size
+          || selectedFamilies.has(getInitialFamily(options.getWord(item)));
+        const matchesExample = !requireExample || Boolean(options.hasExample?.(item));
+        return matchesFamily && matchesExample;
+      });
       setItems(items);
       resetQuestionOrder();
       nextQuestion();
@@ -117,11 +121,21 @@
           <span>${family}</span>
         </label>
       `).join('');
+      container.insertAdjacentHTML('afterend', `
+        <label class="filterCheck filterExampleCheck">
+          <input type="checkbox" id="exampleOnlyCheck">
+          <span>例文がある問題のみ</span>
+        </label>
+      `);
       container.addEventListener('change', (event) => {
         if (event.target?.type !== 'checkbox') return;
         selectedFamilies = new Set(
           Array.from(container.querySelectorAll('input:checked'), (input) => input.value)
         );
+        apply();
+      });
+      $('#exampleOnlyCheck')?.addEventListener('change', (event) => {
+        requireExample = event.target.checked;
         apply();
       });
 
