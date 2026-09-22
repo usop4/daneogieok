@@ -320,4 +320,30 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
     await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
     await expect(page.locator("#choices .choice .hangul-label").first()).toBeVisible();
   });
+
+  test("Quiz04 keeps all answer choices after filtering to questions with examples", async ({ page }) => {
+    await page.route("**/quiz03-data.enc", (route) => route.fulfill({
+      contentType: "text/plain; charset=utf-8",
+      body: encryptPayload([
+        "가다,行く,例文あり",
+        "나다,出る",
+        "다다,届く",
+        "라다,言う",
+        "마다,来る"
+      ].join("\n"))
+    }));
+    await page.goto("/quiz04.html");
+    await page.locator("#initialFilterToggle").click();
+    await page.locator("#exampleOnlyCheck").check();
+
+    await expect(page.locator("#questionText")).toHaveText("行く");
+    await expect(page.locator("#choices .choice")).toHaveCount(5);
+    const choiceTexts = await page.locator("#choices .choice-text").allTextContents();
+    const wrongIndex = choiceTexts.findIndex((text) => text !== "가다");
+    expect(wrongIndex).toBeGreaterThanOrEqual(0);
+    await page.keyboard.press(String(wrongIndex + 1));
+    await expect(page.locator("#choices .choice.revealed")).toHaveCount(5);
+    await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
+    await expect(page.locator("#choices .choice.wrong")).toHaveCount(1);
+  });
 });

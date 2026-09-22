@@ -116,7 +116,7 @@
       }
 
       function getGroupCandidates(item) {
-        const itemMap = new Map((state.items || []).map((it) => [it.hangul, it]));
+        const itemMap = new Map((state.allItems || []).map((it) => [it.hangul, it]));
 
         const groups = Array.isArray(window.QUIZ03_OPTION_GROUPS)
           ? window.QUIZ03_OPTION_GROUPS.filter((group) => Array.isArray(group.entries) && group.entries.includes(item.hangul))
@@ -170,7 +170,7 @@
           seenValues.add(candidate.hangul);
         }
 
-        const fallbackPool = state.items
+        const fallbackPool = state.allItems
           .filter((candidate) => candidate.hangul !== item.hangul)
           .filter((candidate) => !isExcludedWord(candidate.hangul))
           .map((candidate) => ({
