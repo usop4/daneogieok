@@ -310,8 +310,10 @@
 
       document.addEventListener('keydown', (event) => {
         if (!state.current) return;
-        if (event.key === 'Enter' && state.answered) {
-          nextQuestion();
+        const isNextQuestionKey = event.key === 'Enter' || event.key === '0' || event.code === 'Space';
+        if (isNextQuestionKey) {
+          event.preventDefault();
+          if (state.answered) nextQuestion();
           return;
         }
         if (state.answered) return;

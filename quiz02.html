@@ -410,7 +410,8 @@
       window.addEventListener("keydown", (e) => {
         const target = e.target;
         if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return;
-        if (state.popupVisible && e.key === "Enter") {
+        const isNextQuestionKey = e.key === "Enter" || e.key === "0" || e.code === "Space";
+        if (state.popupVisible && isNextQuestionKey) {
           e.preventDefault();
           hideCorrectPopup();
           nextQuestion();
@@ -421,12 +422,16 @@
           nextQuestion();
           return;
         }
+        if (isNextQuestionKey) {
+          e.preventDefault();
+          nextQuestion();
+          return;
+        }
         if (/^[0-9]$/.test(e.key)) {
           e.preventDefault();
           selectOptionByKey(e.key);
           return;
         }
-        if (e.key === "Enter") nextQuestion();
       });
 
       function escapeHtml(s){ return quizCommon.escapeHtml(s); }

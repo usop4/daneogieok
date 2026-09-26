@@ -507,7 +507,9 @@ window.addEventListener("keydown", (e) => {
     return;
   }
 
-  if (state.popupVisible && e.key === "Enter") {
+  const isNextQuestionKey = e.key === "Enter" || e.key === "0" || e.code === "Space";
+
+  if (state.popupVisible && isNextQuestionKey) {
     e.preventDefault();
     e.stopPropagation();
     closePopupAndAdvance();
@@ -520,13 +522,18 @@ window.addEventListener("keydown", (e) => {
     return;
   }
 
+  if (isNextQuestionKey) {
+    e.preventDefault();
+    nextQuestion();
+    return;
+  }
+
   if (/^[0-9]$/.test(e.key)) {
     e.preventDefault();
     selectOptionByKey(e.key);
     return;
   }
 
-  if (e.key === "Enter") nextQuestion();
 });
 
 // initialize from the bundled data

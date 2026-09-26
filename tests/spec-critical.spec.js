@@ -218,6 +218,22 @@ test.describe("Quiz01/Quiz02 key and auto judge", () => {
     await expect(page.locator("#quizTable .cellBtn.selected")).toHaveCount(0);
   });
 
+  for (const quizPath of ["/quiz01.html", "/quiz02.html"]) {
+    for (const key of ["0", "Space"]) {
+      test(`${quizPath} advances with ${key}`, async ({ page }) => {
+        await page.goto(quizPath);
+        const questionSelector = quizPath === "/quiz01.html" ? "#quizTable .hangulCell" : "#quizTable .questionCell";
+        await expect(page.locator(questionSelector).first()).toBeVisible();
+
+        await page.keyboard.press("1");
+        await expect(page.locator("#quizTable .cellBtn.selected")).not.toHaveCount(0);
+        await page.keyboard.press(key);
+
+        await expect(page.locator("#quizTable .cellBtn.selected")).toHaveCount(0);
+      });
+    }
+  }
+
   test("Quiz01 highlights the correct option after a wrong answer", async ({ page }) => {
     await page.goto("/quiz01.html");
     await expect(page.locator("#quizTable .hangulCell").first()).toBeVisible();
@@ -276,6 +292,21 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
 
       await expect(page.locator("#questionText")).not.toHaveText(firstQuestion || "");
     });
+
+    for (const key of ["0", "Space"]) {
+      test(`${quizPath} advances with ${key} after answering`, async ({ page }) => {
+        await setQuiz03Or04Fixture(page);
+        await page.goto(quizPath);
+        await expect(page.locator("#choices .choice")).toHaveCount(5);
+        const firstQuestion = await page.locator("#questionText").textContent();
+
+        await pressCorrectQuiz03Or04Key(page, quizPath);
+        await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
+        await page.keyboard.press(key);
+
+        await expect(page.locator("#questionText")).not.toHaveText(firstQuestion || "");
+      });
+    }
 
     test(`${quizPath} advances with Enter after an incorrect answer but not before answering`, async ({ page }) => {
       await setQuiz03Or04Fixture(page);
