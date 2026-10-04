@@ -237,7 +237,9 @@
           btn.addEventListener('click', () => evaluateAnswer(option.hangul));
           choicesBox.appendChild(btn);
         });
-        document.getElementById('hintText').textContent = '選択肢を選んでください。';
+        const hintText = document.getElementById('hintText');
+        hintText.hidden = false;
+        hintText.textContent = '選択肢を選んでください。';
         state.answered = false;
         updateStat();
       }
@@ -274,7 +276,12 @@
           state.progress.recordOutcome(state.current, selectedIsCorrect);
           state.progress.persist();
         }
-        document.getElementById('hintText').textContent = state.current.example || '正解です。';
+        if (state.current.example) {
+          document.getElementById('questionText').textContent = state.current.example;
+          document.getElementById('hintText').hidden = true;
+        } else {
+          document.getElementById('hintText').textContent = '正解です。';
+        }
         updateStat();
 
         const correctButton = buttons.find((btn) => state.current.hangul === btn.dataset.value);

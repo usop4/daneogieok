@@ -175,6 +175,31 @@ test.describe("Quiz01/Quiz02 key and auto judge", () => {
 
       await expect(page.locator("#questionText")).toHaveText(quizPath === "/quiz03.html" ? "가다" : "行く");
     });
+
+    test(`${quizPath} displays an example in the question area after answering`, async ({ page }) => {
+      await page.route("**/quiz03-data.enc", (route) => route.fulfill({
+        contentType: "text/plain; charset=utf-8",
+        body: encryptPayload("가다,行く,例文あり")
+      }));
+      await page.goto(quizPath);
+      await page.locator("#choices .choice").first().click();
+
+      await expect(page.locator("#questionText")).toHaveText("例文あり");
+      await expect(page.locator("#hintText")).toBeHidden();
+    });
+
+    test(`${quizPath} keeps the original display when no example exists`, async ({ page }) => {
+      await page.route("**/quiz03-data.enc", (route) => route.fulfill({
+        contentType: "text/plain; charset=utf-8",
+        body: encryptPayload("가다,行く")
+      }));
+      await page.goto(quizPath);
+      await page.locator("#choices .choice").first().click();
+
+      await expect(page.locator("#questionText")).toHaveText(quizPath === "/quiz03.html" ? "가다" : "行く");
+      await expect(page.locator("#hintText")).toHaveText("正解です。");
+      await expect(page.locator("#hintText")).toBeVisible();
+    });
   }
 
   test("Quiz01 orders kanji options by occurrence frequency", async ({ page }) => {
@@ -259,7 +284,7 @@ test.describe("Quiz01/Quiz02 key and auto judge", () => {
 
 test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
   for (const quizPath of ["/quiz03.html", "/quiz04.html"]) {
-    test(`${quizPath} shows an example in the hint only after answering`, async ({ page }) => {
+    test(`${quizPath} shows an example in the question area only after answering`, async ({ page }) => {
       await page.route("**/quiz03-data.enc", (route) => route.fulfill({
         contentType: "text/plain; charset=utf-8",
         body: encryptPayload([
@@ -275,7 +300,8 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
 
       await page.keyboard.press("1");
 
-      await expect(page.locator("#hintText")).toContainText("共通例文です。");
+      await expect(page.locator("#questionText")).toHaveText("共通例文です。");
+      await expect(page.locator("#hintText")).toBeHidden();
     });
   }
 

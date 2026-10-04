@@ -267,7 +267,9 @@
           btn.addEventListener('click', () => evaluateAnswer(option.value));
           choicesBox.appendChild(btn);
         });
-        document.getElementById('hintText').textContent = '選択肢を選んでください。';
+        const hintText = document.getElementById('hintText');
+        hintText.hidden = false;
+        hintText.textContent = '選択肢を選んでください。';
         state.answered = false;
         updateStat();
       }
@@ -302,7 +304,12 @@
         }
         state.score.total += 1;
         recordOutcome(state.current, selectedIsCorrect);
-        document.getElementById('hintText').textContent = state.current.example || '正解です。';
+        if (state.current.example) {
+          document.getElementById('questionText').textContent = state.current.example;
+          document.getElementById('hintText').hidden = true;
+        } else {
+          document.getElementById('hintText').textContent = '正解です。';
+        }
         updateStat();
         if (state.progress) state.progress.persist();
 
