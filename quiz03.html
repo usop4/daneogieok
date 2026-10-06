@@ -254,7 +254,9 @@
 
       function renderQuestion() {
         if (!state.current) return;
-        document.getElementById('questionText').textContent = state.current.hangul;
+        const questionText = document.getElementById('questionText');
+        questionText.classList.remove('example');
+        questionText.textContent = state.current.hangul;
         const choicesBox = document.getElementById('choices');
         const options = pickOptions(state.current);
         choicesBox.innerHTML = '';
@@ -305,7 +307,9 @@
         state.score.total += 1;
         recordOutcome(state.current, selectedIsCorrect);
         if (state.current.example) {
-          document.getElementById('questionText').textContent = state.current.example;
+          const questionText = document.getElementById('questionText');
+          questionText.textContent = state.current.example;
+          questionText.classList.add('example');
           document.getElementById('hintText').hidden = true;
         } else {
           document.getElementById('hintText').textContent = '正解です。';

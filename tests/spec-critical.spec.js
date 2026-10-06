@@ -301,7 +301,15 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
       await page.keyboard.press("1");
 
       await expect(page.locator("#questionText")).toHaveText("共通例文です。");
+      await expect(page.locator("#questionText")).toHaveCSS("font-size", "18px");
+      await expect(page.locator("#questionText")).toHaveCSS("text-align", "left");
       await expect(page.locator("#hintText")).toBeHidden();
+
+      await page.locator("#nextBtn").click();
+
+      await expect(page.locator("#questionText")).not.toHaveText("共通例文です。");
+      await expect(page.locator("#questionText")).toHaveCSS("font-size", "36px");
+      await expect(page.locator("#questionText")).toHaveCSS("text-align", "center");
     });
   }
 
@@ -376,6 +384,25 @@ test.describe("Quiz03/Quiz04 label visibility and result styles", () => {
     await expect(page.locator("#choices .choice.revealed")).toHaveCount(5);
     await expect(page.locator("#choices .choice.correct")).toHaveCount(1);
     await expect(page.locator("#choices .choice .hangul-label").first()).toBeVisible();
+  });
+
+  test("font setting applies Batang across quiz pages and persists", async ({ page }) => {
+    for (const quizPath of ["/quiz01.html", "/quiz02.html", "/quiz03.html", "/quiz04.html"]) {
+      await page.goto(quizPath);
+      await page.locator("#initialFilterToggle").click();
+      if (quizPath === "/quiz01.html") {
+        await page.locator("#fontFamilySelect").selectOption("batang");
+      }
+      await expect(page.locator("#fontFamilySelect")).toHaveValue("batang");
+      await expect(page.locator("body")).toHaveClass(/batang-font/);
+    }
+
+    await page.locator("#fontFamilySelect").selectOption("default");
+    await expect(page.locator("body")).not.toHaveClass(/batang-font/);
+    await page.goto("/quiz01.html");
+    await page.locator("#initialFilterToggle").click();
+    await expect(page.locator("#fontFamilySelect")).toHaveValue("default");
+    await expect(page.locator("body")).not.toHaveClass(/batang-font/);
   });
 
   test("Quiz04 keeps all answer choices after filtering to questions with examples", async ({ page }) => {

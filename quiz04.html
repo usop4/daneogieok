@@ -224,7 +224,9 @@
       function renderQuestion() {
         if (!state.current) return;
         const promptValue = state.current.values[Math.floor(Math.random() * state.current.values.length)];
-        document.getElementById('questionText').textContent = promptValue;
+        const questionText = document.getElementById('questionText');
+        questionText.classList.remove('example');
+        questionText.textContent = promptValue;
         const choicesBox = document.getElementById('choices');
         const options = pickOptions(state.current, promptValue);
         choicesBox.innerHTML = '';
@@ -277,7 +279,9 @@
           state.progress.persist();
         }
         if (state.current.example) {
-          document.getElementById('questionText').textContent = state.current.example;
+          const questionText = document.getElementById('questionText');
+          questionText.textContent = state.current.example;
+          questionText.classList.add('example');
           document.getElementById('hintText').hidden = true;
         } else {
           document.getElementById('hintText').textContent = '正解です。';

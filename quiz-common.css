@@ -145,6 +145,16 @@ h1 {
 .filterExampleCheck { display: flex; margin-top: 10px; }
 .filterCheck input { accent-color: var(--accent); }
 .filterOptions .small { display: block; margin-top: 8px; }
+.fontSetting { display: block; margin-top: 12px; }
+.fontSetting select {
+  min-width: 140px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
 .btn.filterBtn.active {
   border-color: rgba(122,162,255,.85);
   background: rgba(122,162,255,.18);
@@ -267,6 +277,11 @@ table.stats-table th:first-child {
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 14px;
   background: rgba(255,255,255,.05);
+}
+
+.question.example {
+  font-size: 18px;
+  text-align: left;
 }
 
 .choices { display: grid; gap: 10px; }
@@ -495,6 +510,11 @@ textarea {
 
 @media (max-width: 720px) {
   .question { font-size: 28px; }
+}
+
+body.batang-font,
+body.batang-font * {
+  font-family: Batang, '바탕', serif;
 }
 
 @media (max-width: 520px) {

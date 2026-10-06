@@ -127,6 +127,30 @@
           <span>例文がある問題のみ</span>
         </label>
       `);
+      const settingsPanel = $('#initialFilterOptions');
+      settingsPanel?.insertAdjacentHTML('beforeend', `
+        <label class="fontSetting" for="fontFamilySelect">
+          <span class="filterLabel">フォント</span>
+          <select id="fontFamilySelect">
+            <option value="default">標準</option>
+            <option value="batang">Batang</option>
+          </select>
+        </label>
+        <span class="small">Batangが使えない場合は明朝体で表示します。</span>
+      `);
+      const fontSelector = $('#fontFamilySelect');
+      if (fontSelector) {
+        const fontFamily = localStorage.getItem('quiz-font-family-v1') === 'batang'
+          ? 'batang'
+          : 'default';
+        fontSelector.value = fontFamily;
+        document.body.classList.toggle('batang-font', fontFamily === 'batang');
+        fontSelector.addEventListener('change', () => {
+          const useBatang = fontSelector.value === 'batang';
+          document.body.classList.toggle('batang-font', useBatang);
+          localStorage.setItem('quiz-font-family-v1', useBatang ? 'batang' : 'default');
+        });
+      }
       container.addEventListener('change', (event) => {
         if (event.target?.type !== 'checkbox') return;
         selectedFamilies = new Set(
